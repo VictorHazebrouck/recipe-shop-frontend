@@ -3,7 +3,9 @@ import {
   TouchableOpacity,
   StyleSheet,
   Text,
+  TextInput,
   KeyboardAvoidingView,
+  Button,
 } from "react-native";
 
 export default function ConnexionScreen({ navigation }) {
@@ -12,7 +14,7 @@ export default function ConnexionScreen({ navigation }) {
   const [password, setPassword] = useState("");
 
   const handleSubmit = () => {
-    console.log("click");
+    navigation.navigate('Regime')
   };
 
   return (
@@ -37,7 +39,7 @@ export default function ConnexionScreen({ navigation }) {
         value={password}
       />
       <TouchableOpacity onPress={() => handleSubmit()}>
-        <Text style={styles.textButton}>submit</Text>
+        <Text style={styles.textButton}>suivant</Text>
       </TouchableOpacity>
     </KeyboardAvoidingView>
   );
@@ -50,4 +52,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  button: {
+    width: '30%',
+    alignItems: 'center',
+    paddingTop: 8,
+    backgroundColor: '#CC3F0C',
+    borderRadius: 10,
+  },
+
 });
