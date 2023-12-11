@@ -4,12 +4,13 @@ export default function ParametersScreen({ navigation }) {
 
 return (
   <SafeAreaView style={styles.container}>
-    {/* <Text style={styles.title}>{user.name}'s places</Text> */}
+    {<Text style={styles.title}>JohnDoe</Text>}
 
-    <View style={styles.button}>
+    <View>
       <Button
         title="Regime"
         onPress={() => navigation.navigate('Regime')}
+        style={styles.button}
       />
       <Button
         title="Gouts"
@@ -43,6 +44,13 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     marginTop: 30,
     marginBottom: 20,
+  },
+  button: {
+    width: '30%',
+    alignItems: 'center',
+    paddingTop: 8,
+    backgroundColor: '#ec6e5b',
+    borderRadius: 10,
   },
   scrollView: {
     alignItems: 'center',

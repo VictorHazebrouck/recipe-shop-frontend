@@ -41,6 +41,7 @@ export default function ConnexionScreen({ navigation }) {
       <TouchableOpacity onPress={() => handleSubmit()}>
         <Text style={styles.textButton}>suivant</Text>
       </TouchableOpacity>
+
     </KeyboardAvoidingView>
   );
 }
