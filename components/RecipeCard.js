@@ -8,20 +8,19 @@ import {
   Image,
 } from "react-native";
 
-
 const RecipeCard = (props) => {
   return (
-    <TouchableOpacity style={styles.container} onPress={() => props.handlePressCard(props)}>
-        <Image
-          source={{ uri: props.imageURL }}
-          style={{ flex: 1 }}
-        />
-        <View style={styles.infosContainer}>
-          <Text style={styles.text}>{props.name}</Text>
-          <TouchableOpacity>
-            <FontAwesome name={"heart"} size={22} color="red" />
-          </TouchableOpacity>
-        </View>
+    <TouchableOpacity
+      style={styles.container}
+      onPress={() => props.handlePressCard(props)}
+    >
+      <Image source={{ uri: props.imageURL }} style={{ flex: 1 }} />
+      <View style={styles.infosContainer}>
+        <Text style={styles.text}>{props.name}</Text>
+        <TouchableOpacity>
+          <FontAwesome name={"heart"} size={22} color="red" />
+        </TouchableOpacity>
+      </View>
     </TouchableOpacity>
   );
 };

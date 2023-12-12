@@ -1,10 +1,25 @@
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-import { TouchableOpacity, StyleSheet, Text, View, ScrollView, Modal, } from "react-native";
+import {
+  TouchableOpacity,
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  Modal,
+} from "react-native";
 import { useState, useEffect } from "react";
 import RecipeModal from "../components/RecipeModal";
 import RecipeCard from "../components/RecipeCard";
 import ROUTE from "../globals/nico";
-const tagsList = ["A la une", "Pas cher", "Peu de vaisselle", "Pour les fetes", "A cuisiner en famille", "Pour les enfant", "Express",];
+const tagsList = [
+  "A la une",
+  "Pas cher",
+  "Peu de vaisselle",
+  "Pour les fetes",
+  "A cuisiner en famille",
+  "Pour les enfant",
+  "Express",
+];
 
 export default function HomeScreen({ navigation }) {
   const [filter, setFilter] = useState("A la une");
@@ -12,28 +27,55 @@ export default function HomeScreen({ navigation }) {
   const [currentRecipe, setCurrentRecipe] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
 
+  //Updates the recipes state according to the value of the filter state
+  useEffect(() => {
+    (async () => {
+      if (!recipes[filter]) {
+        //data not yet saved => fetch & update
+        const response = await fetch(`${ROUTE}/recipes/find/tag=${filter}`);
+        const data = await response.json();
+        setRecipes({ ...recipes, [filter]: data.res });
+      } else {
+        //already saved => do nothing
+        return;
+      }
+    })();
+  }, [filter]);
+
   const filters = tagsList.map((e, i) => {
     return (
       <TouchableOpacity key={i} onPress={() => setFilter(e)}>
-        <Text style={filter === e ? styles.filterSelected : styles.filterNonSelected}>{e}</Text>
+        <Text
+          style={
+            filter === e ? styles.filterSelected : styles.filterNonSelected
+          }
+        >
+          {e}
+        </Text>
       </TouchableOpacity>
-    )
-  })
+    );
+  });
 
   //Updates the recipes state according to the value of the filter state
   useEffect(() => {
     (async () => {
-      if (!recipes[filter]) {//data not yet saved => fetch & update
-        const response = await fetch(`${ROUTE}/recipes/find/tag=${filter}`)
+      if (!recipes[filter]) {
+        //data not yet saved => fetch & update
+        const response = await fetch(`${ROUTE}/recipes/find/tag=${filter}`);
         const data = await response.json();
-        setRecipes({ ...recipes, [filter]: data.res })
-      } else { //already saved => do nothing
-        return
+        setRecipes({ ...recipes, [filter]: data.res });
+      } else {
+        //already saved => do nothing
+        return;
       }
-    })()
-  }, [filter])
+    })();
+  }, [filter]);
 
-  const recipesList = recipes[filter] && recipes[filter].map((e, i) => <RecipeCard key={i} {...e} handlePressCard={handlePressCard} />);
+  const recipesList =
+    recipes[filter] &&
+    recipes[filter].map((e, i) => (
+      <RecipeCard key={i} {...e} handlePressCard={handlePressCard} />
+    ));
 
   const handlePressCard = (dataRecipe) => {
     // console.log(dataRecipe);
@@ -52,7 +94,7 @@ export default function HomeScreen({ navigation }) {
       </Modal>
       <View style={styles.containerTop}>
         <Text style={styles.topTitle}>Les recettes</Text>
-        <FontAwesome name={"search"} size={25} color='gray' />
+        <FontAwesome name={"search"} size={25} color="gray" />
       </View>
       <View style={styles.containerFilters}>
         <ScrollView
@@ -74,6 +116,8 @@ export default function HomeScreen({ navigation }) {
   );
 }
 
+const screenWidth = Dimensions.get("window").width;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -81,7 +125,6 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     backgroundColor: "#F9F8F8",
   },
-
 
   containerTop: {
     flexDirection: "row",
@@ -100,8 +143,8 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
   filtersScroll: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
+    flexDirection: "row",
+    alignItems: "flex-end",
     paddingBottom: 10,
   },
   filterNonSelected: {
@@ -118,8 +161,8 @@ const styles = StyleSheet.create({
   },
 
   containerRecipes: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
     paddingTop: 15,
   },
-})
+});

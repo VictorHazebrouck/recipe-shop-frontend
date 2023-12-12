@@ -198,6 +198,7 @@ export default function ConnexionScreen({ navigation }) {
   );
 }
 const screenWidth = Dimensions.get("window").width;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
