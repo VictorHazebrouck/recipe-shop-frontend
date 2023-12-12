@@ -1,23 +1,81 @@
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-import { useState, useEffect } from "react";
-import RecipeModal from "../components/RecipeModal";
-import RecipeCard from "../components/RecipeCard";
-import ROUTE from "../globals/nico";
 import {
   TouchableOpacity,
   StyleSheet,
   Text,
   View,
-  Modal,
   ScrollView,
-  Dimensions,
+  Modal,
 } from "react-native";
+import { useState, useEffect } from "react";
+import RecipeModal from "../components/RecipeModal";
+import RecipeCard from "../components/RecipeCard";
+import ROUTE from "../globals/nico";
+const tagsList = [
+  "A la une",
+  "Pas cher",
+  "Peu de vaisselle",
+  "Pour les fetes",
+  "A cuisiner en famille",
+  "Pour les enfant",
+  "Express",
+];
 
 export default function HomeScreen({ navigation }) {
   const [filter, setFilter] = useState("A la une");
   const [recipes, setRecipes] = useState([]);
   const [currentRecipe, setCurrentRecipe] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+
+  //Updates the recipes state according to the value of the filter state
+  useEffect(() => {
+    (async () => {
+      if (!recipes[filter]) {
+        //data not yet saved => fetch & update
+        const response = await fetch(`${ROUTE}/recipes/find/tag=${filter}`);
+        const data = await response.json();
+        setRecipes({ ...recipes, [filter]: data.res });
+      } else {
+        //already saved => do nothing
+        return;
+      }
+    })();
+  }, [filter]);
+
+  const filters = tagsList.map((e, i) => {
+    return (
+      <TouchableOpacity key={i} onPress={() => setFilter(e)}>
+        <Text
+          style={
+            filter === e ? styles.filterSelected : styles.filterNonSelected
+          }
+        >
+          {e}
+        </Text>
+      </TouchableOpacity>
+    );
+  });
+
+  //Updates the recipes state according to the value of the filter state
+  useEffect(() => {
+    (async () => {
+      if (!recipes[filter]) {
+        //data not yet saved => fetch & update
+        const response = await fetch(`${ROUTE}/recipes/find/tag=${filter}`);
+        const data = await response.json();
+        setRecipes({ ...recipes, [filter]: data.res });
+      } else {
+        //already saved => do nothing
+        return;
+      }
+    })();
+  }, [filter]);
+
+  const recipesList =
+    recipes[filter] &&
+    recipes[filter].map((e, i) => (
+      <RecipeCard key={i} {...e} handlePressCard={handlePressCard} />
+    ));
 
   const handlePressCard = (dataRecipe) => {
     // console.log(dataRecipe);
@@ -29,62 +87,28 @@ export default function HomeScreen({ navigation }) {
     setModalVisible(false);
   };
 
-  const tagsList = [
-    "A la une",
-    "Pas cher",
-    "Peu de vaisselle",
-    "Pour les fetes",
-    "A cuisiner en famille",
-    "Pour les enfant",
-    "Express",
-  ];
-
-  const filters = tagsList.map((e, i) => {
-    return (
-      <TouchableOpacity key={i} onPress={() => setFilter(e)}>
-        <Text style={filter === e ? styles.filterSelected : styles.filter}>
-          {e}
-        </Text>
-      </TouchableOpacity>
-    );
-  });
-
-  useEffect(() => {
-    (async () => {
-      const response = await fetch(`${ROUTE}/recipes`);
-      const data = await response.json();
-      setRecipes(data.res);
-    })();
-  }, [filter]);
-
-  const recipesList = recipes.map((e, i) => {
-    return (
-      <TouchableOpacity key={i}>
-        <RecipeCard {...e} handlePressCard={handlePressCard} />
-      </TouchableOpacity>
-    );
-  });
-
   return (
     <View style={styles.container}>
       <Modal visible={modalVisible}>
         <RecipeModal {...currentRecipe} closeModal={closeModal} />
       </Modal>
       <View style={styles.containerTop}>
-        <Text style={styles.title}>Les recettes</Text>
+        <Text style={styles.topTitle}>Les recettes</Text>
         <FontAwesome name={"search"} size={25} color="gray" />
       </View>
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.containerFilters}
-      >
-        {filters}
-      </ScrollView>
+      <View style={styles.containerFilters}>
+        <ScrollView
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.filtersScroll}
+        >
+          {filters}
+        </ScrollView>
+      </View>
       <ScrollView
         vertical
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.containerResults}
+        contentContainerStyle={styles.containerRecipes}
       >
         {recipesList}
       </ScrollView>
@@ -101,10 +125,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     backgroundColor: "#F9F8F8",
   },
-  title: {
-    fontSize: 30,
-    fontWeight: "700",
-  },
+
   containerTop: {
     flexDirection: "row",
     alignItems: "center",
@@ -112,15 +133,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 25,
   },
+  topTitle: {
+    fontSize: 30,
+    fontWeight: "700",
+  },
+
   containerFilters: {
+    height: 55,
+    backgroundColor: "white",
+  },
+  filtersScroll: {
     flexDirection: "row",
     alignItems: "flex-end",
-    paddingBottom: 32,
-    paddingHorizontal: 10,
-    backgroundColor: "white",
-    height: 80,
+    paddingBottom: 10,
   },
-  filter: {
+  filterNonSelected: {
     fontSize: 16,
     fontWeight: "800",
     color: "gray",
@@ -132,17 +159,10 @@ const styles = StyleSheet.create({
     color: "black",
     paddingHorizontal: 8,
   },
-  containerResults: {
-    height: 1000,
+
+  containerRecipes: {
     flexDirection: "row",
     flexWrap: "wrap",
     paddingTop: 15,
-  },
-  recipesContainer: {
-    height: (screenWidth * 58) / 100,
-    width: (screenWidth * 48) / 100,
-    backgroundColor: "red",
-    margin: "1%",
-    flexDirection: "column",
   },
 });
