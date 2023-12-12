@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
   container: {
     height: (screenWidth * 58) / 100,
     width: (screenWidth * 48) / 100,
-    backgroundColor: "red",
+    backgroundColor: "white",
     margin: "1%",
     flexDirection: "column",
   },
