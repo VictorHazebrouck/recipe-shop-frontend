@@ -1,14 +1,17 @@
 import FontAwesome from "react-native-vector-icons/FontAwesome";
+import { useState, useEffect } from "react";
+import RecipeModal from "../components/RecipeModal";
+import RecipeCard from "../components/RecipeCard";
+import ROUTE from "../globals/nico";
 import {
   TouchableOpacity,
   StyleSheet,
   Text,
   View,
+  Modal,
   ScrollView,
   Dimensions,
 } from "react-native";
-import { useState, useEffect } from "react";
-const windowWidth = Dimensions.get("window").width;
 
 export default function HomeScreen({ navigation }) {
   const [filter, setFilter] = useState("A la une");
@@ -88,6 +91,8 @@ export default function HomeScreen({ navigation }) {
     </View>
   );
 }
+
+const screenWidth = Dimensions.get("window").width;
 
 const styles = StyleSheet.create({
   container: {

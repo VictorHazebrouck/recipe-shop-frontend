@@ -14,7 +14,7 @@ const RecipeCard = (props) => {
     <TouchableOpacity onPress={() => props.handlePressCard(props)}>
       <View style={styles.recipesContainer}>
         <View style={styles.photo}>
-          <Text style={styles.text}>{props.name}</Text>
+          <Text style={styles.text}>test</Text>
           <TouchableOpacity>
             <FontAwesome name={"heart"} size={22} color="red" />
           </TouchableOpacity>
