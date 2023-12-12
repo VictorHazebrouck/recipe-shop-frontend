@@ -11,34 +11,51 @@ import {
 } from "react-native";
 
 export default function ConnexionScreen({ navigation }) {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState(false);
-  const [modalSignupVisible, setModalSignupVisible] = useState(false);
+  const [nameSignin, setNameSignin] = useState("");
+  const [passwordSignin, setPasswordSignin] = useState("");
+  const [errorSignin, setErrorSignin] = useState(false);
+  const [errorSigninMess, setErrorSigninMess] = useState("");
   const [modalSigninVisible, setModalSigninVisible] = useState(false);
 
-  // useEffect(() => {
-  //   async function loadFonts() {
-  //     await Font.loadAsync({
-  //       Anton: require("../assets/fonts/Anton-Regular.ttf"),
-  //     });
-  //   }
-  //   loadFonts();
-  // }, []);
+  const [nameSignup, setNameSignup] = useState("");
+  const [emailSignup, setEmailSignup] = useState("");
+  const [passwordSignup, setPasswordSignup] = useState("");
+  const [errorSignup, setErrorSignup] = useState(false);
+  const [errorSignupMess, setErrorSignupMess] = useState("");
+  const [modalSignupVisible, setModalSignupVisible] = useState(false);
 
-  const handleModalSignup = () => {
+  const resetState = () => {
+    setNameSignin("");
+    setPasswordSignin("");
+    setErrorSignin(false);
+    setErrorSigninMess("");
+    setModalSigninVisible(false);
+    setNameSignup("");
+    setEmailSignup("");
+    setPasswordSignup("");
+    setErrorSignup(false);
+    setErrorSignupMess("");
+    setModalSignupVisible(false);
+  };
+
+  const openModalSignup = () => {
     setModalSignupVisible(true);
   };
-  const handleModalSignin = () => {
+  const closeModalSignup = () => {
+    setModalSignupVisible(false);
+  };
+  const openModalSignin = () => {
     setModalSigninVisible(true);
   };
+  const closeModalSignin = () => {
+    resetState();
+  };
 
-  const handleSubmit = () => {
+  const handleSignup = () => {
     const userData = {
-      name: name,
-      email: email,
-      password: password,
+      name: nameSignup,
+      email: emailSignup,
+      password: passwordSignup,
     };
 
     fetch("https://recipe-shop-backend.vercel.app/users/signup", {
@@ -48,11 +65,33 @@ export default function ConnexionScreen({ navigation }) {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         if (data.result) {
           navigation.navigate("Regime");
         } else {
-          setError(true);
+          setErrorSignup(true);
+          setErrorSignupMess(data.error);
+        }
+      });
+  };
+
+  const handleSignin = () => {
+    const userData = {
+      name: nameSignin,
+      password: passwordSignin,
+    };
+
+    fetch("https://recipe-shop-backend.vercel.app/users/signin", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(userData),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.result) {
+          navigation.navigate("Regime");
+        } else {
+          setErrorSignin(true);
+          setErrorSigninMess(data.error);
         }
       });
   };
@@ -62,89 +101,95 @@ export default function ConnexionScreen({ navigation }) {
       style={styles.container}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => handleModalSignin()}
-      >
-        <Text style={styles.textButton}>sign in</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => handleModalSignup()}
-      >
-        <Text style={styles.textButton}>sign up</Text>
-      </TouchableOpacity>
+      <View style={styles.buttonContent}>
+        <TouchableOpacity
+          style={styles.primaryButton}
+          onPress={() => openModalSignin()}
+        >
+          <Text style={styles.primaryTextButton}>sign in</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.secondaryButton}
+          onPress={() => openModalSignup()}
+        >
+          <Text style={styles.secondaryTextButton}>sign up</Text>
+        </TouchableOpacity>
+      </View>
       <Modal
         animationType="slide"
         transparent={true}
         visible={modalSignupVisible}
-        onRequestClose={() => setModalSignupVisible(false)}
+        onRequestClose={closeModalSignup}
       >
-        <View style={styles.modalContainer}>
+        <TouchableOpacity
+          style={styles.modalContainer}
+          activeOpacity={1}
+          onPress={closeModalSignup}
+        >
           <View style={styles.modal}>
             <Text style={styles.h3}>Sign up</Text>
             <TextInput
               placeholder="name"
-              onChangeText={(value) => setName(value)}
-              value={name}
+              onChangeText={(value) => setNameSignup(value)}
+              value={nameSignup}
               style={styles.nameInput}
             />
             <TextInput
               placeholder="email"
-              onChangeText={(value) => setEmail(value)}
-              value={email}
+              onChangeText={(value) => setEmailSignup(value)}
+              value={emailSignup}
               style={styles.emailInput}
             />
             <TextInput
               placeholder="password"
-              onChangeText={(value) => setPassword(value)}
-              value={password}
+              onChangeText={(value) => setPasswordSignup(value)}
+              value={passwordSignup}
               style={styles.passwordInput}
             />
             <TouchableOpacity
-              style={styles.button}
-              onPress={() => handleSubmit()}
+              style={styles.primaryButton}
+              onPress={() => handleSignup()}
             >
-              <Text style={styles.textButton}>valider</Text>
+              <Text style={styles.primaryTextButton}>valider</Text>
             </TouchableOpacity>
-            {error && (
-              <Text style={styles.error}>cet utilisateur existe déjà</Text>
-            )}
+            {errorSignup && <Text style={styles.error}>{errorSignupMess}</Text>}
           </View>
-        </View>
+        </TouchableOpacity>
       </Modal>
       <Modal
         animationType="slide"
         transparent={true}
         visible={modalSigninVisible}
-        onRequestClose={() => setModalSigninVisible(false)}
+        onRequestClose={closeModalSignin}
       >
-        <View style={styles.modalContainer}>
+        <TouchableOpacity
+          style={styles.modalContainer}
+          activeOpacity={1}
+          onPress={closeModalSignin}
+        >
           <View style={styles.modal}>
             <Text style={styles.h3}>Sign in</Text>
             <TextInput
               placeholder="name"
-              onChangeText={(value) => setName(value)}
-              value={name}
+              onChangeText={(value) => setNameSignin(value)}
+              value={nameSignin}
               style={styles.nameInput}
             />
             <TextInput
               placeholder="password"
-              onChangeText={(value) => setPassword(value)}
-              value={password}
+              onChangeText={(value) => setPasswordSignin(value)}
+              value={passwordSignin}
               style={styles.passwordInput}
             />
             <TouchableOpacity
-              style={styles.button}
-              onPress={() => handleModalSignin()}
+              style={styles.primaryButton}
+              onPress={() => handleSignin()}
             >
-              <Text style={styles.textButton}>valider</Text>
+              <Text style={styles.primaryTextButton}>valider</Text>
             </TouchableOpacity>
-            {error && (
-              <Text style={styles.error}>cet utilisateur n'existe pas</Text>
-            )}
+            {errorSignin && <Text style={styles.error}>{errorSigninMess}</Text>}
           </View>
-        </View>
+        </TouchableOpacity>
       </Modal>
     </KeyboardAvoidingView>
   );
@@ -156,6 +201,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#F9F8F8",
     alignItems: "center",
     justifyContent: "center",
+  },
+  buttonContent: {
+    backgroundColor: "#fff",
+    borderRadius: 20,
   },
   modalContainer: {
     flex: 1,
@@ -202,7 +251,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     padding: 10,
   },
-  button: {
+  primaryButton: {
     width: 280,
     height: 53,
     justifyContent: "center",
@@ -211,8 +260,24 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 10,
   },
-  textButton: {
+  primaryTextButton: {
     color: "#fff",
+    fontSize: 20,
+    fontWeight: 500,
+  },
+  secondaryButton: {
+    width: 280,
+    height: 53,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#fff",
+    borderColor: "#CC3F0C",
+    borderWidth: 1,
+    borderRadius: 10,
+    marginBottom: 10,
+  },
+  secondaryTextButton: {
+    color: "#CC3F0C",
     fontSize: 20,
     fontWeight: 500,
   },
