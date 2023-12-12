@@ -1,14 +1,10 @@
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-import {
-  TouchableOpacity,
-  StyleSheet,
-  Text,
-  View,
-  ScrollView,
-  Dimensions,
-} from "react-native";
+import { TouchableOpacity, StyleSheet, Text, View, ScrollView, Dimensions, Modal, } from "react-native";
 import { useState, useEffect } from "react";
-const windowWidth = Dimensions.get("window").width;
+import RecipeModal from "../components/RecipeModal";
+import RecipeCard from "../components/RecipeCard";
+import ROUTE from "../globals/nico";
+const tagsList = ["A la une","Pas cher","Peu de vaisselle","Pour les fetes","A cuisiner en famille","Pour les enfant","Express",];
 
 export default function HomeScreen({ navigation }) {
   const [filter, setFilter] = useState("A la une");
@@ -26,15 +22,6 @@ export default function HomeScreen({ navigation }) {
     setModalVisible(false);
   };
 
-  const tagsList = [
-    "A la une",
-    "Pas cher",
-    "Peu de vaisselle",
-    "Pour les fetes",
-    "A cuisiner en famille",
-    "Pour les enfant",
-    "Express",
-  ];
 
   const filters = tagsList.map((e, i) => {
     return (
@@ -89,6 +76,8 @@ export default function HomeScreen({ navigation }) {
   );
 }
 
+
+const screenWidth = Dimensions.get("window").width;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -132,12 +121,5 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     paddingTop: 15,
-  },
-  recipesContainer: {
-    height: (screenWidth * 58) / 100,
-    width: (screenWidth * 48) / 100,
-    backgroundColor: "red",
-    margin: "1%",
-    flexDirection: "column",
   },
 });

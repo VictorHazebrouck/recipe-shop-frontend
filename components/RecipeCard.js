@@ -7,7 +7,6 @@ import {
   Dimensions,
 } from "react-native";
 
-const screenWidth = Dimensions.get("window").width;
 
 const RecipeCard = (props) => {
   return (
@@ -23,6 +22,8 @@ const RecipeCard = (props) => {
     </TouchableOpacity>
   );
 };
+
+const screenWidth = Dimensions.get("window").width;
 
 const styles = StyleSheet.create({
   recipesContainer: {
