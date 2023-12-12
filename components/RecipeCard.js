@@ -5,20 +5,23 @@ import {
   View,
   TouchableOpacity,
   Dimensions,
+  Image,
 } from "react-native";
 
 
 const RecipeCard = (props) => {
   return (
-    <TouchableOpacity onPress={() => props.handlePressCard(props)}>
-      <View style={styles.recipesContainer}>
-        <View style={styles.photo}>
+    <TouchableOpacity style={styles.container} onPress={() => props.handlePressCard(props)}>
+        <Image
+          source={{ uri: props.imageURL }}
+          style={{ flex: 1 }}
+        />
+        <View style={styles.infosContainer}>
           <Text style={styles.text}>{props.name}</Text>
           <TouchableOpacity>
             <FontAwesome name={"heart"} size={22} color="red" />
           </TouchableOpacity>
         </View>
-      </View>
     </TouchableOpacity>
   );
 };
@@ -26,14 +29,14 @@ const RecipeCard = (props) => {
 const screenWidth = Dimensions.get("window").width;
 
 const styles = StyleSheet.create({
-  recipesContainer: {
+  container: {
     height: (screenWidth * 58) / 100,
     width: (screenWidth * 48) / 100,
     backgroundColor: "red",
     margin: "1%",
-    flexDirection: "column-reverse",
+    flexDirection: "column",
   },
-  photo: {
+  infosContainer: {
     flexDirection: "row",
     backgroundColor: "white",
     height: "40%",
