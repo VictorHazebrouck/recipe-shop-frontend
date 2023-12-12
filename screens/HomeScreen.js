@@ -6,32 +6,39 @@ const windowWidth = Dimensions.get('window').width;
 
 
 export default function HomeScreen({ navigation }) {
-  const [filter, setFilter] = useState("A la une")
-  const [recipes, setRecipes] = useState([])
-
   const tagsList = ["A la une", "Pas cher", "Peu de vaisselle", "Pour les fetes", "A cuisiner en famille", "Pour les enfant", "Express"]
+  const [filter, setFilter] = useState("A la une")
+  const [recipes, setRecipes] = useState({})
+
   const filters = tagsList.map((e, i) => {
     return (
       <TouchableOpacity key={i} onPress={() => setFilter(e)}>
-        <Text style={filter === e ? styles.filterSelected : styles.filter}>{e}</Text>
+        <Text style={filter === e ? styles.filterSelected : styles.filterNonSelected}>{e}</Text>
       </TouchableOpacity>
     )
   })
 
+
+  
+  //Updates the recipes state according to the value of the filter state
   useEffect(() => {
     (async () => {
-      const response = await fetch(`${ROUTE}/recipes`)
-      const data = await response.json();
-      setRecipes(data.res)
+      if (!recipes[filter]) {//data not yet saved => fetch & update
+        const response = await fetch(`${ROUTE}/recipes/find/tag=${filter}`)
+        const data = await response.json(); 
+        setRecipes({ ...recipes, [filter]: data.res })
+      } else { //already saved => do nothing
+        return
+      }
     })()
   }, [filter])
 
-  const recipesList = recipes.map((e, i) => {
+  const recipesList = recipes[filter] && recipes[filter].map((e, i) => {
     return (
-      <View key={i} style={styles.recipesContainer}>
+      <View key={i} style={styles.recipesCard}>
         <Image
-          source={{ uri: e.imageURL}}
-          style={{flex: 1}}
+          source={{ uri: e.imageURL }}
+          style={{ flex: 1 }}
         />
         <View style={{ flexDirection: "row", backgroundColor: "white", height: "40%", alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 18 }}>
           <Text style={{ fontSize: 16, fontWeight: "800", width: "72%" }}>{e.name}</Text>
@@ -43,22 +50,25 @@ export default function HomeScreen({ navigation }) {
     )
   })
 
+
   return (
     <View style={styles.container}>
       <View style={styles.containerTop}>
-        <Text style={styles.title}>Les recettes</Text>
+        <Text style={styles.topTitle}>Les recettes</Text>
         <FontAwesome name={"search"} size={25} color='gray' />
       </View>
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.containerFilters}>
-        {filters}
-      </ScrollView>
+      <View style={styles.containerFilters}>
+        <ScrollView
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.filtersScroll}>
+          {filters}
+        </ScrollView>
+      </View>
       <ScrollView
         vertical
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.containerResults}>
+        contentContainerStyle={styles.containerRecipes}>
         {recipesList}
       </ScrollView>
     </View>
@@ -72,10 +82,8 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     backgroundColor: '#F9F8F8',
   },
-  title: {
-    fontSize: 30,
-    fontWeight: "700",
-  },
+
+
   containerTop: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -83,15 +91,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 25,
   },
+  topTitle: {
+    fontSize: 30,
+    fontWeight: "700",
+  },
+
   containerFilters: {
+    height: 55,
+    backgroundColor: "white",
+  },
+  filtersScroll: {
     flexDirection: 'row',
     alignItems: 'flex-end',
-    paddingBottom: 32,
-    paddingHorizontal: 10,
-    backgroundColor: 'white',
-    height: 80,
+    paddingBottom: 10,
   },
-  filter: {
+  filterNonSelected: {
     fontSize: 16,
     fontWeight: "800",
     color: "gray",
@@ -103,13 +117,13 @@ const styles = StyleSheet.create({
     color: "black",
     paddingHorizontal: 8,
   },
-  containerResults: {
-    height: 1000,
+
+  containerRecipes: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     paddingTop: 15,
   },
-  recipesContainer: {
+  recipesCard: {
     height: windowWidth * 58 / 100,
     width: windowWidth * 48 / 100,
     backgroundColor: 'red',
