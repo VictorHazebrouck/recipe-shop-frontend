@@ -19,7 +19,7 @@ export default function HomeScreen({ navigation }) {
 
   useEffect(() => {
     ( async ()=>{
-      const response = await fetch(`https://recipe-shop-backend.vercel.app/recipes`)
+      const response = await fetch(`http://10.1.1.71:3000/recipes`)
       const data = await response.json();
       setRecipes(data.res) 
     })()
