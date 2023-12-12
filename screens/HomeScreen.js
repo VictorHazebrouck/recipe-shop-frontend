@@ -26,22 +26,27 @@ export default function HomeScreen({ navigation }) {
   const filters = tagsList.map((e, i) => {
     return (
       <TouchableOpacity key={i} onPress={() => setFilter(e)}>
-        <Text style={filter === e ? styles.filterSelected : styles.filter}>
-          {e}
-        </Text>
+        <Text style={filter === e ? styles.filterSelected : styles.filterNonSelected}>{e}</Text>
       </TouchableOpacity>
-    );
-  });
+    )
+  })
 
+
+  
+  //Updates the recipes state according to the value of the filter state
   useEffect(() => {
     (async () => {
-      const response = await fetch(`${ROUTE}/recipes`);
-      const data = await response.json();
-      setRecipes(data.res);
-    })();
-  }, [filter]);
+      if (!recipes[filter]) {//data not yet saved => fetch & update
+        const response = await fetch(`${ROUTE}/recipes/find/tag=${filter}`)
+        const data = await response.json(); 
+        setRecipes({ ...recipes, [filter]: data.res })
+      } else { //already saved => do nothing
+        return
+      }
+    })()
+  }, [filter])
 
-  const recipesList = recipes.map((e, i) => {
+  const recipesList = recipes[filter] && recipes[filter].map((e, i) => {
     return (
       <TouchableOpacity key={i}>
         <RecipeCard {...e} handlePressCard={handlePressCard} />
@@ -55,21 +60,21 @@ export default function HomeScreen({ navigation }) {
         <RecipeModal {...currentRecipe} closeModal={closeModal} />
       </Modal>
       <View style={styles.containerTop}>
-        <Text style={styles.title}>Les recettes</Text>
-        <FontAwesome name={"search"} size={25} color="gray" />
+        <Text style={styles.topTitle}>Les recettes</Text>
+        <FontAwesome name={"search"} size={25} color='gray' />
       </View>
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.containerFilters}
-      >
-        {filters}
-      </ScrollView>
+      <View style={styles.containerFilters}>
+        <ScrollView
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.filtersScroll}>
+          {filters}
+        </ScrollView>
+      </View>
       <ScrollView
         vertical
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.containerResults}
-      >
+        contentContainerStyle={styles.containerRecipes}>
         {recipesList}
       </ScrollView>
     </View>
@@ -85,10 +90,8 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     backgroundColor: "#F9F8F8",
   },
-  title: {
-    fontSize: 30,
-    fontWeight: "700",
-  },
+
+
   containerTop: {
     flexDirection: "row",
     alignItems: "center",
@@ -96,15 +99,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 25,
   },
-  containerFilters: {
-    flexDirection: "row",
-    alignItems: "flex-end",
-    paddingBottom: 32,
-    paddingHorizontal: 10,
-    backgroundColor: "white",
-    height: 80,
+  topTitle: {
+    fontSize: 30,
+    fontWeight: "700",
   },
-  filter: {
+
+  containerFilters: {
+    height: 55,
+    backgroundColor: "white",
+  },
+  filtersScroll: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    paddingBottom: 10,
+  },
+  filterNonSelected: {
     fontSize: 16,
     fontWeight: "800",
     color: "gray",
@@ -116,10 +125,17 @@ const styles = StyleSheet.create({
     color: "black",
     paddingHorizontal: 8,
   },
-  containerResults: {
-    height: 1000,
-    flexDirection: "row",
-    flexWrap: "wrap",
+
+  containerRecipes: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
     paddingTop: 15,
   },
-});
+  recipesCard: {
+    height: windowWidth * 58 / 100,
+    width: windowWidth * 48 / 100,
+    backgroundColor: 'red',
+    margin: "1%",
+    flexDirection: 'column',
+  }
+})
