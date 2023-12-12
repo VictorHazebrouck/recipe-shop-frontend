@@ -66,6 +66,7 @@ export default function ConnexionScreen({ navigation }) {
       .then((response) => response.json())
       .then((data) => {
         if (data.result) {
+          resetState();
           navigation.navigate("Regime");
         } else {
           setErrorSignup(true);
@@ -88,6 +89,7 @@ export default function ConnexionScreen({ navigation }) {
       .then((response) => response.json())
       .then((data) => {
         if (data.result) {
+          resetState();
           navigation.navigate("Regime");
         } else {
           setErrorSignin(true);
