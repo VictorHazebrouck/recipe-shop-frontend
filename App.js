@@ -5,6 +5,7 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import HomeScreen from "./screens/HomeScreen.js";
 import ShopScreen from "./screens/ShopScreen.js";
 import PlanningScreen from "./screens/PlanningScreen.js";
+import NoPlanningScreen from "./screens/NoPlanningScreen.js";
 import ParametersScreen from "./screens/ParametersScreen.js";
 import RegimeScreen from "./screens/RegimeScreen.js";
 import GoutsScreen from "./screens/GoutsScreen.js";
@@ -33,19 +34,19 @@ const TabNavigator = () => {
           }
 
           return <FontAwesome name={iconName} size={size} color={color} />;
-        },
-        tabBarActiveTintColor: "#ffffff",
-        tabBarInactiveTintColor: "#CC3F0C",
-        tabBarActiveBackgroundColor: "#AF2908",
-        tabInactiveBackgroundColor: "#CC3F0C",
-        headerShown: false,
-      })}
-    >
-      <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Planning" component={PlanningScreen} />
-      <Tab.Screen name="Shop" component={ShopScreen} />
-      <Tab.Screen name="Parameters" component={ParametersScreen} />
-    </Tab.Navigator>
+    },
+    tabBarActiveTintColor: "#ffffff",
+    tabBarInactiveTintColor: "#CC3F0C",
+    tabBarActiveBackgroundColor: "#AF2908",
+    tabInactiveBackgroundColor: "#CC3F0C",
+    headerShown: false,
+  })}
+>
+  <Tab.Screen name="Home" component={HomeScreen} />
+  <Tab.Screen name="Planning" component={NoPlanningScreen} />
+  <Tab.Screen name="Shop" component={ShopScreen} />
+  <Tab.Screen name="Parameters" component={ParametersScreen} />
+</Tab.Navigator>
   );
 };
 

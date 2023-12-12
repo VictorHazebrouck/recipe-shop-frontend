@@ -5,7 +5,7 @@ export default function GoutsScreen({ navigation }) {
    <View>
      <Text>Gouts Screen</Text>
      <Button
-       title="Welcome to Affichage"
+       title="Welcome to Gouts"
        onPress={() => navigation.navigate('Affichage')}
      />
    </View>

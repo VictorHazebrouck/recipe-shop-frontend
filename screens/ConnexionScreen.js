@@ -9,6 +9,7 @@ import {
   Dimensions,
   Modal,
 } from "react-native";
+import ROUTE from "../globals/nico";
 
 export default function ConnexionScreen({ navigation }) {
   const [nameSignin, setNameSignin] = useState("");
@@ -58,7 +59,7 @@ export default function ConnexionScreen({ navigation }) {
       password: passwordSignup,
     };
 
-    fetch("https://recipe-shop-backend.vercel.app/users/signup", {
+    fetch(`${ROUTE}/users/signup`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(userData),
@@ -81,7 +82,7 @@ export default function ConnexionScreen({ navigation }) {
       password: passwordSignin,
     };
 
-    fetch("https://recipe-shop-backend.vercel.app/users/signin", {
+    fetch(`${ROUTE}/users/signin`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(userData),

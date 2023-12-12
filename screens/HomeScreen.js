@@ -1,17 +1,14 @@
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-import { useState, useEffect } from "react";
-import RecipeModal from "../components/RecipeModal";
-import RecipeCard from "../components/RecipeCard";
 import {
   TouchableOpacity,
   StyleSheet,
   Text,
   View,
-  Modal,
   ScrollView,
   Dimensions,
 } from "react-native";
-const screenWidth = Dimensions.get("window").width;
+import { useState, useEffect } from "react";
+const windowWidth = Dimensions.get("window").width;
 
 export default function HomeScreen({ navigation }) {
   const [filter, setFilter] = useState("A la une");
@@ -51,9 +48,7 @@ export default function HomeScreen({ navigation }) {
 
   useEffect(() => {
     (async () => {
-      const response = await fetch(
-        `https://recipe-shop-backend.vercel.app/recipes`
-      );
+      const response = await fetch(`${ROUTE}/recipes`);
       const data = await response.json();
       setRecipes(data.res);
     })();
@@ -143,6 +138,6 @@ const styles = StyleSheet.create({
     width: (screenWidth * 48) / 100,
     backgroundColor: "red",
     margin: "1%",
-    flexDirection: "column-reverse",
+    flexDirection: "column",
   },
 });
