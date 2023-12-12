@@ -22,30 +22,30 @@ const TabNavigator = () => {
         tabBarIcon: ({ color, size }) => {
           let iconName = "";
 
-      if (route.name === "Home") {
-        iconName = "home";
-      } else if (route.name === "Planning") {
-        iconName = "calendar";
-      } else if (route.name === "Shop") {
-        iconName = "shopping-cart";
-      } else if (route.name === "Parameters") {
-        iconName = "gear";
-      }
+          if (route.name === "Home") {
+            iconName = "home";
+          } else if (route.name === "Planning") {
+            iconName = "calendar";
+          } else if (route.name === "Shop") {
+            iconName = "shopping-cart";
+          } else if (route.name === "Parameters") {
+            iconName = "gear";
+          }
 
-      return <FontAwesome name={iconName} size={size} color={color} />;
-    },
-    tabBarActiveTintColor: "#ffffff",
-    tabBarInactiveTintColor: "#CC3F0C",
-    tabBarActiveBackgroundColor: "#AF2908",
-    tabInactiveBackgroundColor: "#CC3F0C",
-    headerShown: false,
-  })}
->
-  <Tab.Screen name="Home" component={HomeScreen} />
-  <Tab.Screen name="Planning" component={PlanningScreen} />
-  <Tab.Screen name="Shop" component={ShopScreen} />
-  <Tab.Screen name="Parameters" component={ParametersScreen} />
-</Tab.Navigator>
+          return <FontAwesome name={iconName} size={size} color={color} />;
+        },
+        tabBarActiveTintColor: "#ffffff",
+        tabBarInactiveTintColor: "#CC3F0C",
+        tabBarActiveBackgroundColor: "#AF2908",
+        tabInactiveBackgroundColor: "#CC3F0C",
+        headerShown: false,
+      })}
+    >
+      <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen name="Planning" component={PlanningScreen} />
+      <Tab.Screen name="Shop" component={ShopScreen} />
+      <Tab.Screen name="Parameters" component={ParametersScreen} />
+    </Tab.Navigator>
   );
 };
 
@@ -63,4 +63,3 @@ export default function App() {
     </NavigationContainer>
   );
 }
-
