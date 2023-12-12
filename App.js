@@ -33,8 +33,7 @@ const TabNavigator = () => {
             iconName = "gear";
           }
 
-<<<<<<< HEAD
-      return <FontAwesome name={iconName} size={size} color={color} />;
+          return <FontAwesome name={iconName} size={size} color={color} />;
     },
     tabBarActiveTintColor: "#ffffff",
     tabBarInactiveTintColor: "#CC3F0C",
@@ -48,22 +47,6 @@ const TabNavigator = () => {
   <Tab.Screen name="Shop" component={ShopScreen} />
   <Tab.Screen name="Parameters" component={ParametersScreen} />
 </Tab.Navigator>
-=======
-          return <FontAwesome name={iconName} size={size} color={color} />;
-        },
-        tabBarActiveTintColor: "#ffffff",
-        tabBarInactiveTintColor: "#CC3F0C",
-        tabBarActiveBackgroundColor: "#AF2908",
-        tabInactiveBackgroundColor: "#CC3F0C",
-        headerShown: false,
-      })}
-    >
-      <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Planning" component={PlanningScreen} />
-      <Tab.Screen name="Shop" component={ShopScreen} />
-      <Tab.Screen name="Parameters" component={ParametersScreen} />
-    </Tab.Navigator>
->>>>>>> d98d32e646dd9649d7b853cd544b62ccc5b9ac49
   );
 };
 
@@ -71,7 +54,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        {/* <Stack.Screen name="Connexion" component={ConnexionScreen} /> */}
+        <Stack.Screen name="Connexion" component={ConnexionScreen} />
         <Stack.Screen name="Regime" component={RegimeScreen} />
         <Stack.Screen name="Gouts" component={GoutsScreen} />
         <Stack.Screen name="Affichage" component={AffichageScreen} />

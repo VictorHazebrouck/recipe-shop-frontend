@@ -18,16 +18,20 @@ export default function HomeScreen({ navigation }) {
   })
 
   useEffect(() => {
-    ( async ()=>{
+    (async () => {
       const response = await fetch(`http://10.1.1.71:3000/recipes`)
       const data = await response.json();
-      setRecipes(data.res) 
+      setRecipes(data.res)
     })()
   }, [filter])
 
   const recipesList = recipes.map((e, i) => {
     return (
       <View key={i} style={styles.recipesContainer}>
+        <Image
+          source={{ uri: e.imageURL}}
+          style={{flex: 1}}
+        />
         <View style={{ flexDirection: "row", backgroundColor: "white", height: "40%", alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 18 }}>
           <Text style={{ fontSize: 16, fontWeight: "800", width: "72%" }}>{e.name}</Text>
           <TouchableOpacity>
