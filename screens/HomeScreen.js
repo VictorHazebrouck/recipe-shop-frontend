@@ -1,12 +1,13 @@
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { TouchableOpacity, StyleSheet, Text, View, ScrollView, Dimensions } from 'react-native';
+import { TouchableOpacity, StyleSheet, Text, View, ScrollView, Dimensions, Image } from 'react-native';
 import { useState, useEffect } from 'react';
+import ROUTE from '../globals/nico';
 const windowWidth = Dimensions.get('window').width;
+
 
 export default function HomeScreen({ navigation }) {
   const [filter, setFilter] = useState("A la une")
   const [recipes, setRecipes] = useState([])
-
 
   const tagsList = ["A la une", "Pas cher", "Peu de vaisselle", "Pour les fetes", "A cuisiner en famille", "Pour les enfant", "Express"]
   const filters = tagsList.map((e, i) => {
@@ -19,7 +20,7 @@ export default function HomeScreen({ navigation }) {
 
   useEffect(() => {
     (async () => {
-      const response = await fetch(`http://10.1.1.71:3000/recipes`)
+      const response = await fetch(`${ROUTE}/recipes`)
       const data = await response.json();
       setRecipes(data.res)
     })()
@@ -113,6 +114,6 @@ const styles = StyleSheet.create({
     width: windowWidth * 48 / 100,
     backgroundColor: 'red',
     margin: "1%",
-    flexDirection: 'column-reverse',
+    flexDirection: 'column',
   }
 })
