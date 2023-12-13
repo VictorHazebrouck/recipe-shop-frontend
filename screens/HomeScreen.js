@@ -59,8 +59,6 @@ export default function HomeScreen({ navigation }) {
     );
   });
 
-<<<<<<< HEAD
-=======
   //Updates the recipes state according to the value of the filter state
   useEffect(() => {
     (async () => {
@@ -81,7 +79,6 @@ export default function HomeScreen({ navigation }) {
     setModalVisible(true);
   };
 
->>>>>>> 750bd6590d3eaa11bff4844882910394eae0fbb2
   const recipesList =
     recipes[filter] &&
     recipes[filter].map((e, i) => (
