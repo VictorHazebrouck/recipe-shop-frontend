@@ -5,6 +5,7 @@ import {
   Text,
   View,
   ScrollView,
+  Dimensions,
   Modal,
 } from "react-native";
 import { useState, useEffect } from "react";
@@ -71,17 +72,16 @@ export default function HomeScreen({ navigation }) {
     })();
   }, [filter]);
 
+  const handlePressCard = (dataRecipe) => {
+    setCurrentRecipe(dataRecipe);
+    setModalVisible(true);
+  };
+
   const recipesList =
     recipes[filter] &&
     recipes[filter].map((e, i) => (
       <RecipeCard key={i} {...e} handlePressCard={handlePressCard} />
     ));
-
-  const handlePressCard = (dataRecipe) => {
-    // console.log(dataRecipe);
-    setCurrentRecipe(dataRecipe);
-    setModalVisible(true);
-  };
 
   const closeModal = () => {
     setModalVisible(false);
@@ -89,7 +89,7 @@ export default function HomeScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Modal visible={modalVisible}>
+      <Modal visible={modalVisible} animationType="slide">
         <RecipeModal {...currentRecipe} closeModal={closeModal} />
       </Modal>
       <View style={styles.containerTop}>
