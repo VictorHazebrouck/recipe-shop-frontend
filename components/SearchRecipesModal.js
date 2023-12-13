@@ -8,13 +8,13 @@ import {
     Modal,
 } from "react-native";
 import { useState, useEffect } from "react";
-import RecipeModal from "../components/RecipeModal";
-import RecipeCard from "../components/RecipeCard";
+import RecipeModal from "./RecipeModal";
+import RecipeCard from "./RecipeCard";
 import ROUTE from "../globals/nico";
 const dishType = ["Entrée", "Plat", "Dessert", "Apéro", "Autre"]
 const difficulty = ["Easy", "Medium", "Hard"]
 import Slider from '@react-native-community/slider';
-import SearchBar from "../components/SearchBar";
+import SearchBar from "./SearchBar";
 
 
 
@@ -36,7 +36,8 @@ export default function SearchRecipeModal({ navigation, closeSearchModal }) {
         setModalVisible(false);
     };
 
-    const displayFilters = (filterName, callBack) => {
+    const displayFilters = (filterName, 
+        ) => {
         return filterName.map((e, i) => {
             return (
                 <TouchableOpacity key={i} onPress={(e)=> callBack(e)}>
