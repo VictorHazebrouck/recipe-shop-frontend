@@ -5,7 +5,6 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import HomeScreen from "./screens/HomeScreen.js";
 import ShopScreen from "./screens/ShopScreen.js";
 import PlanningScreen from "./screens/PlanningScreen.js";
-import NoPlanningScreen from "./screens/NoPlanningScreen.js";
 import ParametersScreen from "./screens/ParametersScreen.js";
 import RegimeScreen from "./screens/RegimeScreen.js";
 import GoutsScreen from "./screens/GoutsScreen.js";
@@ -43,7 +42,7 @@ const TabNavigator = () => {
   })}
 >
   <Tab.Screen name="Home" component={HomeScreen} />
-  <Tab.Screen name="Planning" component={NoPlanningScreen} />
+  <Tab.Screen name="Planning" component={PlanningScreen} />
   <Tab.Screen name="Shop" component={ShopScreen} />
   <Tab.Screen name="Parameters" component={ParametersScreen} />
 </Tab.Navigator>

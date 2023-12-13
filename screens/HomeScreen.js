@@ -5,6 +5,7 @@ import {
   Text,
   View,
   ScrollView,
+  Dimensions,
   Modal,
 } from "react-native";
 import { useState, useEffect } from "react";
@@ -58,17 +59,34 @@ export default function HomeScreen({ navigation }) {
     );
   });
 
+<<<<<<< HEAD
+=======
+  //Updates the recipes state according to the value of the filter state
+  useEffect(() => {
+    (async () => {
+      if (!recipes[filter]) {
+        //data not yet saved => fetch & update
+        const response = await fetch(`${ROUTE}/recipes/find/tag=${filter}`);
+        const data = await response.json();
+        setRecipes({ ...recipes, [filter]: data.res });
+      } else {
+        //already saved => do nothing
+        return;
+      }
+    })();
+  }, [filter]);
+
+  const handlePressCard = (dataRecipe) => {
+    setCurrentRecipe(dataRecipe);
+    setModalVisible(true);
+  };
+
+>>>>>>> 750bd6590d3eaa11bff4844882910394eae0fbb2
   const recipesList =
     recipes[filter] &&
     recipes[filter].map((e, i) => (
       <RecipeCard key={i} {...e} handlePressCard={handlePressCard} />
     ));
-
-  const handlePressCard = (dataRecipe) => {
-    // console.log(dataRecipe);
-    setCurrentRecipe(dataRecipe);
-    setModalVisible(true);
-  };
 
   const closeModal = () => {
     setModalVisible(false);
@@ -76,7 +94,7 @@ export default function HomeScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Modal visible={modalVisible}>
+      <Modal visible={modalVisible} animationType="slide">
         <RecipeModal {...currentRecipe} closeModal={closeModal} />
       </Modal>
       <Modal visible={isSearchModal}>
