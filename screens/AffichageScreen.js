@@ -1,35 +1,57 @@
+import React, { useState } from 'react';
 import { TouchableOpacity, StyleSheet, Text, View } from 'react-native';
 import Checkbox from 'expo-checkbox';
-import { useState} from 'react';
+
 
 export default function PlanningScreen({ navigation }) {
+  const [isPlanningChecked, setPlanningChecked] = useState(false);
+  const [isNoPlanningChecked, setNoPlanningChecked] = useState(false);
 
-  const [isChecked, setChecked] = useState(undefined);
+  const handlePlanningCheck = () => {
+    setPlanningChecked(true);
+    setNoPlanningChecked(false);
+  };
+  
+  const handleNoPlanningCheck = () => {
+    setPlanningChecked(false);
+    setNoPlanningChecked(true);
+  };
 
   const handleNext = () => {
+    //dispatch planning type to store
     navigation.navigate('FavStore');
   };
 
   return (
-    <View style={styles.container}>      
+    <View style={styles.container}>
       <View style={styles.containerTop}>
         <Text style={styles.title}>AFFICHAGE</Text>
       </View>
-          <View style={styles.checkboxPlanning}>
-          <Checkbox style={styles.checkbox} value={isChecked} onValueChange={setChecked} color={isChecked ? '#4B3A47' : undefined} />
-            <Text>
-            Planifier les recettes dans un planning et avoir la liste de courses
-            </Text>
-          </View>
-              <View style={styles.checkboxNoPlanning}>
-              <Checkbox style={styles.checkbox} value={isChecked} onValueChange={setChecked} color={isChecked ? '#4B3A47': undefined} />
-              <Text>
-                Sélectionner uniquement les recettes et obtenir la liste de courses
-                </Text>
-              </View>
-                <TouchableOpacity style={styles.Next } onPress={handleNext}>
-                <Text style={{ fontSize: 16, fontWeight: "600", color: '#ffffff', textAlign: 'center' }}>SUIVANT</Text>
-                </TouchableOpacity>
+      <TouchableOpacity onPress={handlePlanningCheck}>
+        <View style={[styles.checkboxContainer, { backgroundColor: isPlanningChecked ? '#EE9F68' : 'transparent' }]}>
+          <Checkbox
+            style={styles.checkbox}
+            value={isPlanningChecked}
+            onValueChange={handlePlanningCheck}
+            color={isPlanningChecked ? '#4B3A47' : undefined}
+          />
+          <Text>Planifier les recettes dans un planning et avoir la liste de courses</Text>
+        </View>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={handleNoPlanningCheck}>
+        <View style={[styles.checkboxContainer, { backgroundColor: isNoPlanningChecked ? '#EE9F68' : 'transparent' }]}>
+          <Checkbox
+            style={styles.checkbox}
+            value={isNoPlanningChecked}
+            onValueChange={handleNoPlanningCheck}
+            color={isNoPlanningChecked ? '#4B3A47' : undefined}
+          />
+          <Text>Sélectionner uniquement les recettes et obtenir la liste de courses</Text>
+        </View>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.Next} onPress={handleNext}>
+        <Text style={{ fontSize: 16, fontWeight: '600', color: '#ffffff', textAlign: 'center' }}>SUIVANT</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -37,48 +59,32 @@ export default function PlanningScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'stretch',
-    justifyContent: 'flex-start',
-    backgroundColor: '#F9F8F8',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   containerTop: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingVertical: 25,
-    marginTop: 20,
+    marginBottom: 20,
   },
   title: {
     fontSize: 30,
-    fontWeight: "700",
+    fontWeight: 'bold',
   },
-  checkboxPlanning: {
-    flexDirection: "row",  
-    alignItems: 'center', 
-    justifyContent: 'center', 
-    backgroundColor: '#EE9F68',
-    paddingHorizontal: 40,
+  checkboxContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width:'100%',
+    marginBottom: 10,
     paddingVertical: 40,
-    marginTop: 50,
-  },
-  checkboxNoPlanning: {
-    flexDirection: "row",  
-    alignItems: 'center', 
-    justifyContent: 'center', 
-    paddingHorizontal: 40,
-    paddingVertical: 40,
+    paddingHorizontal: 50,
   },
   checkbox: {
-    margin: 8,
+    marginRight: 10,
   },
-  Next: { 
+  Next: {
     backgroundColor: '#CC3F0C',
-    marginTop: 30,
-    marginLeft: 40,
-    width:'70%',
-    borderRadius:5,
-    paddingHorizontal: 20,
+    paddingHorizontal: 70,
     paddingVertical: 10,
+    borderRadius: 5,
+    marginTop: 20,
   },
-})
+});
