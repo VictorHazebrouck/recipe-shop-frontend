@@ -10,6 +10,7 @@ import {
 import { useState, useEffect } from "react";
 import RecipeModal from "../components/RecipeModal";
 import RecipeCard from "../components/RecipeCard";
+import SearchRecipesModal from "./SearchRecipesModal";
 import ROUTE from "../globals/nico";
 const tagsList = [
   "A la une",
@@ -26,6 +27,7 @@ export default function HomeScreen({ navigation }) {
   const [recipes, setRecipes] = useState([]);
   const [currentRecipe, setCurrentRecipe] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [isSearchModal, setIsSearchModal] = useState(true)
 
   //Updates the recipes state according to the value of the filter state
   useEffect(() => {
@@ -56,21 +58,6 @@ export default function HomeScreen({ navigation }) {
     );
   });
 
-  //Updates the recipes state according to the value of the filter state
-  useEffect(() => {
-    (async () => {
-      if (!recipes[filter]) {
-        //data not yet saved => fetch & update
-        const response = await fetch(`${ROUTE}/recipes/find/tag=${filter}`);
-        const data = await response.json();
-        setRecipes({ ...recipes, [filter]: data.res });
-      } else {
-        //already saved => do nothing
-        return;
-      }
-    })();
-  }, [filter]);
-
   const recipesList =
     recipes[filter] &&
     recipes[filter].map((e, i) => (
@@ -92,9 +79,14 @@ export default function HomeScreen({ navigation }) {
       <Modal visible={modalVisible}>
         <RecipeModal {...currentRecipe} closeModal={closeModal} />
       </Modal>
+      <Modal visible={isSearchModal}>
+        <SearchRecipesModal closeSearchModal={()=> setIsSearchModal(false)}/>
+      </Modal>
       <View style={styles.containerTop}>
         <Text style={styles.topTitle}>Les recettes</Text>
-        <FontAwesome name={"search"} size={25} color="gray" />
+        <TouchableOpacity onPress={()=> setIsSearchModal(true)}>
+          <FontAwesome name={"search"} size={25} color="gray" />
+        </TouchableOpacity>
       </View>
       <View style={styles.containerFilters}>
         <ScrollView
@@ -115,8 +107,6 @@ export default function HomeScreen({ navigation }) {
     </View>
   );
 }
-
-const screenWidth = Dimensions.get("window").width;
 
 const styles = StyleSheet.create({
   container: {
