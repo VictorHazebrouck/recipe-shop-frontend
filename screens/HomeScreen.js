@@ -48,11 +48,7 @@ export default function HomeScreen({ navigation }) {
   const filters = tagsList.map((e, i) => {
     return (
       <TouchableOpacity key={i} onPress={() => setFilter(e)}>
-        <Text
-          style={
-            filter === e ? styles.filterSelected : styles.filterNonSelected
-          }
-        >
+        <Text style={filter === e ? styles.filterSelected : styles.filterNonSelected}>
           {e}
         </Text>
       </TouchableOpacity>
@@ -95,11 +91,11 @@ export default function HomeScreen({ navigation }) {
         <RecipeModal {...currentRecipe} closeModal={closeModal} />
       </Modal>
       <Modal visible={isSearchModal}>
-        <SearchRecipesModal closeSearchModal={()=> setIsSearchModal(false)}/>
+        <SearchRecipesModal closeSearchModal={() => setIsSearchModal(false)} />
       </Modal>
       <View style={styles.containerTop}>
         <Text style={styles.topTitle}>Les recettes</Text>
-        <TouchableOpacity onPress={()=> setIsSearchModal(true)}>
+        <TouchableOpacity onPress={() => setIsSearchModal(true)}>
           <FontAwesome name={"search"} size={25} color="gray" />
         </TouchableOpacity>
       </View>
