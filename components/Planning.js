@@ -51,7 +51,7 @@ export default function PlanningScreen({ navigation }) {
     today: "Aujourd'hui",
   };
 
-  LocaleConfig.defaultLocale = 'fr';
+  LocaleConfig.defaultLocale = 'fr'; 
 
   const [recipes, setRecipes] = useState({});
 
