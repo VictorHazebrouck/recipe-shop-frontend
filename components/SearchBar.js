@@ -13,11 +13,11 @@ const SearchBar = ({
 
   //Avoids too many calls on backend & db
   useEffect(() => {
-    //don't send input value to parent if length < x
-    if (input.length < minChar) return;
-
     //wait for x milliseconds before sending input value to parent
     const timeoutId = setTimeout(async () => {
+      //don't send input value to parent if length < x
+      if (input.length === 0) onInputChange("");
+      if (input.length < minChar) return;
       await onInputChange(input);
     }, debounceTimer);
 

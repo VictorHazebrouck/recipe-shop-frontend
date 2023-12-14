@@ -55,21 +55,6 @@ export default function HomeScreen({ navigation }) {
     );
   });
 
-  //Updates the recipes state according to the value of the filter state
-  useEffect(() => {
-    (async () => {
-      if (!recipes[filter]) {
-        //data not yet saved => fetch & update
-        const response = await fetch(`${ROUTE}/recipes/find/tag=${filter}`);
-        const data = await response.json();
-        setRecipes({ ...recipes, [filter]: data.res });
-      } else {
-        //already saved => do nothing
-        return;
-      }
-    })();
-  }, [filter]);
-
   const handlePressCard = (dataRecipe) => {
     setCurrentRecipe(dataRecipe);
     setModalVisible(true);

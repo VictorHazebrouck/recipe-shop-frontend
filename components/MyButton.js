@@ -1,19 +1,33 @@
 import React from "react";
 import { Text, StyleSheet, TouchableOpacity } from "react-native";
 
-const MyButton = ({ onPress, name = "button", isPlain, styleButton={}, styleText={}  }, color="#CC3F0C") => {
+const MyButton = ({
+  onPress,
+  name = "button",
+  isPlain,
+  styleButton = {},
+  styleText = {},
+}) => {
   if (isPlain) {
     return (
-      <TouchableOpacity style={{...styles.buttonPlain, ...styleButton}} onPress={onPress}>
-        <Text style={{...styles.textButtonPlain, ...styleText}}>{name}</Text>
+      <TouchableOpacity
+        style={{ ...styles.buttonPlain, ...styleButton }}
+        onPress={onPress}
+      >
+        <Text style={{ ...styles.textButtonPlain, ...styleText }}>{name}</Text>
       </TouchableOpacity>
     );
   } else {
     return (
-      <TouchableOpacity style={{...styles.buttonNotPlain, ...styleButton}} onPress={onPress}>
-        <Text style={{...styles.textButtonNotPlain, ...styleText}}>{name}</Text>
+      <TouchableOpacity
+        style={{ ...styles.buttonNotPlain, ...styleButton }}
+        onPress={onPress}
+      >
+        <Text style={{ ...styles.textButtonNotPlain, ...styleText }}>
+          {name}
+        </Text>
       </TouchableOpacity>
-    )
+    );
   }
 };
 
