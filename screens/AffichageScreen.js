@@ -1,26 +1,23 @@
-import React, { useState } from "react";
-import { TouchableOpacity, StyleSheet, Text, View } from "react-native";
-import Checkbox from "expo-checkbox";
-// import { useDispatch } from 'react-redux';
+import React, { useState } from 'react';
+import { TouchableOpacity, StyleSheet, Text, View } from 'react-native';
+import Checkbox from 'expo-checkbox';
+import { useDispatch } from 'react-redux';
+import {choicePlanning} from '../reducers/user'
+
 
 export default function PlanningScreen({ navigation }) {
-  const [isPlanningChecked, setPlanningChecked] = useState(false);
-  const [isNoPlanningChecked, setNoPlanningChecked] = useState(false);
-  // const dispatch = useDispatch();
+  const [isPlanningChecked, setPlanningChecked] = useState(true);
+  const dispatch = useDispatch();
 
   const handlePlanningCheck = () => {
-    setPlanningChecked(true);
-    setNoPlanningChecked(false);
-  };
-
-  const handleNoPlanningCheck = () => {
-    setPlanningChecked(false);
-    setNoPlanningChecked(true);
+    setPlanningChecked(!isPlanningChecked);
+  
   };
 
   const handleNext = () => {
     //dispatch planning type to store
-    navigation.navigate("FavStore");
+    dispatch(choicePlanning(isPlanningChecked)) 
+    navigation.navigate('FavStore');
   };
 
   return (
@@ -46,20 +43,13 @@ export default function PlanningScreen({ navigation }) {
           </Text>
         </View>
       </TouchableOpacity>
-      <TouchableOpacity onPress={handleNoPlanningCheck}>
-        <View
-          style={[
-            styles.checkboxContainer,
-            {
-              backgroundColor: isNoPlanningChecked ? "#EE9F68" : "transparent",
-            },
-          ]}
-        >
+      <TouchableOpacity onPress={handlePlanningCheck}>
+        <View style={[styles.checkboxContainer, { backgroundColor: !isPlanningChecked ? '#EE9F68' : 'transparent' }]}>
           <Checkbox
             style={styles.checkbox}
-            value={isNoPlanningChecked}
-            onValueChange={handleNoPlanningCheck}
-            color={isNoPlanningChecked ? "#4B3A47" : undefined}
+            value={!isPlanningChecked}
+            onValueChange={handlePlanningCheck}
+            color={!isPlanningChecked ? '#4B3A47' : undefined}
           />
           <Text>
             Sélectionner uniquement les recettes et obtenir la liste de courses

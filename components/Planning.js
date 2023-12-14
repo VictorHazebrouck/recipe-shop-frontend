@@ -3,6 +3,8 @@ import { StyleSheet, Text, View, TouchableOpacity, StatusBar } from 'react-nativ
 import { Agenda, LocaleConfig } from 'react-native-calendars';
 import { Card } from 'react-native-paper';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import { useState } from 'react';
+import ROUTE from '../globals/nico';
 
 export default function PlanningScreen({ navigation }) {
 
@@ -51,53 +53,52 @@ export default function PlanningScreen({ navigation }) {
 
   LocaleConfig.defaultLocale = 'fr';
 
-
-  const [items, setItems] = React.useState({});
+  const [recipes, setRecipes] = useState({});
 
   const loadItems = (day) => {
 
-    setTimeout(() => {
-      for (let i = -15; i < 85; i++) {
-        const time = day.timestamp + i * 24 * 60 * 60 * 1000;
-        const strTime = timeToString(time);
+    fetch(`${ROUTE}/recipes`)
+      .then(response => response.json())
+      .then(data => {
 
-        if (!items[strTime]) {
-          items[strTime] = [];
+        const recettes = {} 
 
-          const numItems = Math.floor(Math.random() * 3 + 1);
-          for (let j = 0; j < numItems; j++) {
-            items[strTime].push({
-              name: 'Nom de la recette',
-              height: Math.max(10, Math.floor(Math.random() * 150)),
-              day: strTime
-            });
+        for (let i = -15; i < 85; i++) {
+          const time = day.timestamp + i * 24 * 60 * 60 * 1000;
+          const strTime = timeToString(time);
+
+          recettes[strTime] = [];
+          recettes[strTime].push({
+            name: data.res[0].name
           }
+          )
         }
-      }
-      const newItems = {};
-      Object.keys(items).forEach(key => {
-        newItems[key] = items[key];
-      });
-      setItems(newItems);
-    }, 1000
-    );
+        setRecipes(recettes)
+      })
   }
+  console.log(recipes)
 
-  const renderDay = (day) => { 
+  const renderDay = (day) => {
     if (day) {
       const options = { weekday: 'long', day: 'numeric' };
       const formatter = new Intl.DateTimeFormat('fr-FR', options);
       const formattedDate = formatter.format(day);
-  
+
+      // Extraire la première lettre et la mettre en majuscule
+      const firstLetterUpperCase = formattedDate.charAt(0).toUpperCase();
+
       return (
-        <Text style={styles.dayText}>{formattedDate}</Text>
+        <View style={styles.dayContainer}>
+          {/* Afficher la première lettre en majuscule suivie du reste de la chaîne */}
+          <Text style={styles.dayText}>{firstLetterUpperCase + formattedDate.slice(1)}</Text>
+        </View>
       );
     }
   };
 
   const renderItem = (item) => {
-    const isLastItemOfDay = items[item.day] && items[item.day].indexOf(item) === items[item.day].length - 1;
-  
+    const isLastItemOfDay = recipes[item.day] && recipes[item.day].indexOf(item) === recipes[item.day].length - 1;
+
     return (
       <View>
         <Card style={styles.card}>
@@ -107,7 +108,7 @@ export default function PlanningScreen({ navigation }) {
             </View>
           </Card.Content>
         </Card>
-  
+
         {isLastItemOfDay && (
           <TouchableOpacity style={styles.addRecipe} onPress={handleAddRecipe}>
             <Text style={{ fontSize: 16, fontWeight: "600", color: '#4B3A47', width: "80%" }}>Ajouter une recette</Text>
@@ -121,7 +122,7 @@ export default function PlanningScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <Agenda
-        items={items}
+        items={recipes}
         loadItemsForMonth={loadItems}
         selected={'2023-12-13'}
         refreshControl={null}
@@ -129,6 +130,10 @@ export default function PlanningScreen({ navigation }) {
         refreshing={true}
         renderDay={renderDay}
         renderItem={renderItem}
+        theme={{
+          todayTextColor: '#CC3F0C',
+          textDayFontWeight: '500',
+        }}
       />
 
       <StatusBar />
@@ -161,7 +166,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius:0,
+    borderRadius: 0,
     backgroundColor: 'green',
   },
   deleteRecipe: {

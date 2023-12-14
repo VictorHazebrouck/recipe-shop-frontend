@@ -11,6 +11,13 @@ import GoutsScreen from "./screens/GoutsScreen.js";
 import AffichageScreen from "./screens/AffichageScreen.js";
 import FavStoreScreen from "./screens/FavStoreScreen.js";
 import ConnexionScreen from "./screens/ConnexionScreen.js";
+import { Provider } from 'react-redux';
+import { configureStore } from '@reduxjs/toolkit';
+import user from './reducers/user.js';
+
+const store = configureStore({
+ reducer: { user },
+});
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -51,6 +58,7 @@ const TabNavigator = () => {
 
 export default function App() {
   return (
+    <Provider store={store}>
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Connexion" component={ConnexionScreen} />
@@ -61,5 +69,6 @@ export default function App() {
         <Stack.Screen name="TabNavigator" component={TabNavigator} />
       </Stack.Navigator>
     </NavigationContainer>
+    </Provider>
   );
 }
