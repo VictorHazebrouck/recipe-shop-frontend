@@ -56,27 +56,58 @@ export default function PlanningScreen({ navigation }) {
   const [recipes, setRecipes] = useState({});
 
   const loadItems = (day) => {
-
-    fetch(`${ROUTE}/recipes`)
+    fetch(`${ROUTE}/users/recipes`)
       .then(response => response.json())
       .then(data => {
-
-        const recettes = {} 
-
+        const recettes = {};
+        const receiveRecipesList = data.response.currentRecipes;
+  
         for (let i = -15; i < 85; i++) {
           const time = day.timestamp + i * 24 * 60 * 60 * 1000;
           const strTime = timeToString(time);
-
+  
           recettes[strTime] = [];
-          recettes[strTime].push({
-            name: data.res[0].name
-          }
-          )
+
+          receiveRecipesList.forEach(recipe => {
+            recettes[strTime].push({
+              name: recipe.id.name
+            });
+          });
         }
-        setRecipes(recettes)
-      })
+  
+        setRecipes(recettes);
+      });
   }
-  console.log(recipes)
+
+
+  // const loadItems = (day) => {
+
+  //   fetch(`${ROUTE}/users/recipes`)
+  //     .then(response => response.json())
+  //     .then(data => {
+
+  //       const recettes = {} 
+  //       const receiveRecipesList = data.response.currentRecipes
+
+  //       for (let i = -15; i < 85; i++) {
+  //         const time = day.timestamp + i * 24 * 60 * 60 * 1000;
+  //         const strTime = timeToString(time);
+
+  //         recettes[strTime] = [{},];
+
+  //         receiveRecipesList.forEach(e => {
+
+          
+  //         const date = e.date(formatage)
+
+  //         recettes[date].push({
+  //           name: e.id.name
+  //         });
+  //       });
+  //     }
+  //       setRecipes(recettes)
+  //     })
+  // }
 
   const renderDay = (day) => {
     if (day) {
@@ -96,18 +127,20 @@ export default function PlanningScreen({ navigation }) {
     }
   };
 
-  const renderItem = (item) => {
+  const renderItem = (item, firstItemDay) => {
     const isLastItemOfDay = recipes[item.day] && recipes[item.day].indexOf(item) === recipes[item.day].length - 1;
-
+    if (firstItemDay) return <View/> 
     return (
-      <View>
         <Card style={styles.card}>
-          <Card.Content>
+          <Card.Content style={styles.cardContent}>
             <View>
-              <Text>{item.name}</Text>
+              <Text style={styles.textCard}>{item.name}</Text>
+              <TouchableOpacity >
+              <FontAwesome style={{ marginLeft: 10 }} name='trash-o' size={25} color='#CC3F0C' />
+            </TouchableOpacity>
             </View>
           </Card.Content>
-        </Card>
+
 
         {isLastItemOfDay && (
           <TouchableOpacity style={styles.addRecipe} onPress={handleAddRecipe}>
@@ -115,7 +148,7 @@ export default function PlanningScreen({ navigation }) {
             <FontAwesome style={{ marginLeft: 10 }} name='plus' size={25} color='#CC3F0C' />
           </TouchableOpacity>
         )}
-      </View>
+        </Card>
     );
   };
 
@@ -144,7 +177,6 @@ export default function PlanningScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#EE9F68',
     width: '100%',
   },
   topContainer: {
@@ -166,8 +198,26 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 0,
-    backgroundColor: 'green',
+    borderRadius: 5,
+    borderWidth: 1,
+    marginTop: 30,
+    marginBottom: 5,
+    marginRight: 20,
+  },
+  dayContainer:{
+    flex:1,
+    witdh:'100%',
+    backgroundColor:'yellow',
+  },
+  cardContent:{
+    backgroundColor: 'red',
+    flexDirection: "row",
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  textCard: {
+    padding: 0,
+    margin: 0,
   },
   deleteRecipe: {
     flexDirection: "row",
@@ -189,7 +239,8 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   dayText: {
-    fontSize: 24,
+    width:'100%',
+    fontSize: 30,
     fontWeight: 'bold',
     color: '#333',
   },
