@@ -11,7 +11,7 @@ import {
 import { useState, useEffect } from "react";
 import RecipeModal from "../components/RecipeModal";
 import RecipeCard from "../components/RecipeCard";
-import SearchRecipesModal from "./SearchRecipesModal";
+import SearchRecipesModal from "../components/SearchRecipesModal";
 import ROUTE from "../globals/nico";
 const tagsList = [
   "A la une",
@@ -48,19 +48,13 @@ export default function HomeScreen({ navigation }) {
   const filters = tagsList.map((e, i) => {
     return (
       <TouchableOpacity key={i} onPress={() => setFilter(e)}>
-        <Text
-          style={
-            filter === e ? styles.filterSelected : styles.filterNonSelected
-          }
-        >
+        <Text style={filter === e ? styles.filterSelected : styles.filterNonSelected}>
           {e}
         </Text>
       </TouchableOpacity>
     );
   });
 
-<<<<<<< HEAD
-=======
   //Updates the recipes state according to the value of the filter state
   useEffect(() => {
     (async () => {
@@ -81,7 +75,6 @@ export default function HomeScreen({ navigation }) {
     setModalVisible(true);
   };
 
->>>>>>> 750bd6590d3eaa11bff4844882910394eae0fbb2
   const recipesList =
     recipes[filter] &&
     recipes[filter].map((e, i) => (
@@ -98,11 +91,11 @@ export default function HomeScreen({ navigation }) {
         <RecipeModal {...currentRecipe} closeModal={closeModal} />
       </Modal>
       <Modal visible={isSearchModal}>
-        <SearchRecipesModal closeSearchModal={()=> setIsSearchModal(false)}/>
+        <SearchRecipesModal closeSearchModal={() => setIsSearchModal(false)} />
       </Modal>
       <View style={styles.containerTop}>
         <Text style={styles.topTitle}>Les recettes</Text>
-        <TouchableOpacity onPress={()=> setIsSearchModal(true)}>
+        <TouchableOpacity onPress={() => setIsSearchModal(true)}>
           <FontAwesome name={"search"} size={25} color="gray" />
         </TouchableOpacity>
       </View>
