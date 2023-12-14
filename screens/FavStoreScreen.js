@@ -1,13 +1,22 @@
-import { Button, StyleSheet, Text, View } from 'react-native';
+import { Button, StyleSheet, Text, View } from "react-native";
 
 export default function FavStoreScreen({ navigation }) {
- return (
-   <View>
-     <Text>FavStore Screen</Text>
-     <Button
-       title="Welcome to Magasin favori"
-       onPress={() => navigation.navigate('TabNavigator')}
-     />
-   </View>
- );
+  return (
+    <View style={styles.container}>
+      <Text>FavStore Screen</Text>
+      <Button
+        title="suivant"
+        onPress={() => navigation.navigate("TabNavigator")}
+      />
+    </View>
+  );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "aqua",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+});

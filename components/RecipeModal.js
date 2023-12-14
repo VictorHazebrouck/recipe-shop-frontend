@@ -4,6 +4,7 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import Fontisto from "react-native-vector-icons/Fontisto";
 import MyButton from "./MyButton";
+import ROUTE from "../globals/nico";
 import { useState, useEffect } from "react";
 import {
   Text,
@@ -20,6 +21,7 @@ const screenWidth = Dimensions.get("window").width;
 const RecipeModal = (props) => {
   const [numberOfPers, setNumberOfPers] = useState(1);
   const [ingredientsList, setIngredientsList] = useState([]);
+  const [like, setLike] = useState("heart-o");
 
   const instructions = props.instructions;
 
@@ -37,12 +39,41 @@ const RecipeModal = (props) => {
       setNumberOfPers(numberOfPers - 1);
     }
   };
+
   const handlePressBonus = () => {
     setNumberOfPers(numberOfPers + 1);
   };
 
   const handleSubmit = () => {
-    console.log(ingredientsList);
+    fetch(`${ROUTE}/users/add`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        _id: props._id,
+        date: new Date(),
+        nb: numberOfPers,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+      });
+  };
+
+  const handleLike = () => {
+    fetch(`${ROUTE}/users/like`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ _id: props._id }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.result) {
+          setLike("heart");
+        } else {
+          setLike("heart-o");
+        }
+      });
   };
 
   const ingredientQty = ingredientsList.map((e, i) => (
@@ -74,9 +105,9 @@ const RecipeModal = (props) => {
             />
             <MaterialCommunityIcons name={"corn"} size={16} color="#4B3B47" />
           </View>
-          <View style={styles.like}>
-            <Fontisto name={"favorite"} size={20} color="#CC3F0C" />
-          </View>
+          <TouchableOpacity style={styles.like} onPress={handleLike}>
+            <FontAwesome name={like} size={20} color="#CC3F0C" />
+          </TouchableOpacity>
         </View>
         <View style={styles.content}>
           <View style={styles.title}>

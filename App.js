@@ -40,19 +40,19 @@ const TabNavigator = () => {
           }
 
           return <FontAwesome name={iconName} size={size} color={color} />;
-    },
-    tabBarActiveTintColor: "#ffffff",
-    tabBarInactiveTintColor: "#CC3F0C",
-    tabBarActiveBackgroundColor: "#AF2908",
-    tabInactiveBackgroundColor: "#CC3F0C",
-    headerShown: false,
-  })}
->
-  <Tab.Screen name="Home" component={HomeScreen} />
-  <Tab.Screen name="Planning" component={PlanningScreen} />
-  <Tab.Screen name="Shop" component={ShopScreen} />
-  <Tab.Screen name="Parameters" component={ParametersScreen} />
-</Tab.Navigator>
+        },
+        tabBarActiveTintColor: "#ffffff",
+        tabBarInactiveTintColor: "#CC3F0C",
+        tabBarActiveBackgroundColor: "#AF2908",
+        tabInactiveBackgroundColor: "#CC3F0C",
+        headerShown: false,
+      })}
+    >
+      <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen name="Planning" component={PlanningScreen} />
+      <Tab.Screen name="Shop" component={ShopScreen} />
+      <Tab.Screen name="Parameters" component={ParametersScreen} />
+    </Tab.Navigator>
   );
 };
 
@@ -65,7 +65,7 @@ export default function App() {
         <Stack.Screen name="Regime" component={RegimeScreen} />
         <Stack.Screen name="Gouts" component={GoutsScreen} />
         <Stack.Screen name="Affichage" component={AffichageScreen} />
-        <Stack.Screen name="FavStore" component={FavStoreScreen} /> 
+        <Stack.Screen name="FavStore" component={FavStoreScreen} />
         <Stack.Screen name="TabNavigator" component={TabNavigator} />
       </Stack.Navigator>
     </NavigationContainer>
