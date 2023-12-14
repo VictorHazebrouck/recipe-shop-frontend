@@ -28,7 +28,7 @@ export default function HomeScreen({ navigation }) {
   const [recipes, setRecipes] = useState([]);
   const [currentRecipe, setCurrentRecipe] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
-  const [isSearchModal, setIsSearchModal] = useState(true)
+  const [isSearchModal, setIsSearchModal] = useState(true);
 
   //Updates the recipes state according to the value of the filter state
   useEffect(() => {
@@ -95,11 +95,11 @@ export default function HomeScreen({ navigation }) {
         <RecipeModal {...currentRecipe} closeModal={closeModal} />
       </Modal>
       <Modal visible={isSearchModal}>
-        <SearchRecipesModal closeSearchModal={()=> setIsSearchModal(false)}/>
+        <SearchRecipesModal closeSearchModal={() => setIsSearchModal(false)} />
       </Modal>
       <View style={styles.containerTop}>
         <Text style={styles.topTitle}>Les recettes</Text>
-        <TouchableOpacity onPress={()=> setIsSearchModal(true)}>
+        <TouchableOpacity onPress={() => setIsSearchModal(true)}>
           <FontAwesome name={"search"} size={25} color="gray" />
         </TouchableOpacity>
       </View>
