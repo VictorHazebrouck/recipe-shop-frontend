@@ -61,7 +61,7 @@ export default function PlanningScreen({ navigation }) {
       .then(response => response.json())
       .then(data => {
 
-        const recettes = {}
+        const recettes = {} 
 
         for (let i = -15; i < 85; i++) {
           const time = day.timestamp + i * 24 * 60 * 60 * 1000;
