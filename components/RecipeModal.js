@@ -22,9 +22,11 @@ const RecipeModal = (props) => {
   const [numberOfPers, setNumberOfPers] = useState(1);
   const [ingredientsList, setIngredientsList] = useState([]);
   const [like, setLike] = useState("heart-o");
+  const [difficulty, setDifficulty] = useState(1);
 
   const instructions = props.instructions;
 
+  // CALCULATE qty of ingredients
   useEffect(() => {
     const updatedIngredientsList = props.ingredients.map((ingredient) => ({
       unit: ingredient.id.unit,
@@ -44,6 +46,42 @@ const RecipeModal = (props) => {
     setNumberOfPers(numberOfPers + 1);
   };
 
+  const ingredientQty = ingredientsList.map((e, i) => (
+    <View key={i} style={styles.ingrendientCard}>
+      <Text>{e.name}</Text>
+      <Text>
+        {e.amount} {e.unit}
+      </Text>
+    </View>
+  ));
+
+  // SET difficulty
+  useEffect(() => {
+    if (props.difficulty === "Easy") {
+      setDifficulty(1);
+    } else if (props.difficulty === "Medium") {
+      setDifficulty(2);
+    } else {
+      setDifficulty(3);
+    }
+  }, [props.difficulty]);
+
+  const difficultyLvl = () => {
+    const difficultyIcon = [];
+    for (let i = 0; i < difficulty; i++) {
+      difficultyIcon.push(
+        <MaterialCommunityIcons
+          key={i}
+          name="chef-hat"
+          size={20}
+          color="#4B3B47"
+        />
+      );
+    }
+    return <View style={styles.difficultyIcon}>{difficultyIcon}</View>;
+  };
+
+  // POST id, date et numberOfPers to database
   const handleSubmit = () => {
     fetch(`${ROUTE}/users/add`, {
       method: "POST",
@@ -60,6 +98,7 @@ const RecipeModal = (props) => {
       });
   };
 
+  // POST favorite to database
   const handleLike = () => {
     fetch(`${ROUTE}/users/like`, {
       method: "POST",
@@ -76,15 +115,7 @@ const RecipeModal = (props) => {
       });
   };
 
-  const ingredientQty = ingredientsList.map((e, i) => (
-    <View key={i} style={styles.ingrendientCard}>
-      <Text>{e.name}</Text>
-      <Text>
-        {e.amount} {e.unit}
-      </Text>
-    </View>
-  ));
-
+  // RENDER the recipeModal
   return (
     <View style={styles.container}>
       <ScrollView>
@@ -127,11 +158,7 @@ const RecipeModal = (props) => {
                 <Text>{props.preparationTime}mn</Text>
               </View>
               <View style={styles.difficulty}>
-                <MaterialCommunityIcons
-                  name="chef-hat"
-                  size={20}
-                  color="#4B3B47"
-                />
+                {difficultyLvl()}
                 <Text>{props.difficulty}</Text>
               </View>
             </View>
@@ -220,6 +247,15 @@ const styles = StyleSheet.create({
   },
   h4: {
     fontSize: 20,
+  },
+  time: {
+    alignItems: "center",
+  },
+  difficulty: {
+    alignItems: "center",
+  },
+  difficultyIcon: {
+    flexDirection: "row",
   },
   number: {
     flexDirection: "row",
