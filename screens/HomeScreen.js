@@ -11,7 +11,7 @@ import {
 import { useState, useEffect } from "react";
 import RecipeModal from "../components/RecipeModal";
 import RecipeCard from "../components/RecipeCard";
-import SearchRecipesModal from "./SearchRecipesModal";
+import SearchRecipesModal from "../components/SearchRecipesModal";
 import ROUTE from "../globals/nico";
 const tagsList = [
   "A la une",
