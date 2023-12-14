@@ -48,11 +48,7 @@ export default function HomeScreen({ navigation }) {
   const filters = tagsList.map((e, i) => {
     return (
       <TouchableOpacity key={i} onPress={() => setFilter(e)}>
-        <Text
-          style={
-            filter === e ? styles.filterSelected : styles.filterNonSelected
-          }
-        >
+        <Text style={filter === e ? styles.filterSelected : styles.filterNonSelected}>
           {e}
         </Text>
       </TouchableOpacity>

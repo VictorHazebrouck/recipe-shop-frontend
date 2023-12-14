@@ -12,19 +12,33 @@ import RecipeModal from "./RecipeModal";
 import RecipeCard from "./RecipeCard";
 import ROUTE from "../globals/nico";
 const dishType = ["Entrée", "Plat", "Dessert", "Apéro", "Autre"]
-const difficulty = ["Easy", "Medium", "Hard"]
+const difficulty = ["Facile", "Moyen", "Difficile"]
 import Slider from '@react-native-community/slider';
 import SearchBar from "./SearchBar";
+import MyButton from "./MyButton";
 
 
 
 export default function SearchRecipeModal({ navigation, closeSearchModal }) {
     const [isFilterVisible, setIsFilterVisible] = useState(true);
-    const [recipes, setRecipes] = useState([]);
     const [currentRecipe, setCurrentRecipe] = useState(null);
     const [modalVisible, setModalVisible] = useState(false);
-    const [sliderValue, setSliiderValue] = useState(135);
+
+    const [timeFilter, setTimeFilter] = useState(135);
     const [dishTypeFilter, setDishTypeFilter] = useState("")
+    const [difficultyFilter, setDiffictultyFilter] = useState("")
+    const [inputValue, setInputValue] = useState("")
+    const [recipes, setRecipes] = useState([]);
+
+    useEffect((()=>{
+        (async ()=>{
+            const queryString = `input=${inputValue}&time=${timeFilter}&type=${dishTypeFilter}&difficulty=${difficultyFilter}`
+            /*const response = await fetch(`${ROUTE}/recipes/search?${queryString}`)
+            const data = await response.json()
+            console.log(data);*/
+            console.log(queryString);
+        })()
+    }),[inputValue, timeFilter, dishTypeFilter, difficultyFilter ])
 
     const handlePressCard = (dataRecipe) => {
         // console.log(dataRecipe);
@@ -32,83 +46,92 @@ export default function SearchRecipeModal({ navigation, closeSearchModal }) {
         setModalVisible(true);
     };
 
-    const closeModal = () => {
-        setModalVisible(false);
-    };
 
-    const displayFilters = (filterName, 
-        ) => {
-        return filterName.map((e, i) => {
-            return (
-                <TouchableOpacity key={i} onPress={(e)=> callBack(e)}>
-                    <Text
-                    >
-                        {e}
-                    </Text>
-                </TouchableOpacity>
-            );
-        });
-    }
 
-    const computeSliderValue = () => {
-        if (sliderValue === 135) return "Pas de limite de temps"
-        if (sliderValue / 60 >= 1) return `${Math.floor(sliderValue / 60)}H${sliderValue % 60}`
-        if (sliderValue === 15) return "moins de 15min"
-        if (sliderValue / 60 < 1) return `${sliderValue}min`
-    }
+    const dishTypesFilters = dishType.map((e, i) => {
+        return (
+            <MyButton
+                key={i}
+                name={e}
+                onPress={() => e === dishTypeFilter ? setDishTypeFilter("") : setDishTypeFilter(e)}
+                isPlain={e === dishTypeFilter && true}
+                styleButton={{ paddingVertical: 2, paddingHorizontal: 6, marginLeft: 8 }}
+                styleText={{fontWeight: 600, fontSize: 16,}}
+            />
+        );
+    });
 
-    const handleInputChange = (input) => {
-        console.log(input);
+    const difficultyFilters = difficulty.map((e, i) => {
+        return (
+            <MyButton
+                key={i}
+                name={e}
+                onPress={() => e === difficultyFilter ? setDiffictultyFilter("") : setDiffictultyFilter(e)}
+                isPlain={e === difficultyFilter && true}
+                styleButton={{ paddingVertical: 2, paddingHorizontal: 6, marginLeft: 8 }}
+                styleText={{fontWeight: 600, fontSize: 16,}}
+            />
+        );
+    });
+
+    const computetimeFilter = () => {
+        if (timeFilter === 135) return "2H et plus"
+        if (timeFilter / 60 >= 1) return `${Math.floor(timeFilter / 60)}H${timeFilter % 60}`
+        if (timeFilter === 15) return "moins de 15min"
+        if (timeFilter / 60 < 1) return `${timeFilter}min`
     }
 
     return (
         <View style={styles.container}>
             <View style={styles.containerTop}>
                 <View style={styles.containerInput}>
-                    <TouchableOpacity onPress={() => closeSearchModal()} activeOpacity={1} style={{ height: 40, justifyContent: "center", paddingHorizontal: 15 }}>
+                    <TouchableOpacity onPress={() => closeSearchModal()} style={{ height: 40, justifyContent: "center", paddingHorizontal: 15 }}>
                         <FontAwesome name={"arrow-left"} size={23} color='gray' />
                     </TouchableOpacity>
-                    <SearchBar onInputChange={handleInputChange} placeholder="Rechercher une recette" />
+                    <SearchBar onInputChange={(input) => setInputValue(input)} placeholder="Rechercher une recette" />
                 </View>
                 <TouchableOpacity onPress={() => setIsFilterVisible(!isFilterVisible)} style={styles.showFilters}>
                     <FontAwesome name={!isFilterVisible ? "angle-double-down" : "angle-double-up"} size={23} color={"gray"} />
                 </TouchableOpacity>
                 {isFilterVisible && (
                     <View style={styles.containerFilters}>
-                        <Text>Type</Text>
                         <ScrollView
                             horizontal={true}
                             showsHorizontalScrollIndicator={false}
                             contentContainerStyle={styles.filtersScroll}
                         >
-                            {displayFilters(dishType, ()=>setDishTypeFilter())}
+                            {dishTypesFilters}
                         </ScrollView>
-
-                        <Text>Difficulté</Text>
+                        <View style={{ backgroundColor: "gray", height: 1, width: "64%", alignSelf: "center" }}></View>
                         <ScrollView
                             horizontal={true}
                             showsHorizontalScrollIndicator={false}
                             contentContainerStyle={styles.filtersScroll}
                         >
-                            {displayFilters(difficulty, ()=>setDishTypeFilter())}
+                            {difficultyFilters}
                         </ScrollView>
-
-                        <Text>Temps de préparation</Text>
-                        <View style={{ flexDirection: "row" }}>
+                        <View style={{ backgroundColor: "gray", height: 1, width: "64%", alignSelf: "center" }}></View>
+                        <View style={{ alignItems: "center" }}>
+                            <Text style={{
+                                marginTop: 15, color: "black",
+                                textTransform: "uppercase",
+                                fontWeight: 500,
+                                fontSize: 15,
+                            }}>
+                                {computetimeFilter()}
+                            </Text>
                             <Slider
-                                style={{ width: 200, height: 40 }}
+                                style={{ width: "90%", height: 40 }}
                                 minimumValue={15}
                                 maximumValue={135}
-                                minimumTrackTintColor="red"
+                                minimumTrackTintColor="#CC3F0C"
                                 maximumTrackTintColor="#000000"
-                                onValueChange={(e) => setSliiderValue(e)}
-                                value={sliderValue}
+                                thumbTintColor="white"
+                                onValueChange={(e) => setTimeFilter(e)}
+                                value={timeFilter}
                                 step={15}
                             />
                         </View>
-                        <Text>
-                            {computeSliderValue()}
-                        </Text>
                     </View>
                 )}
             </View>
@@ -120,7 +143,7 @@ export default function SearchRecipeModal({ navigation, closeSearchModal }) {
             >
             </ScrollView>
             <Modal visible={modalVisible}>
-                <RecipeModal {...currentRecipe} closeModal={closeModal} />
+                <RecipeModal {...currentRecipe} closeModal={() => setModalVisible(false)} />
             </Modal>
         </View>
     );
@@ -131,7 +154,7 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: "stretch",
         justifyContent: "flex-start",
-        backgroundColor: "#F9F8F8",
+        backgroundColor: "white",
         paddingTop: 30,
     },
     containerTop: {
@@ -145,22 +168,23 @@ const styles = StyleSheet.create({
         paddingRight: 5,
     },
     showFilters: {
-        backgroundColor: "white",
+        backgroundColor: "#F9F8F8",
         marginHorizontal: 30,
         marginTop: 8,
-        alignItems: "center"
+        alignItems: "center",
+        borderRadius: 4,
     },
 
 
 
     containerFilters: {
-        backgroundColor: "white",
+        backgroundColor: "#F9F8F8",
         marginVertical: 5,
     },
     filtersScroll: {
         flexDirection: "row",
         alignItems: "flex-end",
-        paddingBottom: 10,
+        paddingVertical: 15,
     },
     filterNonSelected: {
         fontSize: 16,
