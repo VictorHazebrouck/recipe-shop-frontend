@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
- value: { firstname: null, email: null, token: null, preference: {}, favoriterecipes: {}, myRecipes: {} }, 
+ value: { firstname: null, email: null, token: null, preference: {}, favoriterecipes: {}, myRecipes: {}, regime:[] }, 
  planningChecked:false,
 };
 
@@ -17,9 +17,12 @@ export const userSlice = createSlice({
    },
    choicePlanning:(state, action) => {
       state.planningChecked=action.payload;
+   },
+   modifyRegime: (state, action) =>{
+    state.value.regime = action.payload
    }
  },
 });
 
-export const { addUser, choicePlanning  } = userSlice.actions;
+export const { addUser, choicePlanning, modifyRegime  } = userSlice.actions;
 export default userSlice.reducer; 

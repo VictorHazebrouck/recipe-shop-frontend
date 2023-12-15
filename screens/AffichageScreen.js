@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { TouchableOpacity, StyleSheet, Text, View } from 'react-native';
 import Checkbox from 'expo-checkbox';
 import { useDispatch } from 'react-redux';
-import {choicePlanning} from '../reducers/user'
+import {choicePlanning} from '../reducers/user';
+import MyButton from '../components/MyButton';
 
 
 export default function PlanningScreen({ navigation }) {
@@ -12,12 +13,6 @@ export default function PlanningScreen({ navigation }) {
   const handlePlanningCheck = () => {
     setPlanningChecked(!isPlanningChecked);
   
-  };
-
-  const handleNext = () => {
-    //dispatch planning type to store
-    dispatch(choicePlanning(isPlanningChecked)) 
-    navigation.navigate('FavStore');
   };
 
   return (
@@ -56,18 +51,7 @@ export default function PlanningScreen({ navigation }) {
           </Text>
         </View>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.Next} onPress={handleNext}>
-        <Text
-          style={{
-            fontSize: 16,
-            fontWeight: "600",
-            color: "#ffffff",
-            textAlign: "center",
-          }}
-        >
-          SUIVANT
-        </Text>
-      </TouchableOpacity>
+      <MyButton onPress={() => navigation.navigate("FavStore")} name="suivant" isPlain={true} styleButton={styles.button}/>
     </View>
   );
 }
@@ -75,6 +59,7 @@ export default function PlanningScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingTop: 20,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -102,5 +87,10 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 5,
     marginTop: 20,
+  },
+  button:{
+    marginTop: "auto",
+    width: 200,
+    marginBottom: 50,
   },
 });

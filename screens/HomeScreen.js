@@ -22,22 +22,25 @@ const tagsList = [
   "Pour les enfant",
   "Express",
 ];
+import { useSelector } from 'react-redux'
+
 
 export default function HomeScreen({ navigation }) {
   const [filter, setFilter] = useState("A la une");
   const [recipes, setRecipes] = useState([]);
   const [currentRecipe, setCurrentRecipe] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
-  const [isSearchModal, setIsSearchModal] = useState(true);
+  const [isSearchModal, setIsSearchModal] = useState(false);
+  const  regime = useSelector((state) => state.user.value.regime)
 
   //Updates the recipes state according to the value of the filter state
   useEffect(() => {
     (async () => {
       if (!recipes[filter]) {
         //data not yet saved => fetch & update
-        const response = await fetch(`${ROUTE}/recipes/find/tag=${filter}`);
+        const response = await fetch(`${ROUTE}/recipes/search?&tag=${filter}&regime=${regime.join(",")}`);
         const data = await response.json();
-        setRecipes({ ...recipes, [filter]: data.res });
+        setRecipes({ ...recipes, [filter]: data.response });
       } else {
         //already saved => do nothing
         return;

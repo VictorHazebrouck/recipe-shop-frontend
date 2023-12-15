@@ -47,7 +47,6 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
     fontWeight: 500,
     fontSize: 20,
-    alignSelf: "flex-start",
   },
   buttonNotPlain: {
     backgroundColor: "#fff",
@@ -64,7 +63,6 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
     fontWeight: 500,
     fontSize: 20,
-    alignSelf: "flex-start",
   },
 });
 
