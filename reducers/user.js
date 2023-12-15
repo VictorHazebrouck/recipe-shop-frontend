@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
  value: { firstname: null, email: null, token: null, preference: {}, favoriterecipes: {}, myRecipes: {}, regime:[] }, 
- planningChecked:false,
+ planningChecked: false,
 };
 
 // création de planningChecked en attendant de gérer les préférences

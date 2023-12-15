@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
-import { TouchableOpacity, StyleSheet, Text, View } from 'react-native';
-import Checkbox from 'expo-checkbox';
-import { useDispatch } from 'react-redux';
-import {choicePlanning} from '../reducers/user';
-import MyButton from '../components/MyButton';
-
+import React, { useState } from "react";
+import { TouchableOpacity, StyleSheet, Text, View } from "react-native";
+import Checkbox from "expo-checkbox";
+import { useDispatch } from "react-redux";
+import { choicePlanning } from "../reducers/user";
+import MyButton from "../components/MyButton";
 
 export default function PlanningScreen({ navigation }) {
   const [isPlanningChecked, setPlanningChecked] = useState(true);
@@ -12,7 +11,6 @@ export default function PlanningScreen({ navigation }) {
 
   const handlePlanningCheck = () => {
     setPlanningChecked(!isPlanningChecked);
-  
   };
 
   return (
@@ -39,19 +37,32 @@ export default function PlanningScreen({ navigation }) {
         </View>
       </TouchableOpacity>
       <TouchableOpacity onPress={handlePlanningCheck}>
-        <View style={[styles.checkboxContainer, { backgroundColor: !isPlanningChecked ? '#EE9F68' : 'transparent' }]}>
+        <View
+          style={[
+            styles.checkboxContainer,
+            { backgroundColor: !isPlanningChecked ? "#EE9F68" : "transparent" },
+          ]}
+        >
           <Checkbox
             style={styles.checkbox}
             value={!isPlanningChecked}
             onValueChange={handlePlanningCheck}
-            color={!isPlanningChecked ? '#4B3A47' : undefined}
+            color={!isPlanningChecked ? "#4B3A47" : undefined}
           />
           <Text>
             Sélectionner uniquement les recettes et obtenir la liste de courses
           </Text>
         </View>
       </TouchableOpacity>
-      <MyButton onPress={() => navigation.navigate("FavStore")} name="suivant" isPlain={true} styleButton={styles.button}/>
+      <MyButton
+        onPress={() => {
+          dispatch(choicePlanning(isPlanningChecked));
+          navigation.navigate("FavStore");
+        }}
+        name="suivant"
+        isPlain={true}
+        styleButton={styles.button}
+      />
     </View>
   );
 }
@@ -88,7 +99,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginTop: 20,
   },
-  button:{
+  button: {
     marginTop: "auto",
     width: 200,
     marginBottom: 50,
