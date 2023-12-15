@@ -9,17 +9,15 @@ import ROUTE from '../globals/nico';
 export default function PlanningScreen({ navigation }) {
 
   const [recipes, setRecipes] = useState({});
+  const [recipesToDelete, setRecipesToDelete] = useState([]);
 
   const handleAddRecipe = () => {
     navigation.navigate('Home');
   };
 
-  const handleDeleteRecipe = (recipeName, itemDate) => {
-    // Filtrer les recettes pour supprimer celle avec le nom correspondant
-    let filteredRecipies = recipes
-    filteredRecipies[itemDate] = filteredRecipies[itemDate].filter(e=> e.name !== recipeName)
-    setRecipes(filteredRecipies);
-    console.log(filteredRecipies)
+  const handleDeleteRecipe = (recipeName) => {
+    // Ajout de la recette à la liste des recettes à supprimer
+    setRecipesToDelete([...recipesToDelete, recipeName]);
   };
 
   // FORMATAGE DE LA DATE
@@ -91,7 +89,6 @@ export default function PlanningScreen({ navigation }) {
         // on remplit les données dans les dates concernées (dans les 100 jours)
         recettes[date].splice(1, 0, { 
           name: e.id.name,
-          date,
         });
       });      
         setRecipes(recettes)
@@ -122,31 +119,22 @@ export default function PlanningScreen({ navigation }) {
 
     if (firstItemDay) return <View/>
     else if (item.addButton) {
-      /**
-       * @todo reussir a retourner sur la page home
-       */
       return (
-        <TouchableOpacity style={styles.addRecipe} onPress={()=>handleAddRecipe}>
+        <TouchableOpacity style={styles.addRecipe} onPress={handleAddRecipe}>
           <Text style={{ fontSize: 16, fontWeight: "600", color: '#ffffff', width: "80%" }}>Ajouter une recette</Text>
           <FontAwesome style={{ marginLeft: 10 }} name='plus' size={25} color='#ffffff' />
         </TouchableOpacity>
       )
     } else {
-      /**
-       * @todo reussir a faire fonctionner le delete, reussir a afficher la modale recipe details.
-       */
       return (
         <Card style={styles.card}>
-          <Card.Content>
           <View style={styles.itemContainer}>
             <Text style={styles.textCard}>{item.name}</Text>
-            <TouchableOpacity  onPress={()=>handleDeleteRecipe(item.name, item.date)}>
+            <TouchableOpacity onPress={() => handleDeleteRecipe(item.date, item.name)}>
               <FontAwesome style={{ marginLeft: 10 }} name='trash-o' size={25} color='#CC3F0C' />
             </TouchableOpacity>            
           </View>
-          </Card.Content>
         </Card>
-        
       );
     }
   };
@@ -195,10 +183,6 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     marginRight: 20,
     marginLeft: 20,
-    shadowColor: 0,
-    shadowOpacity: 0,
-    shadowRadius: 0,
-    shadowOffset: { width: 0, height: 0 },
   },
   itemContainer: {
     flexDirection: 'row', 
@@ -230,9 +214,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#CC3F0C',
     marginTop: 30,
+    marginLeft: 40,
     marginBottom:30,
-    marginLeft: 70,
-    marginRight: 40,
     width: '60%',
     borderRadius: 5,
     paddingHorizontal: 20,
