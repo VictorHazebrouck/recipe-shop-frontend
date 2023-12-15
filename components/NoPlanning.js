@@ -6,7 +6,6 @@ import ROUTE from '../globals/nico';
 export default function NoPlanningScreen({ navigation }) {
 
   const [recipes, setRecipes] = useState([])
-  const [recipesToDelete, setRecipesToDelete] = useState([]);
 
   useEffect(() => {
     ( async ()=>{
@@ -21,16 +20,12 @@ export default function NoPlanningScreen({ navigation }) {
   };
 
   const handleDeleteRecipe = (recipeName) => {
-    // Ajout de la recette à la liste des recettes à supprimer
-    setRecipesToDelete([...recipesToDelete, recipeName]);
+    // Filtrer les recettes pour supprimer celle avec le nom correspondant
+    setRecipes((e) => e.filter((recipe) => recipe.name !== recipeName));
   };
 
-  const recipesList = recipes.map((e, i) => {
-    // Vérifie si la recette doit être supprimée visuellement
-    const shouldDelete = recipesToDelete.includes(e.name);
-    
+  const recipesList = recipes.map((e, i) => { 
     return (
-      !shouldDelete && (
         <View key={i} style={styles.recipesContainer}>
           <View style={styles.recipesList}>
             <Text style={{ fontSize: 16, fontWeight: '600', width: '80%' }}>{e.name}</Text>
@@ -39,7 +34,6 @@ export default function NoPlanningScreen({ navigation }) {
             </TouchableOpacity>
           </View>
         </View>
-      )
     );
   });
 

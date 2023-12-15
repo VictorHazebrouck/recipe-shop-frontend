@@ -17,9 +17,9 @@ export const userSlice = createSlice({
    },
    choicePlanning:(state, action) => {
       state.planningChecked=action.payload;
-   }
+   },  
  },
 });
 
-export const { addUser, choicePlanning  } = userSlice.actions;
+export const { addUser, choicePlanning, removeRecipe  } = userSlice.actions;
 export default userSlice.reducer; 
