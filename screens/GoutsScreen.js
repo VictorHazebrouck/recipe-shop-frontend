@@ -83,6 +83,9 @@ export default function GoutsScreen({ navigation }) {
   };
 
   const handleNext = async()=>{
+    /**
+     * @todo ajouter les gouts au user, ajouter les categories sans ecraser les regimes precedetns
+     */
     /*const response = await fetch('',{
       method: 'put',
       headers: { 'Content-Type': 'application/json' },

@@ -31,6 +31,9 @@ export default function ShopScreen({ navigation }) {
   }, []);
 
   // filter store type rendering
+  /**
+   * @todo enlever les doublons, conputer les totaux, modifier etats sur les inputs.
+   */
   const ingredientsList = ingredients.map((e, i) => {
     return <Ingredient key={i} {...e} />;
   });

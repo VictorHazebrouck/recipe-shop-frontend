@@ -122,6 +122,9 @@ export default function PlanningScreen({ navigation }) {
 
     if (firstItemDay) return <View/>
     else if (item.addButton) {
+      /**
+       * @todo reussir a retourner sur la page home
+       */
       return (
         <TouchableOpacity style={styles.addRecipe} onPress={()=>handleAddRecipe}>
           <Text style={{ fontSize: 16, fontWeight: "600", color: '#ffffff', width: "80%" }}>Ajouter une recette</Text>
@@ -129,6 +132,9 @@ export default function PlanningScreen({ navigation }) {
         </TouchableOpacity>
       )
     } else {
+      /**
+       * @todo reussir a faire fonctionner le delete, reussir a afficher la modale recipe details.
+       */
       return (
         <Card style={styles.card}>
           <Card.Content>

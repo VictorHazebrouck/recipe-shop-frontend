@@ -17,6 +17,10 @@ import {
 
 const screenWidth = Dimensions.get("window").width;
 
+
+/**
+ * @todo import destructure 
+ */
 const RecipeModal = (props) => {
   const [numberOfPers, setNumberOfPers] = useState(1);
   const [ingredientsList, setIngredientsList] = useState([]);
@@ -81,12 +85,15 @@ const RecipeModal = (props) => {
   };
 
   // POST id, date et numberOfPers to database
+  /**
+   * @todo forcer a ajouter un id en cliquant sur ajouter 
+   */
   const handleSubmit = () => {
     fetch(`${ROUTE}/users/add`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        _id: props._id,
+        _id: props._id, //not working properly?
         date: new Date(),
         nb: numberOfPers,
       }),
