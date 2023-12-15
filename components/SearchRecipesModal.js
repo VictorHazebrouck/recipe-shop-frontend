@@ -28,14 +28,14 @@ export default function SearchRecipeModal({ navigation, closeSearchModal }) {
   const [inputValue, setInputValue] = useState("");
   const [recipes, setRecipes] = useState([]);
 
-  console.log(inputValue);
+  // console.log(inputValue);
 
   useEffect(() => {
     (async () => {
       const queryString = `input=${inputValue}&time=${timeFilter}&type=${dishTypeFilter}&difficulty=${difficultyFilter}`;
       const response = await fetch(`${ROUTE}/recipes/search?${queryString}`);
       const data = await response.json();
-      console.log(data);
+      // console.log(data);
       setRecipes(data.response);
     })();
   }, [inputValue, timeFilter, dishTypeFilter, difficultyFilter]);
@@ -86,7 +86,9 @@ export default function SearchRecipeModal({ navigation, closeSearchModal }) {
   };
 
   const recipesList = recipes.map((e, i) => {
-    return <RecipeCard key={i} {...e} handlePressCard={()=>handlePressCard(e)} />;
+    return (
+      <RecipeCard key={i} {...e} handlePressCard={() => handlePressCard(e)} />
+    );
   });
 
   const computetimeFilter = () => {

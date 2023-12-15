@@ -2,7 +2,6 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import Fontisto from "react-native-vector-icons/Fontisto";
 import MyButton from "./MyButton";
 import ROUTE from "../globals/nico";
 import { useState, useEffect } from "react";
@@ -94,7 +93,7 @@ const RecipeModal = (props) => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        // console.log(data);
       });
   };
 

@@ -1,77 +1,147 @@
-import { Button, StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, ScrollView, Dimensions } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useState, useEffect } from "react";
 import ROUTE from "../globals/nico";
 import MyButton from "../components/MyButton";
+import Ingredient from "../components/Ingredient";
+
+const screenWidth = Dimensions.get("window").width;
+const windowHeight = Dimensions.get("window").height;
 
 export default function ShopScreen({ navigation }) {
-  const [recipes, setRecipes] = useState([]);
-  const [recipesToDelete, setRecipesToDelete] = useState([]);
+  const [ingredients, setIngredients] = useState([]);
 
   useEffect(() => {
     (async () => {
-      const response = await fetch(`${ROUTE}/recipes`);
+      const response = await fetch(`${ROUTE}/users/recipes`);
       const data = await response.json();
-      setRecipes(data.res);
+      const ingredientsData = data.response.currentRecipes.flatMap((recipe) => {
+        return recipe.id.ingredients.map((ingredient) => {
+          return {
+            qtyForRecipe: ingredient.amount,
+            name: ingredient.id.name,
+            unit: ingredient.id.unit,
+          };
+        });
+      });
+
+      setIngredients(ingredientsData);
     })();
   }, []);
 
-  const handleDeleteRecipe = (recipeName) => {
-    // Ajout de la recette à la liste des recettes à supprimer
-    setRecipesToDelete([...recipesToDelete, recipeName]);
-  };
+  // filter store type rendering
+  const ingredientsList = ingredients.map((e, i) => {
+    return <Ingredient key={i} {...e} />;
+  });
 
-  const recipesList = recipes.map((e, i) => {
-    // Vérifie si la recette doit être supprimée visuellement
-    const shouldDelete = recipesToDelete.includes(e.name);
+  // le filter est a aller fetch depuis la database des magasins
+  const filter = [
+    { name: "favoris", price: 65.23, distance: 4.2 },
+    { name: "proche", price: 70.1, distance: 0.9 },
+    { name: "livraison", price: 78.5, distance: "livraison" },
+    { name: "economique", price: 35.46, distance: 4.2 },
+  ];
+
+  // filter store type rendering
+  const filterList = filter.map((e, i) => {
+    const iconComponent =
+      e.name === "favoris" ? (
+        <FontAwesome name={"star"} size={30} color="#fff" />
+      ) : e.name === "proche" ? (
+        <MaterialCommunityIcons
+          name="map-marker-distance"
+          size={30}
+          color="#fff"
+        />
+      ) : e.name === "livraison" ? (
+        <MaterialCommunityIcons
+          name="truck-delivery-outline"
+          size={30}
+          color="#fff"
+        />
+      ) : e.name === "economique" ? (
+        <FontAwesome name={"money"} size={30} color="#fff" />
+      ) : null;
 
     return (
-      !shouldDelete && (
-        <View key={i} style={styles.ingredientContainer}>
-          <Text style={styles.name}>{e.name}</Text>
-          <TouchableOpacity onPress={() => handleDeleteRecipe(e.name)}>
-            <FontAwesome
-              style={{ marginLeft: 10 }}
-              name="trash-o"
-              size={25}
-              color="#CC3F0C"
-            />
-          </TouchableOpacity>
-        </View>
-      )
+      <View key={i} style={styles.filterContainer}>
+        <View style={styles.filterIcon}>{iconComponent}</View>
+        <Text style={styles.filterPrice}>{e.price} €</Text>
+        <Text style={styles.filterDistance}>{e.distance} km</Text>
+      </View>
     );
   });
 
   return (
     <View style={styles.container}>
       <Text>shop Screen</Text>
-      <View style={styles.ingredientList}>{recipesList}</View>
-      <MyButton
-        name="valider"
-        onPress={() => navigation.navigate("TabNavigator")}
-      />
+      <ScrollView
+        horizontal={true}
+        showsHorizontalScrollIndicator={true}
+        style={styles.filterList}
+      >
+        {filterList}
+      </ScrollView>
+      <ScrollView
+        vertical={true}
+        showsHorizontalScrollIndicator={true}
+        style={styles.ingredientsList}
+      >
+        {ingredientsList}
+      </ScrollView>
+      <View
+        style={{
+          alignItems: "flex-end",
+          width: screenWidth,
+          paddingHorizontal: 20,
+        }}
+      >
+        <MyButton
+          name="valider"
+          onPress={() => navigation.navigate("TabNavigator")}
+          isPlain
+        />
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    paddingTop: 40,
     alignItems: "center",
-    justifyContent: "center",
   },
-  ingredientList: {
-    backgroundColor: "lightgreen",
-    padding: 20,
-  },
-  ingredientContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+  filterList: {
+    backgroundColor: "#fff",
+    width: screenWidth,
     paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderWidth: 1,
-    borderColor: "#937B8A",
+  },
+  filterContainer: {
+    width: 90,
+    height: 120,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  filterIcon: {
+    backgroundColor: "#CC3F0C",
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  filterPrice: {
+    fontSize: 16,
+    fontWeight: 600,
+  },
+  filterDistance: {
+    fontSize: 16,
+  },
+  ingredientsList: {
+    padding: 20,
+    width: screenWidth,
+    height: windowHeight - 290,
     marginBottom: 20,
   },
-  name: { fontSize: 16, fontWeight: "600" },
 });
