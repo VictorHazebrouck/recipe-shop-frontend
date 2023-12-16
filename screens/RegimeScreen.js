@@ -2,10 +2,10 @@ import { Button, StyleSheet, Text, View, Image } from "react-native";
 import MyButton from "../components/MyButton";
 import { useState } from "react";
 import ROUTE from "../globals/nico";
-import { useDispatch } from 'react-redux'
+import { useDispatch } from "react-redux";
 import { modifyRegime } from "../reducers/user";
 
-import { useSelector } from 'react-redux'
+import { useSelector } from "react-redux";
 
 const regimeList = [
   "Pesco-végétarien",
@@ -30,18 +30,17 @@ const encodeRegime = (arr) => {
 };
 
 export default function RegimeScreen({ navigation }) {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const [regimes, setRegimes] = useState([]);
-  const user = useSelector((state) => state.user)
-  console.log(user);
+  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
 
   const handleRegime = (e) => {
-    const ref = ["Végétarien", "Vegan", "Pesco-végétarien"]
-    if(regimes.includes(e)){
-      setRegimes(regimes.filter((x) => x !== e))
-    } else if(ref.includes(e)){
-      const data = [...regimes].filter(x => !ref.includes(x))
-      setRegimes([...data, e])
+    const ref = ["Végétarien", "Vegan", "Pesco-végétarien"];
+    if (regimes.includes(e)) {
+      setRegimes(regimes.filter((x) => x !== e));
+    } else if (ref.includes(e)) {
+      const data = [...regimes].filter((x) => !ref.includes(x));
+      setRegimes([...data, e]);
     } else {
       setRegimes([...regimes, e]);
     }
@@ -52,22 +51,26 @@ export default function RegimeScreen({ navigation }) {
       <MyButton
         key={i}
         name={e}
-        onPress={()=>handleRegime(e)}
+        onPress={() => handleRegime(e)}
         isPlain={regimes.some((x) => x === e) ? true : false}
       />
     );
   });
 
-  const handleNext = async()=>{
-    const response = await fetch(`${ROUTE}/users/preference`,{
-      method: 'put',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({regime: encodeRegime(regimes)})
-    })
-    const data = await response.json()
-    dispatch(modifyRegime(encodeRegime(regimes)))
-    navigation.navigate("Gouts")
-  }
+  const handleNext = async () => {
+    const response = await fetch(`${ROUTE}/users/preference`, {
+      method: "put",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ regime: encodeRegime(regimes) }),
+    });
+    const data = await response.json();
+    dispatch(modifyRegime(encodeRegime(regimes)));
+    if (isLoggedIn) {
+      navigation.navigate("TabNavigator", { screen: "Parameters" });
+    } else {
+      navigation.navigate("Gouts");
+    }
+  };
 
   return (
     <View style={styles.container}>

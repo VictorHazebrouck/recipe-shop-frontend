@@ -2,12 +2,11 @@ import { Button, StyleSheet, Text, View } from "react-native";
 import MyButton from "../components/MyButton";
 import SearchDropdown from "../components/SeachDropdown";
 import { useState } from "react";
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from "react-redux";
 
 const regimeList = [
   "Fruits à Coques",
   "Arachides",
-  "Gluten",
   "Fruits de Mer",
   "Oeuf",
   "Poisson",
@@ -15,13 +14,12 @@ const regimeList = [
 ];
 
 export default function GoutsScreen({ navigation }) {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
   const [ingredientsUnselected, setIngredientsUnselected] =
     useState(regimeList);
   const [ingredientsSelected, setIngredientsSelected] = useState([]);
-  const [customSelected, setCustomSelected] = useState([])
-
-
+  const [customSelected, setCustomSelected] = useState([]);
 
   const data = ingredientsUnselected.map((e, i) => {
     return (
@@ -46,9 +44,7 @@ export default function GoutsScreen({ navigation }) {
         name={e}
         onPress={() => {
           setIngredientsUnselected([...ingredientsUnselected, e]);
-          setIngredientsSelected(
-            ingredientsSelected.filter((x) => x !== e)
-          );
+          setIngredientsSelected(ingredientsSelected.filter((x) => x !== e));
         }}
         isPlain={true}
       />
@@ -61,9 +57,7 @@ export default function GoutsScreen({ navigation }) {
         key={i}
         name={e.name}
         onPress={() => {
-          setCustomSelected(
-            customSelected.filter((x) => x.name !== e.name)
-          );
+          setCustomSelected(customSelected.filter((x) => x.name !== e.name));
         }}
         isPlain={true}
       />
@@ -79,10 +73,10 @@ export default function GoutsScreen({ navigation }) {
   };
 
   const handleResultSelection = (data) => {
-    setCustomSelected([...customSelected, data])
+    setCustomSelected([...customSelected, data]);
   };
 
-  const handleNext = async()=>{
+  const handleNext = async () => {
     /**
      * @todo ajouter les gouts au user, ajouter les categories sans ecraser les regimes precedetns
      */
@@ -93,8 +87,12 @@ export default function GoutsScreen({ navigation }) {
     })
     const data = response.json()
     console.log(data);*/
-    navigation.navigate("Affichage")
-  }
+    if (isLoggedIn) {
+      navigation.navigate("TabNavigator", { screen: "Parameters" });
+    } else {
+      navigation.navigate("Affichage");
+    }
+  };
 
   return (
     <View style={styles.container}>

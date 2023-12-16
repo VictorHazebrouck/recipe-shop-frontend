@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import { TouchableOpacity, StyleSheet, Text, View } from "react-native";
 import Checkbox from "expo-checkbox";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { choicePlanning } from "../reducers/user";
 import MyButton from "../components/MyButton";
 
 export default function PlanningScreen({ navigation }) {
   const [isPlanningChecked, setPlanningChecked] = useState(true);
   const dispatch = useDispatch();
+  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
 
   const handlePlanningCheck = () => {
     setPlanningChecked(!isPlanningChecked);
@@ -57,7 +58,11 @@ export default function PlanningScreen({ navigation }) {
       <MyButton
         onPress={() => {
           dispatch(choicePlanning(isPlanningChecked));
-          navigation.navigate("FavStore");
+          if (isLoggedIn) {
+            navigation.navigate("TabNavigator", { screen: "Parameters" });
+          } else {
+            navigation.navigate("FavStore");
+          }
         }}
         name="suivant"
         isPlain={true}

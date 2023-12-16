@@ -27,7 +27,7 @@ export const userSlice = createSlice({
       state.planningChecked = action.payload;
     },
     modifyRegime: (state, action) => {
-      state.value.regime = action.payload;
+      state.preferences.regime = action.payload;
     },
 
     //working
