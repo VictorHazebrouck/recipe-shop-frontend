@@ -25,8 +25,23 @@ export default function ShopScreen({ navigation }) {
           };
         });
       });
+      // regroup same ingredients and accumule amount
+      const groupedIngredients = ingredientsData.reduce(
+        (result, ingredient) => {
+          const existingIngredient = result.find(
+            (item) => item.name === ingredient.name
+          );
+          if (existingIngredient) {
+            existingIngredient.qtyForRecipe += ingredient.qtyForRecipe;
+          } else {
+            result.push({ ...ingredient });
+          }
+          return result;
+        },
+        []
+      );
 
-      setIngredients(ingredientsData);
+      setIngredients(groupedIngredients);
     })();
   }, []);
 

@@ -1,13 +1,16 @@
 import React from "react";
+import { useState } from "react";
 import { Text, StyleSheet, View, TextInput } from "react-native";
 
 const Ingredient = (props) => {
+  const [input, setInput] = useState(String(props.qtyForRecipe));
   return (
     <View style={styles.ingredientContainer}>
       <Text style={styles.name}>{props.name}</Text>
       <TextInput
         style={styles.qtyForRecipe}
-        value={String(props.qtyForRecipe)}
+        onChangeText={(value) => setInput(value)}
+        value={input}
         keyboardType="numeric"
       />
       <Text style={styles.unit}>{props.unit}</Text>
