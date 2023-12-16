@@ -31,13 +31,13 @@ export default function SearchRecipeModal({ navigation, closeSearchModal }) {
   // console.log(inputValue);
 
   useEffect(() => {
-    (async () => {
+    const timeoutId = setTimeout(async () => {
       const queryString = `input=${inputValue}&time=${timeFilter}&type=${dishTypeFilter}&difficulty=${difficultyFilter}`;
       const response = await fetch(`${ROUTE}/recipes/search?${queryString}`);
       const data = await response.json();
-      // console.log(data);
       setRecipes(data.response);
-    })();
+    }, 100);
+    return ()=> clearTimeout(timeoutId);
   }, [inputValue, timeFilter, dishTypeFilter, difficultyFilter]);
 
   const dishTypesFilters = dishType.map((e, i) => {

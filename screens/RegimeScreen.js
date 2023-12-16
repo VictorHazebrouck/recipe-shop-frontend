@@ -5,6 +5,8 @@ import ROUTE from "../globals/nico";
 import { useDispatch } from 'react-redux'
 import { modifyRegime } from "../reducers/user";
 
+import { useSelector } from 'react-redux'
+
 const regimeList = [
   "Pesco-végétarien",
   "Sans lactose",
@@ -30,6 +32,8 @@ const encodeRegime = (arr) => {
 export default function RegimeScreen({ navigation }) {
   const dispatch = useDispatch()
   const [regimes, setRegimes] = useState([]);
+  const user = useSelector((state) => state.user)
+  console.log(user);
 
   const handleRegime = (e) => {
     const ref = ["Végétarien", "Vegan", "Pesco-végétarien"]

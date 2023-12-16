@@ -10,8 +10,12 @@ import {
   Modal,
 } from "react-native";
 import ROUTE from "../globals/nico";
+import { useDispatch } from 'react-redux'
+import { logIn } from "../reducers/user";
 
 export default function ConnexionScreen({ navigation }) {
+  const dispatch = useDispatch()
+
   const [nameSignin, setNameSignin] = useState("");
   const [passwordSignin, setPasswordSignin] = useState("");
   const [errorSignin, setErrorSignin] = useState(false);
@@ -90,8 +94,9 @@ export default function ConnexionScreen({ navigation }) {
       .then((response) => response.json())
       .then((data) => {
         if (data.result) {
+          dispatch(logIn(data.response))
           resetState();
-          navigation.navigate("Regime");
+          navigation.navigate("TabNavigator");
         } else {
           setErrorSignin(true);
           setErrorSigninMess(data.error);
