@@ -3,7 +3,9 @@ import SmallButton from "../components/SmallButton";
 import { useSelector } from "react-redux";
 
 export default function FavStoreScreen({ navigation }) {
-  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+  const user = useSelector((state)=> state.user)
+  const token = user.credentials.token
+  const isLoggedIn = user.isLoggedIn
 
   const handleNext = () => {
     if (isLoggedIn) {

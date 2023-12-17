@@ -7,6 +7,9 @@ import ROUTE from "../globals/nico";
 import SmallButton from "../components/SmallButton";
 
 export default function PlanningScreen({ navigation }) {
+  const user = useSelector((state)=> state.user)
+  const token = user.credentials.token
+
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
   const planningChecked = useSelector((state) => state.user.preferences.planningChecked)
   const [isPlanningChecked, setPlanningChecked] = useState(planningChecked);
@@ -20,7 +23,7 @@ export default function PlanningScreen({ navigation }) {
     const response = await fetch(`${ROUTE}/users/preference`,{
       method: 'put',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({planningDisplay: isPlanningChecked})
+      body: JSON.stringify({planningDisplay: isPlanningChecked, token: token})
     })
     const data = await response.json()
     if(!data.result) return

@@ -30,7 +30,7 @@ export default function NoPlanningScreen({ navigation }) {
     const response = await fetch(`${ROUTE}/users/currentRecipes`, {
       method: "delete",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ recipeId }),
+      body: JSON.stringify({ recipeId: recipeId, token: token }),
     });
     const data = await response.json();
     dispatch(modifyCurrentRecipe(data.response));

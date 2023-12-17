@@ -14,7 +14,7 @@ import {
   Dimensions,
   ScrollView,
 } from "react-native";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { modifyCurrentRecipe } from "../reducers/user";
 
 const screenWidth = Dimensions.get("window").width;
@@ -24,6 +24,9 @@ const screenWidth = Dimensions.get("window").width;
  */
 const RecipeModal = (props) => {
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.user);
+  const token = user.credentials.token;
+
   const [numberOfPers, setNumberOfPers] = useState(1);
   const [ingredientsList, setIngredientsList] = useState([]);
   const [like, setLike] = useState("heart-o");
@@ -98,6 +101,7 @@ const RecipeModal = (props) => {
         recipeId: props._id,
         date: new Date(),
         amount: numberOfPers,
+        token: token,
       }),
     })
       .then((response) => response.json())
@@ -110,7 +114,7 @@ const RecipeModal = (props) => {
     fetch(`${ROUTE}/users/like`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ _id: props._id }),
+      body: JSON.stringify({ recipe: { _id: props._id }, token: token }),
     })
       .then((response) => response.json())
       .then((data) => {

@@ -52,8 +52,10 @@ const decodeRegime = (arr) => {
 
 export default function RegimeScreen({ navigation }) {
   const dispatch = useDispatch();
-  const userRegime = useSelector((state) => state.user.preferences.regime);
-  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+  const user = useSelector((state) => state.user);
+  const token = user.credentials.token;
+  const userRegime = user.preferences.regime;
+  const isLoggedIn = user.isLoggedIn;
   const [regimes, setRegimes] = useState(decodeRegime(userRegime));
 
   const handleRegime = (e) => {
@@ -83,7 +85,7 @@ export default function RegimeScreen({ navigation }) {
     const response = await fetch(`${ROUTE}/users/preference`, {
       method: "put",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ regime: encodeRegime(regimes) }),
+      body: JSON.stringify({ regime: encodeRegime(regimes), token }),
     });
     const data = await response.json();
     dispatch(modifyRegime(encodeRegime(regimes)));

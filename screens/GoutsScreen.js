@@ -17,12 +17,13 @@ const regimeList = [
 
 export default function GoutsScreen({ navigation }) {
   const dispatch = useDispatch();
-  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
-  const regime = useSelector((state) => state.user.preferences.regime);
+  const user = useSelector((state) => state.user);
+  const token = user.credentials.token;
+  const isLoggedIn = user.isLoggedIn;
+  const regime = user.preferences.regime;
+  const excludeAliments = user.preferences.excludeAliments;
+
   const customRegime = regime.filter((e) => regimeList.includes(e));
-  const excludeAliments = useSelector(
-    (state) => state.user.preferences.excludeAliments
-  );
   const [ingeridentCategoryUnselcted, setIngeridentCategoryUnselcted] =
     useState(regimeList.filter((e) => !customRegime.includes(e)));
   const [ingeridentCategorySelected, setIngeridentCategorySelected] =
@@ -96,6 +97,7 @@ export default function GoutsScreen({ navigation }) {
       body: JSON.stringify({
         regime: newRegime,
         excludeAliments: ingeridentSelected,
+        token: token,
       }),
     });
     const data = await response.json();

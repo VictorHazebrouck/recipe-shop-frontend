@@ -25,12 +25,17 @@ const tagsList = [
 import { useSelector } from "react-redux";
 
 export default function HomeScreen({ navigation }) {
+  const user = useSelector((state)=> state.user)
+  const token = user.credentials.token
+  const preferences = user.preferences
+
   const [filter, setFilter] = useState("A la une");
   const [recipes, setRecipes] = useState({});
   const [currentRecipe, setCurrentRecipe] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [isSearchModal, setIsSearchModal] = useState(false);
-  const preferences = useSelector((state) => state.user.preferences);
+
+  
 
   //Updates the recipes state according to the value of the filter state
   useEffect(() => {
