@@ -3,6 +3,8 @@ import SmallButton from "../components/SmallButton";
 import SearchDropdown from "../components/SeachDropdown";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { modifyRegime, modifyExcludeIngredients } from "../reducers/user";
+import ROUTE from "../globals/nico";
 
 const regimeList = [
   "Fruits à Coques",
@@ -16,20 +18,28 @@ const regimeList = [
 export default function GoutsScreen({ navigation }) {
   const dispatch = useDispatch();
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
-  const [ingredientsUnselected, setIngredientsUnselected] =
-    useState(regimeList);
-  const [ingredientsSelected, setIngredientsSelected] = useState([]);
-  const [customSelected, setCustomSelected] = useState([]);
+  const regime = useSelector((state) => state.user.preferences.regime);
+  const customRegime = regime.filter((e) => regimeList.includes(e));
+  const excludeAliments = useSelector(
+    (state) => state.user.preferences.excludeAliments
+  );
+  const [ingeridentCategoryUnselcted, setIngeridentCategoryUnselcted] =
+    useState(regimeList.filter((e) => !customRegime.includes(e)));
+  const [ingeridentCategorySelected, setIngeridentCategorySelected] =
+    useState(customRegime);
+  const [ingeridentSelected, setIngeridentSelected] = useState(excludeAliments);
 
-  const data = ingredientsUnselected.map((e, i) => {
+
+
+  const categoriesUnselected = ingeridentCategoryUnselcted.map((e, i) => {
     return (
       <SmallButton
         key={i}
         name={e}
         onPress={() => {
-          setIngredientsSelected([...ingredientsSelected, e]);
-          setIngredientsUnselected(
-            ingredientsUnselected.filter((x) => x !== e)
+          setIngeridentCategorySelected([...ingeridentCategorySelected, e]);
+          setIngeridentCategoryUnselcted(
+            ingeridentCategoryUnselcted.filter((x) => x !== e)
           );
         }}
         isPlain={false}
@@ -37,27 +47,31 @@ export default function GoutsScreen({ navigation }) {
     );
   });
 
-  const dataSelected = ingredientsSelected.map((e, i) => {
+  const categoriesSelected = ingeridentCategorySelected.map((e, i) => {
     return (
       <SmallButton
         key={i}
         name={e}
         onPress={() => {
-          setIngredientsUnselected([...ingredientsUnselected, e]);
-          setIngredientsSelected(ingredientsSelected.filter((x) => x !== e));
+          setIngeridentCategoryUnselcted([...ingeridentCategoryUnselcted, e]);
+          setIngeridentCategorySelected(
+            ingeridentCategorySelected.filter((x) => x !== e)
+          );
         }}
         isPlain={true}
       />
     );
   });
 
-  const dataCustomSelected = customSelected.map((e, i) => {
+  const ingredientsSelectedData = ingeridentSelected.map((e, i) => {
     return (
       <SmallButton
         key={i}
         name={e.name}
         onPress={() => {
-          setCustomSelected(customSelected.filter((x) => x.name !== e.name));
+          setIngeridentSelected(
+            ingeridentSelected.filter((x) => x.name !== e.name)
+          );
         }}
         isPlain={true}
       />
@@ -73,20 +87,27 @@ export default function GoutsScreen({ navigation }) {
   };
 
   const handleResultSelection = (data) => {
-    setCustomSelected([...customSelected, data]);
+    setIngeridentSelected([...ingeridentSelected, data]);
   };
 
   const handleNext = async () => {
-    /**
-     * @todo ajouter les gouts au user, ajouter les categories sans ecraser les regimes precedetns
-     */
-    /*const response = await fetch('',{
-      method: 'put',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({})
-    })
-    const data = response.json()
-    console.log(data);*/
+    const newRegime = [...new Set([...regime, ...ingeridentCategorySelected])];
+    const response = await fetch(`${ROUTE}/users/preference`, {
+      method: "put",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        regime: newRegime,
+        excludeAliments: ingeridentSelected,
+      }),
+    });
+    const data = await response.json();
+    console.log(data);
+
+    if (ingeridentSelected) {
+      dispatch(modifyExcludeIngredients(ingeridentSelected));
+    }
+    dispatch(modifyRegime(newRegime));
+
     if (isLoggedIn) {
       navigation.navigate("TabNavigator", { screen: "Parameters" });
     } else {
@@ -110,10 +131,10 @@ export default function GoutsScreen({ navigation }) {
         onResultSelection={handleResultSelection}
         placeholder="Rechercher des ingrédients à exclure"
       />
-      {data}
+      {categoriesUnselected}
       <Text>Ingrédients exclus</Text>
-      {dataSelected}
-      {dataCustomSelected}
+      {categoriesSelected}
+      {ingredientsSelectedData}
       <SmallButton
         onPress={handleNext}
         name="suivant"

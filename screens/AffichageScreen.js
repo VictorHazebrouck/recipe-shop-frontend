@@ -2,16 +2,35 @@ import React, { useState } from "react";
 import { TouchableOpacity, StyleSheet, Text, View } from "react-native";
 import Checkbox from "expo-checkbox";
 import { useDispatch, useSelector } from "react-redux";
-import { choicePlanning } from "../reducers/user";
+import { modifyPlanning } from "../reducers/user";
+import MyButton from "../components/MyButton";
+import ROUTE from "../globals/nico";
 import SmallButton from "../components/SmallButton";
 
 export default function PlanningScreen({ navigation }) {
-  const [isPlanningChecked, setPlanningChecked] = useState(true);
-  const dispatch = useDispatch();
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+  const planningChecked = useSelector((state) => state.user.preferences.planningChecked)
+  const [isPlanningChecked, setPlanningChecked] = useState(planningChecked);
+  const dispatch = useDispatch();
 
   const handlePlanningCheck = () => {
     setPlanningChecked(!isPlanningChecked);
+  };
+
+  const handleNext = async () => {
+    const response = await fetch(`${ROUTE}/users/preference`,{
+      method: 'put',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({planningDisplay: isPlanningChecked})
+    })
+    const data = await response.json()
+    if(!data.result) return
+    dispatch(modifyPlanning(isPlanningChecked));
+    if (isLoggedIn) {
+      navigation.navigate("TabNavigator", { screen: "Parameters" });
+    } else {
+      navigation.navigate("FavStore");
+    }
   };
 
   return (
@@ -56,14 +75,7 @@ export default function PlanningScreen({ navigation }) {
         </View>
       </TouchableOpacity>
       <SmallButton
-        onPress={() => {
-          dispatch(choicePlanning(isPlanningChecked));
-          if (isLoggedIn) {
-            navigation.navigate("TabNavigator", { screen: "Parameters" });
-          } else {
-            navigation.navigate("FavStore");
-          }
-        }}
+        onPress={handleNext}
         name="suivant"
         isPlain={true}
         styleButton={styles.button}

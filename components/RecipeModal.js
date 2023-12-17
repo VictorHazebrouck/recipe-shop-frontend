@@ -14,6 +14,8 @@ import {
   Dimensions,
   ScrollView,
 } from "react-native";
+import { useDispatch } from "react-redux";
+import { modifyCurrentRecipe } from "../reducers/user";
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -21,6 +23,7 @@ const screenWidth = Dimensions.get("window").width;
  * @todo import destructure
  */
 const RecipeModal = (props) => {
+  const dispatch = useDispatch()
   const [numberOfPers, setNumberOfPers] = useState(1);
   const [ingredientsList, setIngredientsList] = useState([]);
   const [like, setLike] = useState("heart-o");
@@ -88,18 +91,19 @@ const RecipeModal = (props) => {
    * @todo forcer a ajouter un id en cliquant sur ajouter
    */
   const handleSubmit = () => {
-    fetch(`${ROUTE}/users/add`, {
+    fetch(`${ROUTE}/users/currentRecipes`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        _id: props._id, //not working properly?
+        recipeId: props._id,
         date: new Date(),
-        nb: numberOfPers,
+        amount: numberOfPers,
       }),
     })
       .then((response) => response.json())
       .then((data) => {
-        // console.log(data);
+        console.log(data);
+        dispatch(modifyCurrentRecipe(data.response))
       });
   };
 
