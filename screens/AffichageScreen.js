@@ -3,7 +3,7 @@ import { TouchableOpacity, StyleSheet, Text, View } from "react-native";
 import Checkbox from "expo-checkbox";
 import { useDispatch, useSelector } from "react-redux";
 import { choicePlanning } from "../reducers/user";
-import MyButton from "../components/MyButton";
+import SmallButton from "../components/SmallButton";
 
 export default function PlanningScreen({ navigation }) {
   const [isPlanningChecked, setPlanningChecked] = useState(true);
@@ -55,7 +55,7 @@ export default function PlanningScreen({ navigation }) {
           </Text>
         </View>
       </TouchableOpacity>
-      <MyButton
+      <SmallButton
         onPress={() => {
           dispatch(choicePlanning(isPlanningChecked));
           if (isLoggedIn) {

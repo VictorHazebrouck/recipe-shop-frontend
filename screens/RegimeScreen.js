@@ -1,5 +1,5 @@
 import { Button, StyleSheet, Text, View, Image } from "react-native";
-import MyButton from "../components/MyButton";
+import SmallButton from "../components/SmallButton";
 import { useState } from "react";
 import ROUTE from "../globals/nico";
 import { useDispatch } from "react-redux";
@@ -48,7 +48,7 @@ export default function RegimeScreen({ navigation }) {
 
   const data = regimeList.map((e, i) => {
     return (
-      <MyButton
+      <SmallButton
         key={i}
         name={e}
         onPress={() => handleRegime(e)}
@@ -83,7 +83,7 @@ export default function RegimeScreen({ navigation }) {
         REGIME
       </Text>
       {data}
-      <MyButton
+      <SmallButton
         onPress={handleNext}
         name="suivant"
         isPlain={true}

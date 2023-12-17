@@ -3,7 +3,7 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useState, useEffect } from "react";
 import ROUTE from "../globals/nico";
-import MyButton from "../components/MyButton";
+import SmallButton from "../components/SmallButton";
 import Ingredient from "../components/Ingredient";
 
 const screenWidth = Dimensions.get("window").width;
@@ -115,7 +115,7 @@ export default function ShopScreen({ navigation }) {
           paddingHorizontal: 20,
         }}
       >
-        <MyButton
+        <SmallButton
           name="valider"
           onPress={() => navigation.navigate("TabNavigator")}
           isPlain

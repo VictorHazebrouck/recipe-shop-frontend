@@ -1,5 +1,5 @@
 import { Button, StyleSheet, Text, View } from "react-native";
-import MyButton from "../components/MyButton";
+import SmallButton from "../components/SmallButton";
 import { useSelector } from "react-redux";
 
 export default function FavStoreScreen({ navigation }) {
@@ -22,7 +22,7 @@ export default function FavStoreScreen({ navigation }) {
       >
         FAVORITE STORE
       </Text>
-      <MyButton
+      <SmallButton
         onPress={handleNext}
         name="suivant"
         isPlain={true}

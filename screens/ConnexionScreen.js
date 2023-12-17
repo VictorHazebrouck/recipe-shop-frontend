@@ -10,11 +10,12 @@ import {
   Modal,
 } from "react-native";
 import ROUTE from "../globals/nico";
-import { useDispatch } from 'react-redux'
+import { useDispatch } from "react-redux";
 import { logIn } from "../reducers/user";
+import LargeButton from "../components/LargeButton";
 
 export default function ConnexionScreen({ navigation }) {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const [nameSignin, setNameSignin] = useState("");
   const [passwordSignin, setPasswordSignin] = useState("");
@@ -94,7 +95,7 @@ export default function ConnexionScreen({ navigation }) {
       .then((response) => response.json())
       .then((data) => {
         if (data.result) {
-          dispatch(logIn(data.response))
+          dispatch(logIn(data.response));
           resetState();
           navigation.navigate("TabNavigator");
         } else {
@@ -110,19 +111,15 @@ export default function ConnexionScreen({ navigation }) {
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
       <View style={styles.buttonContent}>
-        <TouchableOpacity
-          style={styles.primaryButton}
-          onPress={() => openModalSignin()}
-        >
-          <Text style={styles.primaryTextButton}>sign in</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.secondaryButton}
-          onPress={() => openModalSignup()}
-        >
-          <Text style={styles.secondaryTextButton}>sign up</Text>
-        </TouchableOpacity>
+        <LargeButton
+          name="sign in"
+          isPlain={true}
+          onPress={openModalSignin}
+          styleButton={{ marginBottom: 16 }}
+        />
+        <LargeButton name="sign up" onPress={openModalSignup} />
       </View>
+      {/* modal signup */}
       <Modal
         animationType="slide"
         transparent={true}
@@ -154,16 +151,12 @@ export default function ConnexionScreen({ navigation }) {
               value={passwordSignup}
               style={styles.passwordInput}
             />
-            <TouchableOpacity
-              style={styles.primaryButton}
-              onPress={() => handleSignup()}
-            >
-              <Text style={styles.primaryTextButton}>valider</Text>
-            </TouchableOpacity>
+            <LargeButton name="valider" isPlain={true} onPress={handleSignup} />
             {errorSignup && <Text style={styles.error}>{errorSignupMess}</Text>}
           </View>
         </TouchableOpacity>
       </Modal>
+      {/* modal signin */}
       <Modal
         animationType="slide"
         transparent={true}
@@ -189,12 +182,7 @@ export default function ConnexionScreen({ navigation }) {
               value={passwordSignin}
               style={styles.passwordInput}
             />
-            <TouchableOpacity
-              style={styles.primaryButton}
-              onPress={() => handleSignin()}
-            >
-              <Text style={styles.primaryTextButton}>valider</Text>
-            </TouchableOpacity>
+            <LargeButton name="valider" isPlain={true} onPress={handleSignin} />
             {errorSignin && <Text style={styles.error}>{errorSigninMess}</Text>}
           </View>
         </TouchableOpacity>
@@ -213,7 +201,8 @@ const styles = StyleSheet.create({
   },
   buttonContent: {
     backgroundColor: "#fff",
-    borderRadius: 20,
+    padding: 20,
+    borderRadius: 6,
   },
   modalContainer: {
     flex: 1,
@@ -229,7 +218,8 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   h3: {
-    // fontFamily: "Anton",
+    // uninstall npx react-native-asset ?
+    // fontFamily: "Anton Regular",
     fontSize: 30,
     marginBottom: 10,
   },
@@ -259,36 +249,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginBottom: 10,
     padding: 10,
-  },
-  primaryButton: {
-    width: 280,
-    height: 53,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#CC3F0C",
-    borderRadius: 10,
-    marginBottom: 10,
-  },
-  primaryTextButton: {
-    color: "#fff",
-    fontSize: 20,
-    fontWeight: 500,
-  },
-  secondaryButton: {
-    width: 280,
-    height: 53,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#fff",
-    borderColor: "#CC3F0C",
-    borderWidth: 1,
-    borderRadius: 10,
-    marginBottom: 10,
-  },
-  secondaryTextButton: {
-    color: "#CC3F0C",
-    fontSize: 20,
-    fontWeight: 500,
   },
   error: {
     color: "red",

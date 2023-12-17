@@ -1,5 +1,5 @@
 import { Button, StyleSheet, Text, View } from "react-native";
-import MyButton from "../components/MyButton";
+import SmallButton from "../components/SmallButton";
 import SearchDropdown from "../components/SeachDropdown";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -23,7 +23,7 @@ export default function GoutsScreen({ navigation }) {
 
   const data = ingredientsUnselected.map((e, i) => {
     return (
-      <MyButton
+      <SmallButton
         key={i}
         name={e}
         onPress={() => {
@@ -39,7 +39,7 @@ export default function GoutsScreen({ navigation }) {
 
   const dataSelected = ingredientsSelected.map((e, i) => {
     return (
-      <MyButton
+      <SmallButton
         key={i}
         name={e}
         onPress={() => {
@@ -53,7 +53,7 @@ export default function GoutsScreen({ navigation }) {
 
   const dataCustomSelected = customSelected.map((e, i) => {
     return (
-      <MyButton
+      <SmallButton
         key={i}
         name={e.name}
         onPress={() => {
@@ -114,7 +114,7 @@ export default function GoutsScreen({ navigation }) {
       <Text>Ingrédients exclus</Text>
       {dataSelected}
       {dataCustomSelected}
-      <MyButton
+      <SmallButton
         onPress={handleNext}
         name="suivant"
         isPlain={true}

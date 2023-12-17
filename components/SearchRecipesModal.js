@@ -15,7 +15,8 @@ const dishType = ["Entrée", "Plat", "Dessert", "Apéro", "Autre"];
 const difficulty = ["Easy", "Medium", "Hard"];
 import Slider from "@react-native-community/slider";
 import SearchBar from "./SearchBar";
-import MyButton from "./MyButton";
+import SmallButton from "./SmallButton";
+import MyCheckbox from "./MyCheckbox";
 
 export default function SearchRecipeModal({ navigation, closeSearchModal }) {
   const [isFilterVisible, setIsFilterVisible] = useState(true);
@@ -37,31 +38,54 @@ export default function SearchRecipeModal({ navigation, closeSearchModal }) {
       const data = await response.json();
       setRecipes(data.response);
     }, 100);
-    return ()=> clearTimeout(timeoutId);
+    return () => clearTimeout(timeoutId);
   }, [inputValue, timeFilter, dishTypeFilter, difficultyFilter]);
 
   const dishTypesFilters = dishType.map((e, i) => {
     return (
-      <MyButton
+      // <SmallButton
+      //   key={i}
+      //   name={e}
+      //   onPress={() =>
+      //     e === dishTypeFilter ? setDishTypeFilter("") : setDishTypeFilter(e)
+      //   }
+      //   isPlain={e === dishTypeFilter && true}
+      //   styleButton={{
+      //     paddingVertical: 2,
+      //     paddingHorizontal: 6,
+      //     marginLeft: 8,
+      //   }}
+      //   styleText={{ fontWeight: 600, fontSize: 16 }}
+      // />
+      <MyCheckbox
         key={i}
         name={e}
         onPress={() =>
           e === dishTypeFilter ? setDishTypeFilter("") : setDishTypeFilter(e)
         }
-        isPlain={e === dishTypeFilter && true}
-        styleButton={{
-          paddingVertical: 2,
-          paddingHorizontal: 6,
-          marginLeft: 8,
-        }}
-        styleText={{ fontWeight: 600, fontSize: 16 }}
       />
     );
   });
 
   const difficultyFilters = difficulty.map((e, i) => {
     return (
-      <MyButton
+      // <SmallButton
+      //   key={i}
+      //   name={e}
+      //   onPress={() =>
+      //     e === difficultyFilter
+      //       ? setDiffictultyFilter("")
+      //       : setDiffictultyFilter(e)
+      //   }
+      //   isPlain={e === difficultyFilter && true}
+      //   styleButton={{
+      //     paddingVertical: 2,
+      //     paddingHorizontal: 6,
+      //     marginLeft: 8,
+      //   }}
+      //   styleText={{ fontWeight: 600, fontSize: 16 }}
+      // />
+      <MyCheckbox
         key={i}
         name={e}
         onPress={() =>
@@ -69,13 +93,6 @@ export default function SearchRecipeModal({ navigation, closeSearchModal }) {
             ? setDiffictultyFilter("")
             : setDiffictultyFilter(e)
         }
-        isPlain={e === difficultyFilter && true}
-        styleButton={{
-          paddingVertical: 2,
-          paddingHorizontal: 6,
-          marginLeft: 8,
-        }}
-        styleText={{ fontWeight: 600, fontSize: 16 }}
       />
     );
   });
@@ -227,11 +244,6 @@ const styles = StyleSheet.create({
     marginTop: 8,
     alignItems: "center",
     borderRadius: 4,
-  },
-
-  containerFilters: {
-    backgroundColor: "#F9F8F8",
-    marginVertical: 5,
   },
   filtersScroll: {
     flexDirection: "row",
