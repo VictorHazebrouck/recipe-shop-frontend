@@ -23,14 +23,20 @@ export const userSlice = createSlice({
     addUser: (state, action) => {
       state.value = action.payload;
     },
-    choicePlanning: (state, action) => {
-      state.planningChecked = action.payload;
+    modifyPlanning: (state, action) => {
+      state.preferences.planningChecked = action.payload;
     },
     modifyRegime: (state, action) => {
       state.preferences.regime = action.payload;
     },
+    modifyExcludeIngredients: (state, action)=>{
+      state.preferences.excludeAliments = action.payload;
+    },
+    modifyCurrentRecipe: (state,action) =>{
+      state.plannedRecipes.currentRecipes = action.payload
+    },
 
-    //working
+    //working?
     logIn: (state, action) => {
       const {
         name,
@@ -68,6 +74,6 @@ export const userSlice = createSlice({
   },
 });
 
-export const { addUser, choicePlanning, modifyRegime, logIn } =
+export const { addUser, modifyPlanning, modifyRegime, logIn, modifyExcludeIngredients, modifyCurrentRecipe } =
   userSlice.actions;
 export default userSlice.reducer;

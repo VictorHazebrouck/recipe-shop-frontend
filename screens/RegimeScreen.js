@@ -1,11 +1,9 @@
 import { Button, StyleSheet, Text, View, Image } from "react-native";
 import MyButton from "../components/MyButton";
-import { useState } from "react";
+import { createFactory, useState } from "react";
 import ROUTE from "../globals/nico";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { modifyRegime } from "../reducers/user";
-
-import { useSelector } from "react-redux";
 
 const regimeList = [
   "Pesco-végétarien",
@@ -16,6 +14,7 @@ const regimeList = [
   "Végétarien",
 ];
 
+//turn category into allergens to exclue
 const encodeRegime = (arr) => {
   const ref = [];
   if (arr.includes("Vegan"))
@@ -29,10 +28,30 @@ const encodeRegime = (arr) => {
   return [...new Set(ref)];
 };
 
+//turn allergens into categories
+const decodeRegime = (arr) => {
+  const ref = [];
+  if (["Oeuf", "Lait", "Fruits de Mer", "Poisson", "Viande", "Porc"].every(e => arr.includes(e))){
+     ref.push("Vegan")
+  } else if (["Fruits de Mer", "Poisson", "Viande", "Porc"].every(e => arr.includes(e))){
+    ref.push("Végétarien")
+  } else if(["Viande", "Porc"].every(e => arr.includes(e))){
+    ref.push("Pesco-végétarien")
+  }
+  if (arr.includes("Porc")) ref.push("Sans porc");
+  if (arr.includes("Gluten")) ref.push("Sans gluten");
+  if (arr.includes("Lait")) ref.push("Sans lactose");
+  return [...new Set(ref)];
+};
+
 export default function RegimeScreen({ navigation }) {
   const dispatch = useDispatch();
-  const [regimes, setRegimes] = useState([]);
+  const userRegime = useSelector((state) => state.user.preferences.regime)
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+  const [regimes, setRegimes] = useState(decodeRegime(userRegime));
+
+  console.log(userRegime);
+  console.log(decodeRegime(userRegime));
 
   const handleRegime = (e) => {
     const ref = ["Végétarien", "Vegan", "Pesco-végétarien"];
