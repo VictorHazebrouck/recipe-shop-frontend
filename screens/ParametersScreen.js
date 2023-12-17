@@ -1,5 +1,5 @@
 import { SafeAreaView, Button, StyleSheet, Text, View } from "react-native";
-import MyButton from "../components/MyButton";
+import SmallButton from "../components/SmallButton";
 
 export default function ParametersScreen({ navigation }) {
   return (
@@ -7,27 +7,27 @@ export default function ParametersScreen({ navigation }) {
       {<Text style={styles.title}>JohnDoe</Text>}
 
       <View style={styles.buttonsContainer}>
-        <MyButton
+        <SmallButton
           name="Regime"
           onPress={() => navigation.navigate("Regime")}
           styleButton={{ marginBottom: 10 }}
         />
-        <MyButton
+        <SmallButton
           name="Gouts"
           onPress={() => navigation.navigate("Gouts")}
           styleButton={{ marginBottom: 10 }}
         />
-        <MyButton
+        <SmallButton
           name="Affichage"
           onPress={() => navigation.navigate("Affichage")}
           styleButton={{ marginBottom: 10 }}
         />
-        <MyButton
+        <SmallButton
           name="Magasin Favori"
           onPress={() => navigation.navigate("FavStore")}
           styleButton={{ marginBottom: 10 }}
         />
-        <MyButton
+        <SmallButton
           name="Manage account"
           isPlain={true}
           onPress={() => navigation.navigate("ManageAccount")}

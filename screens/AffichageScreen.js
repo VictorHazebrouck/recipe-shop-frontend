@@ -3,7 +3,6 @@ import { TouchableOpacity, StyleSheet, Text, View } from "react-native";
 import Checkbox from "expo-checkbox";
 import { useDispatch, useSelector } from "react-redux";
 import { modifyPlanning } from "../reducers/user";
-import MyButton from "../components/MyButton";
 import ROUTE from "../globals/nico";
 import SmallButton from "../components/SmallButton";
 
