@@ -26,7 +26,7 @@ import { useSelector } from "react-redux";
 
 export default function HomeScreen({ navigation }) {
   const [filter, setFilter] = useState("A la une");
-  const [recipes, setRecipes] = useState([]);
+  const [recipes, setRecipes] = useState({});
   const [currentRecipe, setCurrentRecipe] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [isSearchModal, setIsSearchModal] = useState(false);
