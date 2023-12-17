@@ -29,8 +29,6 @@ export default function SearchRecipeModal({ navigation, closeSearchModal }) {
   const [inputValue, setInputValue] = useState("");
   const [recipes, setRecipes] = useState([]);
 
-  // console.log(inputValue);
-
   useEffect(() => {
     const timeoutId = setTimeout(async () => {
       const queryString = `input=${inputValue}&time=${timeFilter}&type=${dishTypeFilter}&difficulty=${difficultyFilter}`;

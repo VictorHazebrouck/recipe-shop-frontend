@@ -29,8 +29,6 @@ export default function GoutsScreen({ navigation }) {
     useState(customRegime);
   const [ingeridentSelected, setIngeridentSelected] = useState(excludeAliments);
 
-
-
   const categoriesUnselected = ingeridentCategoryUnselcted.map((e, i) => {
     return (
       <SmallButton
@@ -101,7 +99,6 @@ export default function GoutsScreen({ navigation }) {
       }),
     });
     const data = await response.json();
-    console.log(data);
 
     if (ingeridentSelected) {
       dispatch(modifyExcludeIngredients(ingeridentSelected));

@@ -5,18 +5,21 @@ import { useState, useEffect } from "react";
 import ROUTE from "../globals/nico";
 import SmallButton from "../components/SmallButton";
 import Ingredient from "../components/Ingredient";
+import { useSelector } from "react-redux";
 
 const screenWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
 export default function ShopScreen({ navigation }) {
   const [ingredients, setIngredients] = useState([]);
+  const user = useSelector((state) => state.user);
+  const token = user.credentials.token;
+
+  const currentRecipes = user.plannedRecipes.currentRecipes;
 
   useEffect(() => {
     (async () => {
-      const response = await fetch(`${ROUTE}/users/recipes`);
-      const data = await response.json();
-      const ingredientsData = data.response.currentRecipes.flatMap((recipe) => {
+      const ingredientsData = currentRecipes.flatMap((recipe) => {
         return recipe.id.ingredients.map((ingredient) => {
           return {
             qtyForRecipe: ingredient.amount,
@@ -40,10 +43,10 @@ export default function ShopScreen({ navigation }) {
         },
         []
       );
-
       setIngredients(groupedIngredients);
+      return () => setIngredients({});
     })();
-  }, []);
+  }, [currentRecipes]);
 
   // filter store type rendering
   /**

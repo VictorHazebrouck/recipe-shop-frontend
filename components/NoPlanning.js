@@ -25,8 +25,6 @@ export default function NoPlanningScreen({ navigation }) {
     navigation.navigate("Home");
   };
 
-  console.log(user.plannedRecipes.currentRecipes);
-
   const handleDeleteRecipe = async (recipeId) => {
     // Filtrer les recettes pour supprimer celle avec le nom correspondant
     const response = await fetch(`${ROUTE}/users/currentRecipes`, {

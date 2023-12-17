@@ -31,12 +31,18 @@ const encodeRegime = (arr) => {
 //turn allergens into categories
 const decodeRegime = (arr) => {
   const ref = [];
-  if (["Oeuf", "Lait", "Fruits de Mer", "Poisson", "Viande", "Porc"].every(e => arr.includes(e))){
-     ref.push("Vegan")
-  } else if (["Fruits de Mer", "Poisson", "Viande", "Porc"].every(e => arr.includes(e))){
-    ref.push("Végétarien")
-  } else if(["Viande", "Porc"].every(e => arr.includes(e))){
-    ref.push("Pesco-végétarien")
+  if (
+    ["Oeuf", "Lait", "Fruits de Mer", "Poisson", "Viande", "Porc"].every((e) =>
+      arr.includes(e)
+    )
+  ) {
+    ref.push("Vegan");
+  } else if (
+    ["Fruits de Mer", "Poisson", "Viande", "Porc"].every((e) => arr.includes(e))
+  ) {
+    ref.push("Végétarien");
+  } else if (["Viande", "Porc"].every((e) => arr.includes(e))) {
+    ref.push("Pesco-végétarien");
   }
   if (arr.includes("Porc")) ref.push("Sans porc");
   if (arr.includes("Gluten")) ref.push("Sans gluten");
@@ -46,12 +52,9 @@ const decodeRegime = (arr) => {
 
 export default function RegimeScreen({ navigation }) {
   const dispatch = useDispatch();
-  const userRegime = useSelector((state) => state.user.preferences.regime)
+  const userRegime = useSelector((state) => state.user.preferences.regime);
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
   const [regimes, setRegimes] = useState(decodeRegime(userRegime));
-
-  console.log(userRegime);
-  console.log(decodeRegime(userRegime));
 
   const handleRegime = (e) => {
     const ref = ["Végétarien", "Vegan", "Pesco-végétarien"];

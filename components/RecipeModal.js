@@ -23,7 +23,7 @@ const screenWidth = Dimensions.get("window").width;
  * @todo import destructure
  */
 const RecipeModal = (props) => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const [numberOfPers, setNumberOfPers] = useState(1);
   const [ingredientsList, setIngredientsList] = useState([]);
   const [like, setLike] = useState("heart-o");
@@ -102,11 +102,9 @@ const RecipeModal = (props) => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
-        dispatch(modifyCurrentRecipe(data.response))
+        dispatch(modifyCurrentRecipe(data.response));
       });
   };
-
   // POST favorite to database
   const handleLike = () => {
     fetch(`${ROUTE}/users/like`, {

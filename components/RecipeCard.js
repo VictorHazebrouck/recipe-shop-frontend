@@ -16,7 +16,6 @@ const RecipeCard = (props) => {
   //   (async () => {
   //     const response = await fetch(`${ROUTE}/users/recipes`);
   //     const data = await response.json();
-  //     console.log(data.response.favoriteRecipes);
   //   })();
   // }, []);
 
