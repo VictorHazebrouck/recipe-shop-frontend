@@ -37,7 +37,7 @@ export const userSlice = createSlice({
     },
 
     //working?
-    logIn: (state, action) => {
+    initUser: (state, action) => {
       const {
         name,
         email,
@@ -69,45 +69,15 @@ export const userSlice = createSlice({
         currentRecipes: currentRecipes,
         historyRecipes: historyRecipes,
       };
-      state.isLoggedIn = true;
+      
     },
 
-    signUp: (state, action) => {
-      const {
-        name,
-        email,
-        token,
-        favoriteRecipes,
-        myRecipes,
-        preference,
-        currentRecipes,
-        historyRecipes,
-      } = action.payload;
-
-      state.credentials = {
-        name: name,
-        email: email,
-        token: token,
-      };
-      state.preferences = {
-        planningChecked: preference.planningDisplay,
-        regime: preference.regime,
-        excludeAliments: preference.excludeAliments,
-        favoriteStore: preference.favoriteStore,
-        postCode: preference.postCode,
-      };
-      state.personalRecipes = {
-        favoriteRecipes: favoriteRecipes,
-        myRecipes: myRecipes,
-      };
-      state.plannedRecipes = {
-        currentRecipes: currentRecipes,
-        historyRecipes: historyRecipes,
-      };
+    setLogin: (state, action) => {
+      state.isLoggedIn = true;
     },
   },
 });
 
-export const { addUser, modifyPlanning, modifyRegime, logIn, signUp,modifyExcludeIngredients, modifyCurrentRecipe } =
+export const { addUser, modifyPlanning, modifyRegime, initUser, setLogin,modifyExcludeIngredients, modifyCurrentRecipe } =
   userSlice.actions;
 export default userSlice.reducer;
