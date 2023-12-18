@@ -17,6 +17,7 @@ import {
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { modifyCurrentRecipe } from "../reducers/user";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -28,11 +29,15 @@ const RecipeModal = (props) => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const token = user.credentials.token;
+  const preferences = user.preferences.planningChecked
 
   const [numberOfPers, setNumberOfPers] = useState(1);
   const [ingredientsList, setIngredientsList] = useState([]);
   const [like, setLike] = useState("heart-o");
   const [difficulty, setDifficulty] = useState(1);
+  const [isDatePickerVisibility, setDatePickerVisibility] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedDate, setSelectedDate] = useState('');
 
   const instructions = props.instructions;
   /**
@@ -55,6 +60,18 @@ const RecipeModal = (props) => {
 
   const handlePressPlus = () => {
     setNumberOfPers(numberOfPers + 1);
+  };
+
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
+  };
+
+  const handleConfirm = (date) => {
+    console.warn("A date has been picked: ", date);
+    hideDatePicker();
+    props.closeModal();
+    setSelectedDate(date);
+    navigation.navigate("Planning");
   };
 
   const ingredientQty = ingredientsList.map((e, i) => (
@@ -97,13 +114,44 @@ const RecipeModal = (props) => {
   /**
    * @POST id, date et numberOfPers to database
    */
+
+
+
+
+
   const handleSubmit = () => {
+    if(!preferences) {
+
+      fetch(`${ROUTE}/users/currentRecipes`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          recipeId: props._id,
+          date: new Date(),
+          amount: numberOfPers,
+          token: token,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          dispatch(modifyCurrentRecipe(data.response));
+          props.closeModal();
+          navigation.navigate("Planning");
+          setModalVisible(true);
+        });
+
+    } else {
+    const showDatePicker = () => {
+      setDatePickerVisibility(true);
+    };
+    showDatePicker();
+
     fetch(`${ROUTE}/users/currentRecipes`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         recipeId: props._id,
-        date: new Date(),
+        date: selectedDate,
         amount: numberOfPers,
         token: token,
       }),
@@ -111,10 +159,17 @@ const RecipeModal = (props) => {
       .then((response) => response.json())
       .then((data) => {
         dispatch(modifyCurrentRecipe(data.response));
-        props.closeModal();
-        navigation.navigate("Planning");
+        setModalVisible(true);
       });
+    }
   };
+
+
+
+
+
+
+
   // POST favorite to databases
   const handleLike = () => {
     fetch(`${ROUTE}/users/like`, {
@@ -135,6 +190,7 @@ const RecipeModal = (props) => {
   // RENDER the recipeModal
   return (
     <View style={styles.container}>
+      <View></View>
       <ScrollView>
         <View style={styles.imgContainer}>
           <Image style={styles.image} source={{ uri: props.imageURL }}></Image>
@@ -208,6 +264,13 @@ const RecipeModal = (props) => {
         </View>
         <View style={styles.btnContainer}>
           <SmallButton name="ajouter" isPlain={true} onPress={handleSubmit} />
+
+          <DateTimePickerModal
+            isVisible={isDatePickerVisibility}
+            mode="date"
+            onConfirm={handleConfirm}
+            onCancel={hideDatePicker}
+          />
         </View>
       </ScrollView>
     </View>
