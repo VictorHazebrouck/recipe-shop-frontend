@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import ROUTE from "../globals/nico";
 import { useDispatch } from "react-redux";
-import { logIn } from "../reducers/user";
+import { logIn, signUp } from "../reducers/user";
 import LargeButton from "../components/LargeButton";
 
 export default function ConnexionScreen({ navigation }) {
@@ -72,6 +72,7 @@ export default function ConnexionScreen({ navigation }) {
       .then((response) => response.json())
       .then((data) => {
         if (data.result) {
+          dispatch(signUp(data.newUser));
           resetState();
           navigation.navigate("Regime");
         } else {
