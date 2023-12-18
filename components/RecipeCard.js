@@ -1,4 +1,6 @@
 import FontAwesome from "react-native-vector-icons/FontAwesome";
+import { useState, useEffect } from "react";
+import ROUTE from "../globals/nico";
 import {
   Text,
   StyleSheet,
@@ -9,6 +11,14 @@ import {
 } from "react-native";
 
 const RecipeCard = (props) => {
+  // GET favorite recipes
+  // useEffect(() => {
+  //   (async () => {
+  //     const response = await fetch(`${ROUTE}/users/recipes`);
+  //     const data = await response.json();
+  //   })();
+  // }, []);
+
   return (
     <TouchableOpacity
       style={styles.container}
@@ -18,7 +28,7 @@ const RecipeCard = (props) => {
       <View style={styles.infosContainer}>
         <Text style={styles.text}>{props.name}</Text>
         <TouchableOpacity>
-          <FontAwesome name={"heart"} size={22} color="red" />
+          <FontAwesome name={"heart-o"} size={20} color="#CC3F0C" />
         </TouchableOpacity>
       </View>
     </TouchableOpacity>

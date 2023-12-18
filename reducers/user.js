@@ -1,28 +1,79 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
- value: { firstname: null, email: null, token: null, preference: {}, favoriterecipes: {}, myRecipes: {}, regime:[] }, 
- planningChecked: false,
+  isLoggedIn: false,
+  credentials: { firstname: "", email: "", token: "" },
+  preferences: {
+    planningChecked: false,
+    regime: [],
+    excludeAliments: [],
+    favoriteStore: "",
+    postCode: null,
+  },
+  personalRecipes: { favoriteRecipes: [], myRecipes: [] },
+  plannedRecipes: { currentRecipes: [], historyRecipes: [] },
 };
 
 // création de planningChecked en attendant de gérer les préférences
 
 export const userSlice = createSlice({
- name: 'user',
-
+  name: "user",
   initialState,
- reducers: {
-   addUser: (state, action) => {
-     state.value=action.payload;
-   },
-   choicePlanning:(state, action) => {
-      state.planningChecked=action.payload;
-   },
-   modifyRegime: (state, action) =>{
-    state.value.regime = action.payload
-   }
- },
+  reducers: {
+    addUser: (state, action) => {
+      state.value = action.payload;
+    },
+    modifyPlanning: (state, action) => {
+      state.preferences.planningChecked = action.payload;
+    },
+    modifyRegime: (state, action) => {
+      state.preferences.regime = action.payload;
+    },
+    modifyExcludeIngredients: (state, action)=>{
+      state.preferences.excludeAliments = action.payload;
+    },
+    modifyCurrentRecipe: (state,action) =>{
+      state.plannedRecipes.currentRecipes = action.payload
+    },
+
+    //working?
+    logIn: (state, action) => {
+      const {
+        name,
+        email,
+        token,
+        favoriteRecipes,
+        myRecipes,
+        preference,
+        currentRecipes,
+        historyRecipes,
+      } = action.payload;
+
+      state.credentials = {
+        name: name,
+        email: email,
+        token: token,
+      };
+      state.preferences = {
+        planningChecked: preference.planningDisplay,
+        regime: preference.regime,
+        excludeAliments: preference.excludeAliments,
+        favoriteStore: preference.favoriteStore,
+        postCode: preference.postCode,
+      };
+      state.personalRecipes = {
+        favoriteRecipes: favoriteRecipes,
+        myRecipes: myRecipes,
+      };
+      state.plannedRecipes = {
+        currentRecipes: currentRecipes,
+        historyRecipes: historyRecipes,
+      };
+      state.isLoggedIn = true;
+    },
+  },
 });
 
-export const { addUser, choicePlanning, modifyRegime  } = userSlice.actions;
-export default userSlice.reducer; 
+export const { addUser, modifyPlanning, modifyRegime, logIn, modifyExcludeIngredients, modifyCurrentRecipe } =
+  userSlice.actions;
+export default userSlice.reducer;

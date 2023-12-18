@@ -1,18 +1,35 @@
 import { Button, StyleSheet, Text, View } from "react-native";
-import MyButton from "../components/MyButton";
+import SmallButton from "../components/SmallButton";
+import { useSelector } from "react-redux";
 
 export default function FavStoreScreen({ navigation }) {
+  const user = useSelector((state)=> state.user)
+  const token = user.credentials.token
+  const isLoggedIn = user.isLoggedIn
+
+  const handleNext = () => {
+    if (isLoggedIn) {
+      navigation.navigate("TabNavigator", { screen: "Parameters" });
+    } else {
+      navigation.navigate("TabNavigator");
+    }
+  };
   return (
     <View style={styles.container}>
       <Text
-          style={{
-            fontSize: 30,
-            fontWeight: "bold",
-          }}
-        >
-          FAVORITE STORE
-        </Text>
-      <MyButton onPress={() => navigation.navigate("TabNavigator")} name="suivant" isPlain={true} styleButton={styles.button}/>
+        style={{
+          fontSize: 30,
+          fontWeight: "bold",
+        }}
+      >
+        FAVORITE STORE
+      </Text>
+      <SmallButton
+        onPress={handleNext}
+        name="suivant"
+        isPlain={true}
+        styleButton={styles.button}
+      />
     </View>
   );
 }
@@ -25,7 +42,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  button:{
+  button: {
     marginTop: "auto",
     width: 200,
     marginBottom: 50,

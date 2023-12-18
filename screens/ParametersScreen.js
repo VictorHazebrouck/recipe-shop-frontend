@@ -1,59 +1,56 @@
-import { SafeAreaView, Button, StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView, Button, StyleSheet, Text, View } from "react-native";
+import SmallButton from "../components/SmallButton";
 
 export default function ParametersScreen({ navigation }) {
+  return (
+    <SafeAreaView style={styles.container}>
+      {<Text style={styles.title}>JohnDoe</Text>}
 
-return (
-  <SafeAreaView style={styles.container}>
-    {<Text style={styles.title}>JohnDoe</Text>}
-
-    <View>
-      <Button
-        title="Regime"
-        onPress={() => navigation.navigate('Regime')}
-        style={styles.button}
-      />
-      <Button
-        title="Gouts"
-        onPress={() => navigation.navigate('Gouts')}
-      />
-      <Button
-        title="Affichage"
-        onPress={() => navigation.navigate('Affichage')}
-      />
-      <Button
-        title="Magasin Favori"
-        onPress={() => navigation.navigate('FavStore')}
-      />
-            <Button
-        title="Manage account"
-        onPress={() => navigation.navigate('ManageAccount')}
-      />
-   </View>
-  </SafeAreaView>
-);
+      <View style={styles.buttonsContainer}>
+        <SmallButton
+          name="Regime"
+          onPress={() => navigation.navigate("Regime")}
+          styleButton={{ marginBottom: 10 }}
+        />
+        <SmallButton
+          name="Gouts"
+          onPress={() => navigation.navigate("Gouts")}
+          styleButton={{ marginBottom: 10 }}
+        />
+        <SmallButton
+          name="Affichage"
+          onPress={() => navigation.navigate("Affichage")}
+          styleButton={{ marginBottom: 10 }}
+        />
+        <SmallButton
+          name="Magasin Favori"
+          onPress={() => navigation.navigate("FavStore")}
+          styleButton={{ marginBottom: 10 }}
+        />
+        <SmallButton
+          name="Manage account"
+          isPlain={true}
+          onPress={() => navigation.navigate("ManageAccount")}
+          styleButton={{ marginBottom: 10 }}
+        />
+      </View>
+    </SafeAreaView>
+  );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f2f2f2',
-    alignItems: 'center',
+    backgroundColor: "#f2f2f2",
+    alignItems: "center",
+  },
+  buttonsContainer: {
+    flex: 1,
+    justifyContent: "center"
   },
   title: {
     fontSize: 20,
-    fontWeight: '600',
-    marginTop: 30,
-    marginBottom: 20,
-  },
-  button: {
-    width: '30%',
-    alignItems: 'center',
-    paddingTop: 8,
-    backgroundColor: '#ec6e5b',
-    borderRadius: 10,
-  },
-  scrollView: {
-    alignItems: 'center',
-    paddingBottom: 20,
+    fontWeight: "600",
+    marginTop: 50,
   },
 });

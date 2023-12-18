@@ -8,7 +8,7 @@ export default function PlanningScreen({ navigation }) {
   //use selector planning type
   // conditional return
 
-  const isPlanningChecked = useSelector(state => state.user.planningChecked); //planningChecked à adapter quand préférences seront gérées dans le reducer user
+  const isPlanningChecked = useSelector(state => state.user.preferences.planningChecked); //planningChecked à adapter quand préférences seront gérées dans le reducer user
 
  return (
   <SafeAreaView style={styles.container}>

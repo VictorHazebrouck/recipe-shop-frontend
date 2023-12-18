@@ -3,20 +3,23 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useState, useEffect } from "react";
 import ROUTE from "../globals/nico";
-import MyButton from "../components/MyButton";
+import SmallButton from "../components/SmallButton";
 import Ingredient from "../components/Ingredient";
+import { useSelector } from "react-redux";
 
 const screenWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
 export default function ShopScreen({ navigation }) {
   const [ingredients, setIngredients] = useState([]);
+  const user = useSelector((state) => state.user);
+  const token = user.credentials.token;
+
+  const currentRecipes = user.plannedRecipes.currentRecipes;
 
   useEffect(() => {
     (async () => {
-      const response = await fetch(`${ROUTE}/users/recipes`);
-      const data = await response.json();
-      const ingredientsData = data.response.currentRecipes.flatMap((recipe) => {
+      const ingredientsData = currentRecipes.flatMap((recipe) => {
         return recipe.id.ingredients.map((ingredient) => {
           return {
             qtyForRecipe: ingredient.amount,
@@ -25,10 +28,25 @@ export default function ShopScreen({ navigation }) {
           };
         });
       });
-
-      setIngredients(ingredientsData);
+      // regroup same ingredients and accumule amount
+      const groupedIngredients = ingredientsData.reduce(
+        (result, ingredient) => {
+          const existingIngredient = result.find(
+            (item) => item.name === ingredient.name
+          );
+          if (existingIngredient) {
+            existingIngredient.qtyForRecipe += ingredient.qtyForRecipe;
+          } else {
+            result.push({ ...ingredient });
+          }
+          return result;
+        },
+        []
+      );
+      setIngredients(groupedIngredients);
+      return () => setIngredients({});
     })();
-  }, []);
+  }, [currentRecipes]);
 
   // filter store type rendering
   /**
@@ -100,7 +118,7 @@ export default function ShopScreen({ navigation }) {
           paddingHorizontal: 20,
         }}
       >
-        <MyButton
+        <SmallButton
           name="valider"
           onPress={() => navigation.navigate("TabNavigator")}
           isPlain

@@ -2,7 +2,7 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import MyButton from "./MyButton";
+import SmallButton from "./SmallButton";
 import ROUTE from "../globals/nico";
 import { useState, useEffect } from "react";
 import {
@@ -14,14 +14,19 @@ import {
   Dimensions,
   ScrollView,
 } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
+import { modifyCurrentRecipe } from "../reducers/user";
 
 const screenWidth = Dimensions.get("window").width;
 
-
 /**
- * @todo import destructure 
+ * @todo import destructure
  */
 const RecipeModal = (props) => {
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user);
+  const token = user.credentials.token;
+
   const [numberOfPers, setNumberOfPers] = useState(1);
   const [ingredientsList, setIngredientsList] = useState([]);
   const [like, setLike] = useState("heart-o");
@@ -45,14 +50,14 @@ const RecipeModal = (props) => {
     }
   };
 
-  const handlePressBonus = () => {
+  const handlePressPlus = () => {
     setNumberOfPers(numberOfPers + 1);
   };
 
   const ingredientQty = ingredientsList.map((e, i) => (
     <View key={i} style={styles.ingrendientCard}>
-      <Text>{e.name}</Text>
-      <Text>
+      <Text style={{ color: "#4B3B47", fontWeight: 600 }}>{e.name}</Text>
+      <Text style={{ color: "#4B3B47" }}>
         {e.amount} {e.unit}
       </Text>
     </View>
@@ -86,30 +91,30 @@ const RecipeModal = (props) => {
 
   // POST id, date et numberOfPers to database
   /**
-   * @todo forcer a ajouter un id en cliquant sur ajouter 
+   * @todo forcer a ajouter un id en cliquant sur ajouter
    */
   const handleSubmit = () => {
-    fetch(`${ROUTE}/users/add`, {
+    fetch(`${ROUTE}/users/currentRecipes`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        _id: props._id, //not working properly?
+        recipeId: props._id,
         date: new Date(),
-        nb: numberOfPers,
+        amount: numberOfPers,
+        token: token,
       }),
     })
       .then((response) => response.json())
       .then((data) => {
-        // console.log(data);
+        dispatch(modifyCurrentRecipe(data.response));
       });
   };
-
   // POST favorite to database
   const handleLike = () => {
     fetch(`${ROUTE}/users/like`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ _id: props._id }),
+      body: JSON.stringify({ recipe: { _id: props._id }, token: token }),
     })
       .then((response) => response.json())
       .then((data) => {
@@ -134,13 +139,14 @@ const RecipeModal = (props) => {
             <FontAwesome name={"close"} size={25} color="#4B3B47" />
           </TouchableOpacity>
           <View style={styles.regime}>
-            <FontAwesome5 name={"fish"} size={16} color="#4B3B47" />
+            <FontAwesome5 name={"fish"} size={20} color="#4B3B47" />
             <MaterialCommunityIcons
               name={"food-drumstick-off"}
-              size={16}
+              size={20}
               color="#4B3B47"
+              style={{ marginVertical: 10 }}
             />
-            <MaterialCommunityIcons name={"corn"} size={16} color="#4B3B47" />
+            <MaterialCommunityIcons name={"corn"} size={20} color="#4B3B47" />
           </View>
           <TouchableOpacity style={styles.like} onPress={handleLike}>
             <FontAwesome name={like} size={20} color="#CC3F0C" />
@@ -149,7 +155,9 @@ const RecipeModal = (props) => {
         <View style={styles.content}>
           <View style={styles.title}>
             <View style={styles.name}>
-              <Text>{props.name}</Text>
+              <View style={{ marginBottom: 10 }}>
+                <Text style={styles.h3}>{props.name}</Text>
+              </View>
               <View style={styles.note}>
                 <FontAwesome name={"star"} size={16} color="#4B3B47" />
                 <FontAwesome name={"star"} size={16} color="#4B3B47" />
@@ -161,11 +169,13 @@ const RecipeModal = (props) => {
             <View style={styles.info}>
               <View style={styles.time}>
                 <MaterialIcons name="access-time" size={20} color="#4B3B47" />
-                <Text>{props.preparationTime}mn</Text>
+                <Text style={{ color: "#4B3B47" }}>
+                  {props.preparationTime}mn
+                </Text>
               </View>
               <View style={styles.difficulty}>
                 {difficultyLvl()}
-                <Text>{props.difficulty}</Text>
+                <Text style={{ color: "#4B3B47" }}>{props.difficulty}</Text>
               </View>
             </View>
           </View>
@@ -174,10 +184,12 @@ const RecipeModal = (props) => {
               <FontAwesome name={"minus-circle"} size={20} color="#4B3B47" />
             </TouchableOpacity>
             <Text style={styles.numberOfPers}>{numberOfPers}</Text>
-            <TouchableOpacity onPress={() => handlePressBonus()}>
+            <TouchableOpacity onPress={() => handlePressPlus()}>
               <MaterialIcons name="add-circle" size={20} color="#4B3B47" />
             </TouchableOpacity>
-            <Text>personnes</Text>
+            <Text style={{ fontSize: 16, color: "#4B3B47", marginLeft: 10 }}>
+              personnes
+            </Text>
           </View>
           <View style={styles.ingredient}>
             <Text style={styles.h4}>Ingredient</Text>
@@ -185,11 +197,11 @@ const RecipeModal = (props) => {
           </View>
           <View style={styles.preparation}>
             <Text style={styles.h4}>Preparation</Text>
-            <Text>{instructions}</Text>
+            <Text style={{ color: "#4B3B47" }}>{instructions}</Text>
           </View>
-          <View style={styles.btnContainer}>
-            <MyButton name="ajouter" onPress={handleSubmit} />
-          </View>
+        </View>
+        <View style={styles.btnContainer}>
+          <SmallButton name="ajouter" isPlain={true} onPress={handleSubmit} />
         </View>
       </ScrollView>
     </View>
@@ -202,6 +214,7 @@ const styles = StyleSheet.create({
     width: screenWidth,
     backgroundColor: "#fff",
     borderRadius: 10,
+    overflow: "hidden",
   },
   imgContainer: {
     position: "relative",
@@ -240,19 +253,27 @@ const styles = StyleSheet.create({
   },
   title: {
     flexDirection: "row",
+    marginBottom: 20,
   },
   name: {
     flex: 2,
   },
-  info: {
-    flex: 1,
-    flexDirection: "row",
-  },
-  note: {
-    flexDirection: "row",
+  h3: {
+    fontSize: 30,
+    color: "#4B3B47",
   },
   h4: {
     fontSize: 20,
+    color: "#4B3B47",
+    marginBottom: 10,
+  },
+  info: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-around",
+  },
+  note: {
+    flexDirection: "row",
   },
   time: {
     alignItems: "center",
@@ -265,13 +286,23 @@ const styles = StyleSheet.create({
   },
   number: {
     flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 20,
   },
   numberOfPers: {
     marginHorizontal: 10,
+    fontSize: 16,
+    color: "#4B3B47",
+  },
+  ingredient: {
+    marginBottom: 20,
   },
   ingrendientCard: {
     flexDirection: "row",
     justifyContent: "space-between",
+  },
+  preparation: {
+    marginBottom: 20,
   },
   btnContainer: {
     flex: 1,

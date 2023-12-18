@@ -22,23 +22,29 @@ const tagsList = [
   "Pour les enfant",
   "Express",
 ];
-import { useSelector } from 'react-redux'
-
+import { useSelector } from "react-redux";
 
 export default function HomeScreen({ navigation }) {
+  const user = useSelector((state)=> state.user)
+  const token = user.credentials.token
+  const preferences = user.preferences
+
   const [filter, setFilter] = useState("A la une");
-  const [recipes, setRecipes] = useState([]);
+  const [recipes, setRecipes] = useState({});
   const [currentRecipe, setCurrentRecipe] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [isSearchModal, setIsSearchModal] = useState(false);
-  const  regime = useSelector((state) => state.user.value.regime)
+
+  
 
   //Updates the recipes state according to the value of the filter state
   useEffect(() => {
     (async () => {
       if (!recipes[filter]) {
         //data not yet saved => fetch & update
-        const response = await fetch(`${ROUTE}/recipes/search?&tag=${filter}&regime=${regime.join(",")}`);
+        const response = await fetch(
+          `${ROUTE}/recipes/search?&tag=${filter}&regime=${preferences.regime.join(",")}`
+        );
         const data = await response.json();
         setRecipes({ ...recipes, [filter]: data.response });
       } else {
@@ -51,7 +57,11 @@ export default function HomeScreen({ navigation }) {
   const filters = tagsList.map((e, i) => {
     return (
       <TouchableOpacity key={i} onPress={() => setFilter(e)}>
-        <Text style={filter === e ? styles.filterSelected : styles.filterNonSelected}>
+        <Text
+          style={
+            filter === e ? styles.filterSelected : styles.filterNonSelected
+          }
+        >
           {e}
         </Text>
       </TouchableOpacity>
