@@ -112,7 +112,7 @@ const RecipeModal = (props) => {
       .then((response) => response.json())
       .then((data) => {
         dispatch(modifyCurrentRecipe(data.response));
-        console.log(data.response);
+        props.closeModal();
         navigation.navigate("Planning");
       });
   };

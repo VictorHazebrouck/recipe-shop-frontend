@@ -48,13 +48,16 @@ export default function ShopScreen({ navigation }) {
     })();
   }, [currentRecipes]);
 
-  // filter store type rendering
+  console.log(ingredients);
   /**
    * @todo enlever les doublons, conputer les totaux, modifier etats sur les inputs.
    */
-  const ingredientsList = ingredients.map((e, i) => {
-    return <Ingredient key={i} {...e} />;
-  });
+  const ingredientsList =
+    ingredients && ingredients.length > 0 ? (
+      ingredients.map((e, i) => <Ingredient key={i} {...e} />)
+    ) : (
+      <Text style={{ color: "red", fontSize: 16 }}>Votre liste est vide</Text>
+    );
 
   // le filter est a aller fetch depuis la database des magasins
   const filter = [
@@ -111,19 +114,21 @@ export default function ShopScreen({ navigation }) {
       >
         {ingredientsList}
       </ScrollView>
-      <View
-        style={{
-          alignItems: "flex-end",
-          width: screenWidth,
-          paddingHorizontal: 20,
-        }}
-      >
-        <SmallButton
-          name="valider"
-          onPress={() => navigation.navigate("TabNavigator")}
-          isPlain
-        />
-      </View>
+      {ingredients && ingredients.length > 0 ? (
+        <View
+          style={{
+            alignItems: "flex-end",
+            width: screenWidth,
+            paddingHorizontal: 20,
+          }}
+        >
+          <SmallButton
+            name="valider"
+            onPress={() => navigation.navigate("TabNavigator")}
+            isPlain
+          />
+        </View>
+      ) : null}
     </View>
   );
 }
