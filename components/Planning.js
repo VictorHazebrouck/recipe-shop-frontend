@@ -3,12 +3,12 @@ import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import AgendaScroll from "./AgendaScroll";
-import { Card } from 'react-native-paper';
+import { Card } from "react-native-paper";
 import { modifyCurrentRecipe } from "../reducers/user";
 import ROUTE from "../globals/nico";
 
 export default function PlanningScreen({ navigation }) {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const token = user.credentials.token;
   const currentRecipes = user.plannedRecipes.currentRecipes;
@@ -30,12 +30,9 @@ export default function PlanningScreen({ navigation }) {
     setData(ref);
   }, [currentRecipes]);
 
-  const handleAddRecipe = (day) => {
-    console.log(day);
-  };
+  const handleAddRecipe = (day) => {};
 
-  const handleDeleteRecipe = async (itemData) =>{
-    console.log(itemData._id);
+  const handleDeleteRecipe = async (itemData) => {
     const response = await fetch(`${ROUTE}/users/currentRecipes`, {
       method: "delete",
       headers: { "Content-Type": "application/json" },
@@ -43,8 +40,7 @@ export default function PlanningScreen({ navigation }) {
     });
     const data = await response.json();
     dispatch(modifyCurrentRecipe(data.response));
-  }
-
+  };
 
   handleRefreshPast = () => {
     setStartDay(startDay + 15);
@@ -64,7 +60,10 @@ export default function PlanningScreen({ navigation }) {
 
   const renderCommonLastItem = (day, dayData) => {
     return (
-      <TouchableOpacity style={styles.addRecipe} onPress={() => handleAddRecipe(day)}>
+      <TouchableOpacity
+        style={styles.addRecipe}
+        onPress={() => handleAddRecipe(day)}
+      >
         <Text
           style={{
             fontSize: 16,
@@ -163,7 +162,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     marginRight: 20,
     marginLeft: 20,
-    width: "90%"
+    width: "90%",
   },
   itemContainer: {
     flexDirection: "row",
@@ -174,14 +173,14 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     paddingHorizontal: 20,
   },
-  dayContainer:{
-    flex:1,
-    witdh:'100%',
+  dayContainer: {
+    flex: 1,
+    witdh: "100%",
   },
   dayText: {
-    width:'100%',
+    width: "100%",
     fontSize: 30,
-    fontWeight: 'bold',
-    color: '#333',
+    fontWeight: "bold",
+    color: "#333",
   },
 });

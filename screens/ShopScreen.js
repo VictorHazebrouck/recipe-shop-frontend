@@ -8,34 +8,34 @@ import Ingredient from "../components/Ingredient";
 import { useSelector } from "react-redux";
 
 const screenWidth = Dimensions.get("window").width;
-const windowHeight = Dimensions.get("window").height;
+const screenHeight = Dimensions.get("window").height;
 
 export default function ShopScreen({ navigation }) {
   const [ingredients, setIngredients] = useState([]);
+  const [finished, setFinished] = useState(false);
   const user = useSelector((state) => state.user);
   const token = user.credentials.token;
 
   const currentRecipes = user.plannedRecipes.currentRecipes;
-
   useEffect(() => {
     (async () => {
       const ingredientsData = currentRecipes.flatMap((recipe) => {
         return recipe.id.ingredients.map((ingredient) => {
           return {
-            qtyForRecipe: ingredient.amount,
+            qtyForRecipe: recipe.nb * ingredient.amount,
             name: ingredient.id.name,
             unit: ingredient.id.unit,
           };
         });
       });
-      // regroup same ingredients and accumule amount
+      // regroup same ingredients and accumule qtyForRecipe
       const groupedIngredients = ingredientsData.reduce(
         (result, ingredient) => {
-          const existingIngredient = result.find(
+          const existingIngredient = result.findIndex(
             (item) => item.name === ingredient.name
           );
-          if (existingIngredient) {
-            existingIngredient.qtyForRecipe += ingredient.qtyForRecipe;
+          if (existingIngredient > 0) {
+            result[existingIngredient].qtyForRecipe += ingredient.qtyForRecipe;
           } else {
             result.push({ ...ingredient });
           }
@@ -43,17 +43,18 @@ export default function ShopScreen({ navigation }) {
         },
         []
       );
+      console.log("inside useEffect -->", groupedIngredients);
+
       setIngredients(groupedIngredients);
-      return () => setIngredients({});
+      //return () => setIngredients({});
     })();
   }, [currentRecipes]);
 
-  console.log(ingredients);
   /**
    * @todo enlever les doublons, conputer les totaux, modifier etats sur les inputs.
    */
   const ingredientsList =
-    ingredients && ingredients.length > 0 ? (
+    ingredients.length > 0 ? (
       ingredients.map((e, i) => <Ingredient key={i} {...e} />)
     ) : (
       <Text style={{ color: "red", fontSize: 16 }}>Votre liste est vide</Text>
@@ -97,7 +98,17 @@ export default function ShopScreen({ navigation }) {
     );
   });
 
-  return (
+  const handleSubmit = () => {
+    setFinished(true);
+  };
+
+  return finished ? (
+    <View style={styles.container}>
+      <View style={styles.displayCenter}>
+        <Text style={styles.h2}>course terminé</Text>
+      </View>
+    </View>
+  ) : (
     <View style={styles.container}>
       <Text>shop Screen</Text>
       <ScrollView
@@ -122,21 +133,25 @@ export default function ShopScreen({ navigation }) {
             paddingHorizontal: 20,
           }}
         >
-          <SmallButton
-            name="valider"
-            onPress={() => navigation.navigate("TabNavigator")}
-            isPlain
-          />
+          <SmallButton name="valider" onPress={handleSubmit} isPlain />
         </View>
       ) : null}
     </View>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     paddingTop: 40,
     alignItems: "center",
+  },
+  displayCenter: {
+    height: screenHeight,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  h2: {
+    fontSize: 40,
+    fontWeight: 600,
   },
   filterList: {
     backgroundColor: "#fff",
@@ -167,7 +182,7 @@ const styles = StyleSheet.create({
   ingredientsList: {
     padding: 20,
     width: screenWidth,
-    height: windowHeight - 290,
+    height: screenHeight - 290,
     marginBottom: 20,
   },
 });

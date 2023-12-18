@@ -1,9 +1,14 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Text, StyleSheet, View, TextInput } from "react-native";
+import { useSelector } from "react-redux";
 
 const Ingredient = (props) => {
-  const [input, setInput] = useState(String(props.qtyForRecipe));
+  const [input, setInput] = useState("");
+
+  useEffect(() => {
+    setInput(props.qtyForRecipe.toString());
+  }, [props.qtyForRecipe]);
+
   return (
     <View style={styles.ingredientContainer}>
       <Text style={styles.name}>{props.name}</Text>

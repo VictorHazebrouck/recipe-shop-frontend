@@ -35,7 +35,6 @@ const RecipeModal = (props) => {
   const [difficulty, setDifficulty] = useState(1);
 
   const instructions = props.instructions;
-  // console.log(props.name);
   /**
    * @CALCULATE qty of ingredients
    */
