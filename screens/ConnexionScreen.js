@@ -132,7 +132,7 @@ export default function ConnexionScreen({ navigation }) {
           activeOpacity={1}
           onPress={closeModalSignup}
         >
-          <View style={styles.modal}>
+          <View onStartShouldSetResponder={() => true} style={styles.modal}>
             <Text style={styles.h3}>Sign up</Text>
             <TextInput
               placeholder="name"
@@ -169,7 +169,7 @@ export default function ConnexionScreen({ navigation }) {
           activeOpacity={1}
           onPress={closeModalSignin}
         >
-          <View style={styles.modal}>
+          <View onStartShouldSetResponder={() => true} style={styles.modal}>
             <Text style={styles.h3}>Sign in</Text>
             <TextInput
               placeholder="name"
