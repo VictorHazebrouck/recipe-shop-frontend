@@ -70,9 +70,10 @@ const RecipeModal = (props) => {
     console.warn("A date has been picked: ", date);
     hideDatePicker();
     props.closeModal();
-    setSelectedDate(date);
+    setSelectedDate(date.split("T")[0]);
     navigation.navigate("Planning");
   };
+console.log(setSelectedDate)
 
   const ingredientQty = ingredientsList.map((e, i) => (
     <View key={i} style={styles.ingrendientCard}>
