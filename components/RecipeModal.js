@@ -2,6 +2,7 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { useNavigation } from "@react-navigation/native";
 import SmallButton from "./SmallButton";
 import ROUTE from "../globals/nico";
 import { useState, useEffect } from "react";
@@ -23,6 +24,7 @@ const screenWidth = Dimensions.get("window").width;
  * @todo import destructure
  */
 const RecipeModal = (props) => {
+  const navigation = useNavigation();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const token = user.credentials.token;
@@ -33,8 +35,10 @@ const RecipeModal = (props) => {
   const [difficulty, setDifficulty] = useState(1);
 
   const instructions = props.instructions;
-
-  // CALCULATE qty of ingredients
+  // console.log(props.name);
+  /**
+   * @CALCULATE qty of ingredients
+   */
   useEffect(() => {
     const updatedIngredientsList = props.ingredients.map((ingredient) => ({
       unit: ingredient.id.unit,
@@ -63,7 +67,9 @@ const RecipeModal = (props) => {
     </View>
   ));
 
-  // SET difficulty
+  /**
+   * @SET difficulty
+   */
   useEffect(() => {
     if (props.difficulty === "Easy") {
       setDifficulty(1);
@@ -89,9 +95,8 @@ const RecipeModal = (props) => {
     return <View style={styles.difficultyIcon}>{difficultyIcon}</View>;
   };
 
-  // POST id, date et numberOfPers to database
   /**
-   * @todo forcer a ajouter un id en cliquant sur ajouter
+   * @POST id, date et numberOfPers to database
    */
   const handleSubmit = () => {
     fetch(`${ROUTE}/users/currentRecipes`, {
@@ -107,9 +112,11 @@ const RecipeModal = (props) => {
       .then((response) => response.json())
       .then((data) => {
         dispatch(modifyCurrentRecipe(data.response));
+        props.closeModal();
+        navigation.navigate("Planning");
       });
   };
-  // POST favorite to database
+  // POST favorite to databases
   const handleLike = () => {
     fetch(`${ROUTE}/users/like`, {
       method: "POST",
@@ -181,11 +188,11 @@ const RecipeModal = (props) => {
           </View>
           <View style={styles.number}>
             <TouchableOpacity onPress={() => handlePressMinus()}>
-              <FontAwesome name={"minus-circle"} size={20} color="#4B3B47" />
+              <FontAwesome name={"minus-circle"} size={25} color="#4B3B47" />
             </TouchableOpacity>
             <Text style={styles.numberOfPers}>{numberOfPers}</Text>
             <TouchableOpacity onPress={() => handlePressPlus()}>
-              <MaterialIcons name="add-circle" size={20} color="#4B3B47" />
+              <MaterialIcons name="add-circle" size={25} color="#4B3B47" />
             </TouchableOpacity>
             <Text style={{ fontSize: 16, color: "#4B3B47", marginLeft: 10 }}>
               personnes
@@ -291,7 +298,7 @@ const styles = StyleSheet.create({
   },
   numberOfPers: {
     marginHorizontal: 10,
-    fontSize: 16,
+    fontSize: 20,
     color: "#4B3B47",
   },
   ingredient: {

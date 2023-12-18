@@ -1,8 +1,10 @@
 import { Button, StyleSheet, Text, View } from "react-native";
 import SmallButton from "../components/SmallButton";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setLogin } from "../reducers/user";
 
 export default function FavStoreScreen({ navigation }) {
+  const dispatch = useDispatch()
   const user = useSelector((state)=> state.user)
   const token = user.credentials.token
   const isLoggedIn = user.isLoggedIn
@@ -12,6 +14,7 @@ export default function FavStoreScreen({ navigation }) {
       navigation.navigate("TabNavigator", { screen: "Parameters" });
     } else {
       navigation.navigate("TabNavigator");
+      dispatch(setLogin())
     }
   };
   return (

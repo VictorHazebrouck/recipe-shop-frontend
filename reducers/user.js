@@ -37,7 +37,7 @@ export const userSlice = createSlice({
     },
 
     //working?
-    logIn: (state, action) => {
+    initUser: (state, action) => {
       const {
         name,
         email,
@@ -69,11 +69,15 @@ export const userSlice = createSlice({
         currentRecipes: currentRecipes,
         historyRecipes: historyRecipes,
       };
+      
+    },
+
+    setLogin: (state, action) => {
       state.isLoggedIn = true;
     },
   },
 });
 
-export const { addUser, modifyPlanning, modifyRegime, logIn, modifyExcludeIngredients, modifyCurrentRecipe } =
+export const { addUser, modifyPlanning, modifyRegime, initUser, setLogin,modifyExcludeIngredients, modifyCurrentRecipe } =
   userSlice.actions;
 export default userSlice.reducer;

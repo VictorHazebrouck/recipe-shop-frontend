@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import ROUTE from "../globals/nico";
 import { useDispatch } from "react-redux";
-import { logIn } from "../reducers/user";
+import { initUser, setLogin } from "../reducers/user";
 import LargeButton from "../components/LargeButton";
 
 export default function ConnexionScreen({ navigation }) {
@@ -72,6 +72,7 @@ export default function ConnexionScreen({ navigation }) {
       .then((response) => response.json())
       .then((data) => {
         if (data.result) {
+          dispatch(initUser(data.newUser));
           resetState();
           navigation.navigate("Regime");
         } else {
@@ -95,7 +96,8 @@ export default function ConnexionScreen({ navigation }) {
       .then((response) => response.json())
       .then((data) => {
         if (data.result) {
-          dispatch(logIn(data.response));
+          dispatch(initUser(data.response));
+          dispatch(setLogin())
           resetState();
           navigation.navigate("TabNavigator");
         } else {
@@ -131,7 +133,7 @@ export default function ConnexionScreen({ navigation }) {
           activeOpacity={1}
           onPress={closeModalSignup}
         >
-          <View style={styles.modal}>
+          <View onStartShouldSetResponder={() => true} style={styles.modal}>
             <Text style={styles.h3}>Sign up</Text>
             <TextInput
               placeholder="name"
@@ -168,7 +170,7 @@ export default function ConnexionScreen({ navigation }) {
           activeOpacity={1}
           onPress={closeModalSignin}
         >
-          <View style={styles.modal}>
+          <View onStartShouldSetResponder={() => true} style={styles.modal}>
             <Text style={styles.h3}>Sign in</Text>
             <TextInput
               placeholder="name"
