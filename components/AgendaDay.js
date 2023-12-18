@@ -9,8 +9,8 @@ const AgendaDay = ({
   renderCommonLastItem,
 }) => {
 
-  const ref = data.map((e, i) => {
-    return renderItem(day,e,i)
+  const ref = data.map((itemData, index) => {
+    return renderItem(day, itemData, index)
   });
 
   return (

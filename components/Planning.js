@@ -17,6 +17,19 @@ export default function PlanningScreen({ navigation }) {
   const [startDay, setStartDay] = useState(15);
   const [endDay, setEndDay] = useState(15);
 
+  useEffect(() => {
+    const ref = {};
+    currentRecipes.forEach((e) => {
+      const date = e.date.split("T")[0];
+      if (ref[date]) {
+        ref[date].push(e);
+      } else {
+        ref[date] = [e];
+      }
+    });
+    setData(ref);
+  }, [currentRecipes]);
+
   const handleAddRecipe = (day) => {
     console.log(day);
   };
@@ -32,18 +45,6 @@ export default function PlanningScreen({ navigation }) {
     dispatch(modifyCurrentRecipe(data.response));
   }
 
-  useEffect(() => {
-    const ref = {};
-    currentRecipes.forEach((e) => {
-      const date = e.date.split("T")[0];
-      if (ref[date]) {
-        ref[date].push(e);
-      } else {
-        ref[date] = [e];
-      }
-    });
-    setData(ref);
-  }, [currentRecipes]);
 
   handleRefreshPast = () => {
     setStartDay(startDay + 15);
