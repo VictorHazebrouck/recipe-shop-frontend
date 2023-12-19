@@ -22,14 +22,23 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 const screenWidth = Dimensions.get("window").width;
 
 /**
- * @todo import destructure
- */
+
+@component
+@param {Function} props.closeModal - Callback to close modal which englobes this component
+@param {string} props.name
+@param {number} props.preparationTime
+@param {string} props.difficulty
+@param {string} props._id
+@param {string} props.imageURL
+@param {string[]} props.instructions
+@param {object[]} props.ingredients */
+
 const RecipeModal = (props) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const token = user.credentials.token;
-  const preferences = user.preferences.planningChecked
+  const preferences = user.preferences.planningChecked;
 
   const [numberOfPers, setNumberOfPers] = useState(1);
   const [ingredientsList, setIngredientsList] = useState([]);
@@ -37,9 +46,9 @@ const RecipeModal = (props) => {
   const [difficulty, setDifficulty] = useState(1);
   const [isDatePickerVisibility, setDatePickerVisibility] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
-  const [selectedDate, setSelectedDate] = useState('');
 
   const instructions = props.instructions;
+
   /**
    * @CALCULATE qty of ingredients
    */
@@ -62,16 +71,47 @@ const RecipeModal = (props) => {
     setNumberOfPers(numberOfPers + 1);
   };
 
+  // FONCTIONS DE PARAMÉTRAGE DU PICKER (CHOIX DE LA DATE DE LA RECETTE)
+  const showDatePicker = () => {
+    setDatePickerVisibility(true);
+  };
+
   const hideDatePicker = () => {
     setDatePickerVisibility(false);
   };
 
+
+  //function to add new recipe to bdd and navigate to planning
+  const addRecipe = (date) => {
+    fetch(`${ROUTE}/users/currentRecipes`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        recipeId: props._id,
+        date: date,
+        amount: numberOfPers,
+        token: token,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        dispatch(modifyCurrentRecipe(data.response));
+        props.closeModal();
+        navigation.navigate("Planning");
+      });
+  };
+  //quand on confirme
   const handleConfirm = (date) => {
-    console.warn("A date has been picked: ", date);
-    hideDatePicker();
-    props.closeModal();
-    setSelectedDate(date);
-    navigation.navigate("Planning");
+    const formattedDate = formatDate(date);
+    addRecipe(formattedDate);
+  };
+
+  const formatDate = (date) => {
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Ajoute un zéro devant si nécessaire
+    const day = date.getDate().toString().padStart(2, "0"); // Ajoute un zéro devant si nécessaire
+
+    return `${year}-${month}-${day}`;
   };
 
   const ingredientQty = ingredientsList.map((e, i) => (
@@ -115,13 +155,8 @@ const RecipeModal = (props) => {
    * @POST id, date et numberOfPers to database
    */
 
-
-
-
-
   const handleSubmit = () => {
-    if(!preferences) {
-
+    if (!preferences) {
       fetch(`${ROUTE}/users/currentRecipes`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -139,36 +174,12 @@ const RecipeModal = (props) => {
           navigation.navigate("Planning");
           setModalVisible(true);
         });
-
+    } else if (props.chosenDay) {
+      addRecipe(props.chosenDay);
     } else {
-    const showDatePicker = () => {
-      setDatePickerVisibility(true);
-    };
-    showDatePicker();
-
-    fetch(`${ROUTE}/users/currentRecipes`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        recipeId: props._id,
-        date: selectedDate,
-        amount: numberOfPers,
-        token: token,
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        dispatch(modifyCurrentRecipe(data.response));
-        setModalVisible(true);
-      });
+      showDatePicker();
     }
   };
-
-
-
-
-
-
 
   // POST favorite to databases
   const handleLike = () => {

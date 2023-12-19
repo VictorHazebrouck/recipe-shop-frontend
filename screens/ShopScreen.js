@@ -2,21 +2,23 @@ import { StyleSheet, Text, View, ScrollView, Dimensions } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useState, useEffect } from "react";
-import ROUTE from "../globals/nico";
 import SmallButton from "../components/SmallButton";
 import Ingredient from "../components/Ingredient";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { modifyCurrentRecipe, modifyHistory } from "../reducers/user";
+import ROUTE from "../globals/nico";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
 export default function ShopScreen({ navigation }) {
   const [ingredients, setIngredients] = useState([]);
-  const [finished, setFinished] = useState(false);
   const user = useSelector((state) => state.user);
   const token = user.credentials.token;
+  const dispatch = useDispatch();
 
   const currentRecipes = user.plannedRecipes.currentRecipes;
+
   useEffect(() => {
     (async () => {
       const ingredientsData = currentRecipes.flatMap((recipe) => {
@@ -34,7 +36,7 @@ export default function ShopScreen({ navigation }) {
           const existingIngredient = result.findIndex(
             (item) => item.name === ingredient.name
           );
-          if (existingIngredient > 0) {
+          if (existingIngredient >= 0) {
             result[existingIngredient].qtyForRecipe += ingredient.qtyForRecipe;
           } else {
             result.push({ ...ingredient });
@@ -43,22 +45,25 @@ export default function ShopScreen({ navigation }) {
         },
         []
       );
-      console.log("inside useEffect -->", groupedIngredients);
 
       setIngredients(groupedIngredients);
-      //return () => setIngredients({});
     })();
   }, [currentRecipes]);
+
+  const handleDeleteIngredient = (name) => {
+    setIngredients(ingredients.filter((e) => e.name !== name));
+  };
 
   /**
    * @todo enlever les doublons, conputer les totaux, modifier etats sur les inputs.
    */
-  const ingredientsList =
-    ingredients.length > 0 ? (
-      ingredients.map((e, i) => <Ingredient key={i} {...e} />)
-    ) : (
-      <Text style={{ color: "red", fontSize: 16 }}>Votre liste est vide</Text>
-    );
+  const ingredientsList = ingredients.map((e, i) => (
+    <Ingredient
+      handleDeleteIngredient={handleDeleteIngredient}
+      key={i}
+      {...e}
+    />
+  ));
 
   // le filter est a aller fetch depuis la database des magasins
   const filter = [
@@ -98,17 +103,24 @@ export default function ShopScreen({ navigation }) {
     );
   });
 
-  const handleSubmit = () => {
-    setFinished(true);
+  const handleSubmit = async () => {
+    try {
+      const response = await fetch(`${ROUTE}/users/archive`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token: token }),
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      dispatch(modifyHistory(currentRecipes));
+      dispatch(modifyCurrentRecipe([]));
+    } catch (error) {
+      console.error("Error while archiving recipes:", error.message);
+    }
   };
 
-  return finished ? (
-    <View style={styles.container}>
-      <View style={styles.displayCenter}>
-        <Text style={styles.h2}>course terminé</Text>
-      </View>
-    </View>
-  ) : (
+  return (
     <View style={styles.container}>
       <Text>shop Screen</Text>
       <ScrollView
@@ -118,27 +130,34 @@ export default function ShopScreen({ navigation }) {
       >
         {filterList}
       </ScrollView>
-      <ScrollView
-        vertical={true}
-        showsHorizontalScrollIndicator={true}
-        style={styles.ingredientsList}
-      >
-        {ingredientsList}
-      </ScrollView>
-      {ingredients && ingredients.length > 0 ? (
-        <View
-          style={{
-            alignItems: "flex-end",
-            width: screenWidth,
-            paddingHorizontal: 20,
-          }}
-        >
-          <SmallButton name="valider" onPress={handleSubmit} isPlain />
+      {currentRecipes.length > 0 ? (
+        <View style={styles.fullContent}>
+          <ScrollView
+            vertical={true}
+            showsHorizontalScrollIndicator={true}
+            style={styles.ingredientsList}
+          >
+            {ingredientsList}
+          </ScrollView>
+          <View
+            style={{
+              alignItems: "flex-end",
+              width: screenWidth,
+              paddingHorizontal: 20,
+            }}
+          >
+            <SmallButton name="valider" onPress={handleSubmit} isPlain />
+          </View>
         </View>
-      ) : null}
+      ) : (
+        <View style={styles.emptyContent}>
+          <Text style={styles.emptyText}>Vos courses sont terminées</Text>
+        </View>
+      )}
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     paddingTop: 40,
@@ -182,7 +201,24 @@ const styles = StyleSheet.create({
   ingredientsList: {
     padding: 20,
     width: screenWidth,
-    height: screenHeight - 290,
-    marginBottom: 20,
+    height: screenHeight - 240,
+    marginVertical: 20,
+  },
+  fullContent: {
+    width: screenWidth,
+    height: screenHeight - 220,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  emptyContent: {
+    width: screenWidth,
+    height: screenHeight - 220,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  emptyText: {
+    fontSize: 40,
+    fontWeight: 600,
+    color: "#4B3B47",
   },
 });
