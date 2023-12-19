@@ -5,7 +5,6 @@ import {
   Text,
   View,
   ScrollView,
-  Dimensions,
   Modal,
 } from "react-native";
 import { useState, useEffect } from "react";
@@ -24,7 +23,7 @@ const tagsList = [
 ];
 import { useSelector } from "react-redux";
 
-export default function HomeScreen({ navigation }) {
+export default function HomeScreen({ navigation, route }) {
   const user = useSelector((state)=> state.user)
   const token = user.credentials.token
   const preferences = user.preferences
@@ -34,8 +33,14 @@ export default function HomeScreen({ navigation }) {
   const [currentRecipe, setCurrentRecipe] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [isSearchModal, setIsSearchModal] = useState(false);
+  const [chosenDay, setChosenDay] = useState('');
 
   
+useEffect(()=>{
+  if(route.params){
+    setChosenDay(route.params)
+  }
+}, [route.params])
 
   //Updates the recipes state according to the value of the filter state
   useEffect(() => {
@@ -80,13 +85,14 @@ export default function HomeScreen({ navigation }) {
     ));
 
   const closeModal = () => {
+    setChosenDay('')
     setModalVisible(false);
   };
 
   return (
     <View style={styles.container}>
       <Modal visible={modalVisible} animationType="slide">
-        <RecipeModal {...currentRecipe} closeModal={closeModal} />
+        {chosenDay!== '' ? <RecipeModal {...currentRecipe} closeModal={closeModal} chosenDay={chosenDay}/> : <RecipeModal {...currentRecipe} closeModal={closeModal}/>}
       </Modal>
       <Modal visible={isSearchModal}>
         <SearchRecipesModal closeSearchModal={() => setIsSearchModal(false)} />
