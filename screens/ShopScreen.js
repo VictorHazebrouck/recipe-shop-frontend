@@ -4,7 +4,8 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import { useState, useEffect } from "react";
 import SmallButton from "../components/SmallButton";
 import Ingredient from "../components/Ingredient";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { modifyCurrentRecipe } from "../reducers/user";
 import ROUTE from "../globals/nico";
 
 const screenWidth = Dimensions.get("window").width;
@@ -12,9 +13,9 @@ const screenHeight = Dimensions.get("window").height;
 
 export default function ShopScreen({ navigation }) {
   const [ingredients, setIngredients] = useState([]);
-  const [finished, setFinished] = useState(false);
   const user = useSelector((state) => state.user);
   const token = user.credentials.token;
+  const dispatch = useDispatch();
 
   const currentRecipes = user.plannedRecipes.currentRecipes;
 
@@ -46,9 +47,6 @@ export default function ShopScreen({ navigation }) {
       );
 
       setIngredients(groupedIngredients);
-      if (ingredients) {
-        setFinished(false);
-      }
     })();
   }, [currentRecipes]);
 
@@ -106,19 +104,19 @@ export default function ShopScreen({ navigation }) {
   });
 
   const handleSubmit = async () => {
-    const allRecipes = user.plannedRecipes.currentRecipes;
-    console.log(allRecipes);
-    allRecipes.map(async (e) => {
-      console.log(e._id);
-      const response = fetch(`${ROUTE}/users/archive`, {
+    try {
+      const response = await fetch(`${ROUTE}/users/archive`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token: token, recipeId: e._id }),
+        body: JSON.stringify({ token: token }),
       });
-      const data = await response.json();
-      console.log(data);
-    });
-    // setFinished(true);
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      dispatch(modifyCurrentRecipe([]));
+    } catch (error) {
+      console.error("Error while archiving recipes:", error.message);
+    }
   };
 
   return (
@@ -131,11 +129,7 @@ export default function ShopScreen({ navigation }) {
       >
         {filterList}
       </ScrollView>
-      {finished && ingredients && ingredients.length > 0 ? (
-        <View style={styles.emptyContent}>
-          <Text style={styles.emptyText}>Vos courses sont terminées</Text>
-        </View>
-      ) : (
+      {currentRecipes.length > 0 ? (
         <View style={styles.fullContent}>
           <ScrollView
             vertical={true}
@@ -153,6 +147,10 @@ export default function ShopScreen({ navigation }) {
           >
             <SmallButton name="valider" onPress={handleSubmit} isPlain />
           </View>
+        </View>
+      ) : (
+        <View style={styles.emptyContent}>
+          <Text style={styles.emptyText}>Vos courses sont terminées</Text>
         </View>
       )}
     </View>
