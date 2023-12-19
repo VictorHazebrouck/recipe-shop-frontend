@@ -3,11 +3,12 @@ import {
   Text,
   StyleSheet,
   View,
-  TextInput,
+  TouchableOpacity,
   Button,
   ScrollView,
 } from "react-native";
 import AgendaDay from "./AgendaDay";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 /**
  * AgendaScroll component displays a scrollable agenda with specified start and end days.
@@ -54,21 +55,18 @@ const AgendaScroll = ({
   //display each date and send it relevant data
   let ref = [];
   Object.keys(daysData).forEach((key, i) => {
-    ref.push(
-        <AgendaDay
-          key={i}
-          day={key}
-          data={daysData[key]}
-          {...rest}
-        />
-      );
+    ref.push(<AgendaDay key={i} day={key} data={daysData[key]} {...rest} />);
   });
 
   return (
     <ScrollView style={styles.container}>
-      <Button title="load past items" onPress={() => onRefreshPast()} />
+      <TouchableOpacity style={{ alignSelf: 'center' }} onPress={() => onRefreshPast()}>
+        <FontAwesome name="caret-up" size={30} color="#CC3F0C" />
+      </TouchableOpacity>
       {ref}
-      <Button title="load future items" onPress={() => onRefreshFuture()} />
+      <TouchableOpacity style={{ alignSelf: 'center' }} onPress={() => onRefreshFuture()}>
+        <FontAwesome name="caret-down" size={30} color="#CC3F0C" />
+      </TouchableOpacity>
     </ScrollView>
   );
 };

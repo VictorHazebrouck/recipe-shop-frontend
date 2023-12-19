@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { useEffect, useState } from "react";
+import { StyleSheet, Text, View, TouchableOpacity, Modal } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import AgendaScroll from "./AgendaScroll";
 import { Card } from "react-native-paper";
 import { modifyCurrentRecipe } from "../reducers/user";
 import ROUTE from "../globals/nico";
+import RecipeModal from "./RecipeModal";
 
 export default function PlanningScreen({ navigation }) {
   const dispatch = useDispatch();
@@ -14,8 +15,10 @@ export default function PlanningScreen({ navigation }) {
   const currentRecipes = user.plannedRecipes.currentRecipes;
 
   const [data, setData] = useState({});
-  const [startDay, setStartDay] = useState(15);
+  const [startDay, setStartDay] = useState(0);
   const [endDay, setEndDay] = useState(15);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [currentRecipe, setCurentRecipe] = useState(null);
 
   useEffect(() => {
     const ref = {};
@@ -30,7 +33,9 @@ export default function PlanningScreen({ navigation }) {
     setData(ref);
   }, [currentRecipes]);
 
-  const handleAddRecipe = (day) => {};
+  const handleAddRecipe = (day) => {
+    navigation.navigate("Home", day);
+  };
 
   const handleDeleteRecipe = async (itemData) => {
     const response = await fetch(`${ROUTE}/users/currentRecipes`, {
@@ -49,11 +54,24 @@ export default function PlanningScreen({ navigation }) {
     setEndDay(endDay + 15);
   };
 
+  const handleModal = (itemData) => {
+    setCurentRecipe(itemData);
+    setModalVisible(true);
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+  };
+
   const renderDay = (day) => {
+    const options = { weekday: "long", day: "numeric" };
+    const formattedDate = new Date(day).toLocaleDateString("fr-FR", options);
+    const capitalizedDay =
+      formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
+
     return (
       <View style={styles.dayContainer}>
-        {/* Afficher la première lettre en majuscule suivie du reste de la chaîne */}
-        <Text style={styles.dayText}>{day}</Text>
+        <Text style={styles.dayText}>{capitalizedDay}</Text>
       </View>
     );
   };
@@ -87,9 +105,11 @@ export default function PlanningScreen({ navigation }) {
   const renderItem = (day, itemData, i) => {
     return (
       <Card style={styles.card} key={i}>
-        <Card.Content>
+        <Card.Content style={styles.cardContent}>
           <View style={styles.itemContainer}>
-            <Text style={styles.textCard}>{itemData.id.name}</Text>
+            <TouchableOpacity onPress={() => handleModal(itemData.id)}>
+              <Text style={styles.textCard}>{itemData.id.name}</Text>
+            </TouchableOpacity>
             <TouchableOpacity onPress={() => handleDeleteRecipe(itemData)}>
               <FontAwesome
                 style={{ marginLeft: 10 }}
@@ -100,6 +120,9 @@ export default function PlanningScreen({ navigation }) {
             </TouchableOpacity>
           </View>
         </Card.Content>
+        <Modal visible={modalVisible} animationType="slide">
+          <RecipeModal {...currentRecipe} closeModal={closeModal}></RecipeModal>
+        </Modal>
       </Card>
     );
   };
@@ -115,7 +138,7 @@ export default function PlanningScreen({ navigation }) {
       renderDay={renderDay}
       renderItem={renderItem}
       renderCommonLastItem={renderCommonLastItem}
-    />
+    ></AgendaScroll>
   );
 }
 
@@ -152,6 +175,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 10,
   },
+  cardContent: {
+    flexDirection: "row",
+    justifyContent: "space-between", 
+    alignItems: "center",
+    width: "100%",
+  },
   card: {
     flexDirection: "row",
     alignItems: "center",
@@ -176,11 +205,14 @@ const styles = StyleSheet.create({
   dayContainer: {
     flex: 1,
     witdh: "100%",
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
   },
   dayText: {
     width: "100%",
     fontSize: 30,
     fontWeight: "bold",
     color: "#333",
+    textAlign: 'left',
   },
 });
