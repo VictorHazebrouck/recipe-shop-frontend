@@ -2,10 +2,10 @@ import { StyleSheet, Text, View, ScrollView, Dimensions } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useState, useEffect } from "react";
-import ROUTE from "../globals/nico";
 import SmallButton from "../components/SmallButton";
 import Ingredient from "../components/Ingredient";
 import { useSelector } from "react-redux";
+import ROUTE from "../globals/nico";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -17,6 +17,7 @@ export default function ShopScreen({ navigation }) {
   const token = user.credentials.token;
 
   const currentRecipes = user.plannedRecipes.currentRecipes;
+
   useEffect(() => {
     (async () => {
       const ingredientsData = currentRecipes.flatMap((recipe) => {
@@ -34,7 +35,7 @@ export default function ShopScreen({ navigation }) {
           const existingIngredient = result.findIndex(
             (item) => item.name === ingredient.name
           );
-          if (existingIngredient > 0) {
+          if (existingIngredient >= 0) {
             result[existingIngredient].qtyForRecipe += ingredient.qtyForRecipe;
           } else {
             result.push({ ...ingredient });
@@ -43,22 +44,28 @@ export default function ShopScreen({ navigation }) {
         },
         []
       );
-      console.log("inside useEffect -->", groupedIngredients);
 
       setIngredients(groupedIngredients);
-      //return () => setIngredients({});
+      if (ingredients) {
+        setFinished(false);
+      }
     })();
   }, [currentRecipes]);
+
+  const handleDeleteIngredient = (name) => {
+    setIngredients(ingredients.filter((e) => e.name !== name));
+  };
 
   /**
    * @todo enlever les doublons, conputer les totaux, modifier etats sur les inputs.
    */
-  const ingredientsList =
-    ingredients.length > 0 ? (
-      ingredients.map((e, i) => <Ingredient key={i} {...e} />)
-    ) : (
-      <Text style={{ color: "red", fontSize: 16 }}>Votre liste est vide</Text>
-    );
+  const ingredientsList = ingredients.map((e, i) => (
+    <Ingredient
+      handleDeleteIngredient={handleDeleteIngredient}
+      key={i}
+      {...e}
+    />
+  ));
 
   // le filter est a aller fetch depuis la database des magasins
   const filter = [
@@ -98,17 +105,23 @@ export default function ShopScreen({ navigation }) {
     );
   });
 
-  const handleSubmit = () => {
-    setFinished(true);
+  const handleSubmit = async () => {
+    const allRecipes = user.plannedRecipes.currentRecipes;
+    console.log(allRecipes);
+    allRecipes.map(async (e) => {
+      console.log(e._id);
+      const response = fetch(`${ROUTE}/users/archive`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token: token, recipeId: e._id }),
+      });
+      const data = await response.json();
+      console.log(data);
+    });
+    // setFinished(true);
   };
 
-  return finished ? (
-    <View style={styles.container}>
-      <View style={styles.displayCenter}>
-        <Text style={styles.h2}>course terminé</Text>
-      </View>
-    </View>
-  ) : (
+  return (
     <View style={styles.container}>
       <Text>shop Screen</Text>
       <ScrollView
@@ -118,27 +131,34 @@ export default function ShopScreen({ navigation }) {
       >
         {filterList}
       </ScrollView>
-      <ScrollView
-        vertical={true}
-        showsHorizontalScrollIndicator={true}
-        style={styles.ingredientsList}
-      >
-        {ingredientsList}
-      </ScrollView>
-      {ingredients && ingredients.length > 0 ? (
-        <View
-          style={{
-            alignItems: "flex-end",
-            width: screenWidth,
-            paddingHorizontal: 20,
-          }}
-        >
-          <SmallButton name="valider" onPress={handleSubmit} isPlain />
+      {finished && ingredients && ingredients.length > 0 ? (
+        <View style={styles.emptyContent}>
+          <Text style={styles.emptyText}>Vos courses sont terminées</Text>
         </View>
-      ) : null}
+      ) : (
+        <View style={styles.fullContent}>
+          <ScrollView
+            vertical={true}
+            showsHorizontalScrollIndicator={true}
+            style={styles.ingredientsList}
+          >
+            {ingredientsList}
+          </ScrollView>
+          <View
+            style={{
+              alignItems: "flex-end",
+              width: screenWidth,
+              paddingHorizontal: 20,
+            }}
+          >
+            <SmallButton name="valider" onPress={handleSubmit} isPlain />
+          </View>
+        </View>
+      )}
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     paddingTop: 40,
@@ -182,7 +202,24 @@ const styles = StyleSheet.create({
   ingredientsList: {
     padding: 20,
     width: screenWidth,
-    height: screenHeight - 290,
-    marginBottom: 20,
+    height: screenHeight - 240,
+    marginVertical: 20,
+  },
+  fullContent: {
+    width: screenWidth,
+    height: screenHeight - 220,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  emptyContent: {
+    width: screenWidth,
+    height: screenHeight - 220,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  emptyText: {
+    fontSize: 40,
+    fontWeight: 600,
+    color: "#4B3B47",
   },
 });

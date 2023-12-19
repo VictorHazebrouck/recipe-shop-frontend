@@ -1,8 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { Text, StyleSheet, View, TextInput } from "react-native";
-import { useSelector } from "react-redux";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  Text,
+  StyleSheet,
+  View,
+  TextInput,
+  TouchableOpacity,
+} from "react-native";
 
 const Ingredient = (props) => {
+  const user = useSelector((state) => state.user);
   const [input, setInput] = useState("");
 
   useEffect(() => {
@@ -21,7 +29,11 @@ const Ingredient = (props) => {
         }}
       >
         <View
-          style={{ width: 120, flexDirection: "row", alignItems: "center" }}
+          style={{
+            width: 100,
+            flexDirection: "row",
+            alignItems: "center",
+          }}
         >
           <TextInput
             style={styles.qtyForRecipe}
@@ -32,6 +44,11 @@ const Ingredient = (props) => {
           <Text style={styles.unit}>{props.unit}</Text>
         </View>
         <Text style={styles.price}>100€</Text>
+        <TouchableOpacity
+          onPress={() => props.handleDeleteIngredient(props.name)}
+        >
+          <FontAwesome name="trash" size={25} color="#402B3D" />
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -49,7 +66,12 @@ const styles = StyleSheet.create({
   },
   name: { fontSize: 16, fontWeight: "400", color: "#937B8A" },
   unit: { fontSize: 16, fontWeight: "400", color: "#937B8A" },
-  price: { fontSize: 16, fontWeight: "600", color: "#937B8A" },
+  price: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#937B8A",
+    marginHorizontal: 10,
+  },
   qtyForRecipe: {
     width: 70,
     height: 42,
