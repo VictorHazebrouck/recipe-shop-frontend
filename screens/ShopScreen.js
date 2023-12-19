@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import SmallButton from "../components/SmallButton";
 import Ingredient from "../components/Ingredient";
 import { useDispatch, useSelector } from "react-redux";
-import { modifyCurrentRecipe } from "../reducers/user";
+import { modifyCurrentRecipe, modifyHistory } from "../reducers/user";
 import ROUTE from "../globals/nico";
 
 const screenWidth = Dimensions.get("window").width;
@@ -113,6 +113,7 @@ export default function ShopScreen({ navigation }) {
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
+      dispatch(modifyHistory(currentRecipes));
       dispatch(modifyCurrentRecipe([]));
     } catch (error) {
       console.error("Error while archiving recipes:", error.message);
