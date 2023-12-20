@@ -16,15 +16,16 @@ import {
 const screenWidth = Dimensions.get("window").width;
 
 export default function PlanningScreen({ navigation }) {
+  const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const token = user.credentials.token;
+  const isLoggedIn = user.isLoggedIn;
 
-  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+  const [isPlanningChecked, setPlanningChecked] = useState(planningChecked);
+
   const planningChecked = useSelector(
     (state) => state.user.preferences.planningChecked
   );
-  const [isPlanningChecked, setPlanningChecked] = useState(planningChecked);
-  const dispatch = useDispatch();
 
   const handlePlanningCheck = () => {
     setPlanningChecked(!isPlanningChecked);

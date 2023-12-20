@@ -199,7 +199,7 @@ export default function RegimeScreen({ navigation }) {
           <View style={styles.progressBar}></View>
           <View style={styles.progress}></View>
         </View>
-        <Text style={styles.title}>REGIME</Text>
+        <Text style={styles.h2}>REGIME</Text>
         <View style={styles.content}>{data}</View>
       </View>
       <LargeButton onPress={handleNext} name="suivant" isPlain={true} />
@@ -239,7 +239,7 @@ const styles = StyleSheet.create({
     width: 75,
     height: 14,
   },
-  title: {
+  h2: {
     fontSize: 40,
     color: "#4B3B47",
     alignSelf: "flex-start",

@@ -4,19 +4,23 @@ import {
   Text,
   TextInput,
   View,
-  TouchableOpacity,
+  KeyboardAvoidingView,
+  Dimensions,
 } from "react-native";
-import SmallButton from "../components/SmallButton";
+import LargeButton from "../components/LargeButton";
 import StoreCard from "../components/StoreCard";
 import { useDispatch, useSelector } from "react-redux";
 import * as Location from "expo-location";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
+const screenWidth = Dimensions.get("window").width;
+
 export default function FavStoreScreen({ navigation }) {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
-  dispatch(setLogin());
+  const token = user.credentials.token;
   const isLoggedIn = user.isLoggedIn;
+
   const [postalCode, setPostalCode] = useState("");
 
   useEffect(() => {
@@ -56,37 +60,21 @@ export default function FavStoreScreen({ navigation }) {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.progressContainer}>
-        <View style={styles.progressBar}></View>
-        <View style={styles.progress}></View>
-      </View>
-      <Text
-        style={{
-          fontSize: 30,
-          fontWeight: "bold",
-          marginTop: 30,
-          marginLeft: 30,
-        }}
-      >
-        MAGASIN FAVORI
-      </Text>
-      <Text
-        style={{
-          fontSize: 20,
-          fontWeight: "thin",
-          marginTop: 20,
-          marginLeft: 30,
-        }}
-      >
-        Les magasins proches de :
-      </Text>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
+      <View style={{ alignItems: "center", backgroundColor: "red" }}>
+        <View style={styles.progressContainer}>
+          <View style={styles.progressBar}></View>
+          <View style={styles.progress}></View>
+        </View>
+        <Text style={styles.h2}>REGIME</Text>
+        <Text style={styles.subTitle}>Les magasins proches de</Text>
+        <View style={styles.content}></View>
 
-      <View
-        style={{ ...styles.input, flexDirection: "row", alignItems: "center" }}
-      >
         <FontAwesome
-          style={{ marginLeft: 10, marginRight: 10 }}
+          style={{ position: "absolute" }}
           name="map-marker"
           size={25}
           color="#333"
@@ -95,22 +83,13 @@ export default function FavStoreScreen({ navigation }) {
           placeholder="Code postal"
           onChangeText={(value) => setPostalCode(value)}
           value={postalCode}
+          style={styles.input}
         />
+
+        <StoreCard />
       </View>
-
-      <StoreCard
-        uri="https://res.cloudinary.com/dyflh81v9/image/upload/v1703066301/Leclerc_n5a1ax.png"
-        name="E.Leclerc Carvin"
-        distance={4.2}
-      />
-
-      <SmallButton
-        onPress={handleNext}
-        name="valider"
-        isPlain={true}
-        styleButton={styles.button}
-      />
-    </View>
+      <LargeButton onPress={handleNext} name="suivant" isPlain={true} />
+    </KeyboardAvoidingView>
   );
 }
 
@@ -123,8 +102,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   input: {
+    width: screenWidth - 40,
     height: 40,
-    width: "80%",
     borderColor: "gray",
     borderRadius: 5,
     borderWidth: 1,
@@ -156,9 +135,22 @@ const styles = StyleSheet.create({
     width: 300,
     height: 14,
   },
-  button: {
-    marginTop: "auto",
-    width: 200,
-    marginBottom: 50,
+  h2: {
+    fontSize: 40,
+    color: "#4B3B47",
+    alignSelf: "flex-start",
+    marginBottom: 18,
+  },
+  subTitle: {
+    fontSize: 16,
+    color: "#4B3B47",
+    alignSelf: "flex-start",
+    marginBottom: 18,
+  },
+  content: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "center",
+    width: screenWidth - 40,
   },
 });
