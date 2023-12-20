@@ -36,6 +36,7 @@ export default function HomeScreen({ navigation, route }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [isSearchModal, setIsSearchModal] = useState(false);
   const [chosenDay, setChosenDay] = useState("");
+  const [modalClosedAlert, setModalClosedAlert] = useState(true)
 
   const [referenceList, setReferenceList] = useState(tagsList);
   //const [isPersonal]
@@ -82,7 +83,7 @@ export default function HomeScreen({ navigation, route }) {
         return;
       }
     })();
-  }, [filter]);
+  }, [filter, modalClosedAlert]);
 
   const filters = referenceList.map((e, i) => {
     return (
@@ -110,6 +111,7 @@ export default function HomeScreen({ navigation, route }) {
     ));
 
   const closeModal = () => {
+    setModalClosedAlert(!modalClosedAlert)
     setChosenDay("");
     setModalVisible(false);
   };
