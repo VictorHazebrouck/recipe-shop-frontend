@@ -1,16 +1,35 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import { StyleSheet, Text, TextInput, View, TouchableOpacity } from "react-native";
 import SmallButton from "../components/SmallButton";
+import StoreCard from "../components/StoreCard";
 import { useDispatch, useSelector } from "react-redux";
-import { setLogin } from "../reducers/user";
 
 export default function FavStoreScreen({ navigation }) {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
-  const token = user.credentials.token;
   const isLoggedIn = user.isLoggedIn;
 
-  const [location, setLocation] = useState("Votre code postal"); 
+  const [postCode, setPostCode] = useState('');
+
+  const handlePostCode = () => {
+    if (postCode.length === 0) {
+      return;
+    }
+
+    fetch(`https://api-adresse.data.gouv.fr/search/?q=${postcode}`)
+      .then((response) => response.json())
+      .then((data) => {
+        const firstPostCode = data.features[0];
+        const newPostCode = {
+          postCode: firstPostCode.properties.postCode,
+          latitude: firstPostCode.geometry.coordinates[1],
+          longitude: firstPostCode.geometry.coordinates[0],
+        };
+
+        dispatch(addPostCode(newPostCode));
+        setPostCode('');
+      });
+  };
 
   const handleNext = () => {
     if (isLoggedIn) {
@@ -42,12 +61,16 @@ export default function FavStoreScreen({ navigation }) {
         }}
       >
         Les magasins proches de :
-      </Text>
+      </Text>      
       <TextInput
         style={styles.input}
-        placeholder={location}
-        onChangeText={(text) => setLocation(text)}
+        placeholder="Code postal"
+        onChangeText={(value) => setPostCode(value)}
+        value={postCode}
       />
+
+      <StoreCard uri="https://res.cloudinary.com/dyflh81v9/image/upload/v1703066301/Leclerc_n5a1ax.png" name="E.Leclerc Carvin" distance ={4.2}/>
+
         <SmallButton
           onPress={handleNext}
           name="valider"
