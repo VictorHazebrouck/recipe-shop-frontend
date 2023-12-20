@@ -43,7 +43,7 @@ const Ingredient = (props) => {
           />
           <Text style={styles.unit}>{props.unit}</Text>
         </View>
-        <Text style={styles.price}>100€</Text>
+        <Text style={styles.price}>{props.price} €</Text>
         <TouchableOpacity
           onPress={() => props.handleDeleteIngredient(props.name)}
         >
