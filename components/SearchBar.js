@@ -1,7 +1,15 @@
 import React from "react";
-import { View, StyleSheet, TextInput, TouchableOpacity } from "react-native";
+import {
+  View,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  Dimensions,
+} from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { useState, useEffect } from "react";
+
+const screenWidth = Dimensions.get("window").width;
 
 const SearchBar = ({
   onInputChange,
@@ -30,12 +38,12 @@ const SearchBar = ({
       <TextInput
         style={styles.input}
         placeholder={placeholder}
-        placeholderTextColor="gray"
+        placeholderTextColor="#937B8A"
         onChangeText={(value) => setInput(value)}
         value={input}
       />
       <TouchableOpacity onPress={() => setInput("")} activeOpacity={1}>
-        <FontAwesome name={"close"} size={23} color="gray" />
+        <FontAwesome name={"close"} size={23} style={styles.erase} />
       </TouchableOpacity>
     </View>
   );
@@ -43,19 +51,17 @@ const SearchBar = ({
 
 const styles = StyleSheet.create({
   inputContainer: {
-    backgroundColor: "white",
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "flex-end",
-    borderWidth: 1,
-    borderColor: "#D3D3D3",
-    height: 40,
-    flex: 1,
-    borderRadius: 50,
-    paddingHorizontal: 15,
+    height: 42,
+    flex: 10,
   },
   input: {
+    height: 42,
     flex: 1,
+  },
+  erase: {
+    color: "#937B8A",
   },
 });
 

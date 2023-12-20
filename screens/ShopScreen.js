@@ -22,6 +22,7 @@ export default function ShopScreen({ navigation }) {
   const [ingredients, setIngredients] = useState([]);
   const [stores, setStores] = useState([]);
   const [ref, setRef] = useState(0);
+
   const user = useSelector((state) => state.user);
   const token = user.credentials.token;
   const dispatch = useDispatch();

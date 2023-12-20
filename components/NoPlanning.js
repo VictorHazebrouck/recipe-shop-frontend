@@ -5,12 +5,15 @@ import {
   Text,
   View,
   ScrollView,
+  Dimensions,
 } from "react-native";
 import { useState, useEffect } from "react";
 import ROUTE from "../globals/nico";
 import { useSelector, useDispatch } from "react-redux";
 import { modifyCurrentRecipe } from "../reducers/user";
 import RecipeModal from "./RecipeModal";
+
+const screenHeight = Dimensions.get("window").height;
 
 export default function NoPlanningScreen({ navigation }) {
   const dispatch = useDispatch();
@@ -41,22 +44,14 @@ export default function NoPlanningScreen({ navigation }) {
   ).map((e, i) => {
     return (
       <View key={i} style={styles.recipesContainer}>
-        <View style={styles.recipesList}>
-          <TouchableOpacity
-            onPress={() => handleTextPress(e)}
-            style={{ width: "80%" }}
-          >
-            <Text style={{ fontSize: 16, fontWeight: "600" }}>{e.id.name}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => handleDeleteRecipe(e._id)}>
-            <FontAwesome
-              style={{ marginLeft: 10 }}
-              name="trash-o"
-              size={25}
-              color="#CC3F0C"
-            />
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity onPress={() => handleTextPress(e)}>
+          <Text style={{ fontSize: 16, fontWeight: "600", color: "#4B3B47" }}>
+            {e.id.name}
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => handleDeleteRecipe(e._id)}>
+          <FontAwesome name="trash" size={25} color="#4B3B47" />
+        </TouchableOpacity>
       </View>
     );
   });
@@ -67,14 +62,14 @@ export default function NoPlanningScreen({ navigation }) {
         <TouchableOpacity
           onPress={() => setIsCurrentRecipes(!isCurrentRecipes)}
         >
-          <Text style={isCurrentRecipes ? styles.title : styles.text}>
+          <Text style={isCurrentRecipes ? styles.h3 : styles.regular}>
             Mes envies
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => setIsCurrentRecipes(!isCurrentRecipes)}
         >
-          <Text style={isCurrentRecipes ? styles.text : styles.title}>
+          <Text style={isCurrentRecipes ? styles.regular : styles.h3}>
             Historique
           </Text>
         </TouchableOpacity>
@@ -85,27 +80,18 @@ export default function NoPlanningScreen({ navigation }) {
         contentContainerStyle={styles.containerResults}
       >
         {currentRecipesList}
-
-        <TouchableOpacity style={styles.addRecipe} onPress={handleAddRecipe}>
-          <Text
-            style={{
-              fontSize: 16,
-              fontWeight: "600",
-              color: "#ffffff",
-              width: "80%",
-            }}
-          >
-            Ajouter une recette
-          </Text>
-
-          <FontAwesome
-            style={{ marginLeft: 10 }}
-            name="plus"
-            size={25}
-            color="#ffffff"
-          />
-        </TouchableOpacity>
       </ScrollView>
+      <TouchableOpacity style={styles.addRecipe} onPress={handleAddRecipe}>
+        <Text style={{ fontSize: 16, color: "#ffffff" }}>
+          Ajouter une recette
+        </Text>
+        <FontAwesome
+          style={{ marginLeft: 10 }}
+          name="plus"
+          size={25}
+          color="#fff"
+        />
+      </TouchableOpacity>
     </View>
   );
 }
@@ -113,52 +99,44 @@ export default function NoPlanningScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "stretch",
-    justifyContent: "flex-start",
     backgroundColor: "#F9F8F8",
   },
-  title: {
+  h3: {
     fontSize: 30,
-    fontWeight: "700",
+    color: "#4B3B47",
+  },
+  regular: {
+    fontSize: 16,
+    color: "#4B3B47",
   },
   containerTop: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal: 20,
-    paddingVertical: 25,
   },
   containerResults: {
-    height: 1000,
-    flexDirection: "row",
-    flexWrap: "wrap",
-    paddingTop: 15,
+    marginVertical: 20,
+    height: screenHeight - 200,
   },
   recipesContainer: {
-    margin: "1%",
-    flexDirection: "column-reverse",
-  },
-  recipesList: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "space-between",
     paddingHorizontal: 20,
     paddingVertical: 10,
+    marginBottom: 10,
     borderWidth: 1,
-    borderColor: "#937B8A",
+    borderColor: "#4B3B47",
     borderRadius: 5,
-    marginLeft: 30,
   },
   addRecipe: {
+    justifyContent: "flex-end",
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
     backgroundColor: "#CC3F0C",
-    marginTop: 30,
-    marginLeft: 40,
-    width: "80%",
     borderRadius: 5,
     paddingHorizontal: 20,
     paddingVertical: 10,
+    marginBottom: 20,
   },
 });

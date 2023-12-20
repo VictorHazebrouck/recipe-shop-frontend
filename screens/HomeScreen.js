@@ -6,6 +6,8 @@ import {
   View,
   ScrollView,
   Modal,
+  Image,
+  KeyboardAvoidingView,
 } from "react-native";
 import { useState, useEffect } from "react";
 import RecipeModal from "../components/RecipeModal";
@@ -36,7 +38,7 @@ export default function HomeScreen({ navigation, route }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [isSearchModal, setIsSearchModal] = useState(false);
   const [chosenDay, setChosenDay] = useState("");
-  const [modalClosedAlert, setModalClosedAlert] = useState(true)
+  const [modalClosedAlert, setModalClosedAlert] = useState(true);
 
   const [referenceList, setReferenceList] = useState(tagsList);
   //const [isPersonal]
@@ -55,11 +57,9 @@ export default function HomeScreen({ navigation, route }) {
 
         if (!idsList || !idsList.length > 0) {
           //if no items liked or saved, return
-          setRecipes({ ...recipes, [filter]: [] })
-          return
+          setRecipes({ ...recipes, [filter]: [] });
+          return;
         }
-
-        console.log(idsList);
 
         const response = await fetch(
           `${ROUTE}/recipes/populateIds?idsList=${idsList
@@ -67,8 +67,8 @@ export default function HomeScreen({ navigation, route }) {
             .join(",")}`
         );
         const data = await response.json();
-        
-        setRecipes({ ...recipes, [filter]: data.response })
+
+        setRecipes({ ...recipes, [filter]: data.response });
       } else if (!recipes[filter]) {
         //fetch & update recipes on first filter load
         const response = await fetch(
@@ -111,10 +111,11 @@ export default function HomeScreen({ navigation, route }) {
     ));
 
   const closeModal = () => {
-    setModalClosedAlert(!modalClosedAlert)
+    setModalClosedAlert(!modalClosedAlert);
     setChosenDay("");
     setModalVisible(false);
   };
+
   const handlePressUserLikes = () => {
     if (referenceList === tagsList) {
       setReferenceList(userList);
@@ -126,7 +127,10 @@ export default function HomeScreen({ navigation, route }) {
   };
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
       <Modal visible={modalVisible} animationType="slide">
         {chosenDay !== "" ? (
           <RecipeModal
@@ -138,21 +142,38 @@ export default function HomeScreen({ navigation, route }) {
           <RecipeModal {...currentRecipe} closeModal={closeModal} />
         )}
       </Modal>
-      <Modal visible={isSearchModal}>
+      <Modal visible={isSearchModal} animationType="slide" transparent={true}>
         <SearchRecipesModal closeSearchModal={() => setIsSearchModal(false)} />
       </Modal>
       <View style={styles.containerTop}>
-        <TouchableOpacity onPress={handlePressUserLikes}>
-          <FontAwesome
-            name={referenceList === tagsList ? "heart-o" : "heart"}
-            size={25}
-            color="#CC3F0C"
+        <View style={styles.profil}>
+          <Image
+            source={require("../assets/profil.png")}
+            style={styles.profilImg}
           />
-        </TouchableOpacity>
-        <Text style={styles.topTitle}>Les recettes</Text>
-        <TouchableOpacity onPress={() => setIsSearchModal(true)}>
-          <FontAwesome name={"search"} size={25} color="gray" />
-        </TouchableOpacity>
+          <View>
+            <Text style={styles.bold}>
+              Bonjour {user.credentials.name || "John Doe"}
+            </Text>
+            <Text style={styles.regular}>Que mange-t-on aujourd’hui ?</Text>
+          </View>
+        </View>
+        <View style={styles.searchRecipes}>
+          <TouchableOpacity onPress={handlePressUserLikes} style={{ flex: 1 }}>
+            <FontAwesome
+              name={referenceList === tagsList ? "heart-o" : "heart"}
+              size={25}
+              color="#CC3F0C"
+            />
+          </TouchableOpacity>
+          <Text style={styles.h3}>Les recettes</Text>
+          <TouchableOpacity
+            onPress={() => setIsSearchModal(true)}
+            style={{ flex: 1 }}
+          >
+            <FontAwesome name={"search"} size={25} color="gray" />
+          </TouchableOpacity>
+        </View>
       </View>
       <View style={styles.containerFilters}>
         <ScrollView
@@ -170,30 +191,48 @@ export default function HomeScreen({ navigation, route }) {
       >
         {recipesList}
       </ScrollView>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "stretch",
-    justifyContent: "flex-start",
+    paddingTop: 40,
     backgroundColor: "#F9F8F8",
   },
-
   containerTop: {
+    // alignItems: "center",
+    // justifyContent: "space-between",
+    paddingHorizontal: 20,
+  },
+  profil: {
+    flexDirection: "row",
+    alignSelf: "flex-start",
+  },
+  profilImg: {
+    marginRight: 10,
+  },
+  bold: {
+    fontSize: 16,
+    color: "#4B3B47",
+    fontWeight: 600,
+  },
+  regular: {
+    fontSize: 16,
+    color: "#4B3B47",
+    fontWeight: 400,
+  },
+  searchRecipes: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 20,
-    paddingVertical: 25,
+    paddingVertical: 10,
   },
-  topTitle: {
+  h3: {
     fontSize: 30,
-    fontWeight: "700",
+    color: "#4B3B47",
+    flex: 8,
   },
-
   containerFilters: {
     height: 55,
     backgroundColor: "white",
