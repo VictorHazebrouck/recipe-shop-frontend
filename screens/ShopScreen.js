@@ -1,4 +1,11 @@
-import { StyleSheet, Text, View, ScrollView, Dimensions, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  Dimensions,
+  TouchableOpacity,
+} from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useState, useEffect } from "react";
@@ -14,7 +21,7 @@ const screenHeight = Dimensions.get("window").height;
 export default function ShopScreen({ navigation }) {
   const [ingredients, setIngredients] = useState([]);
   const [stores, setStores] = useState([]);
-  const [ref, setRef] = useState(0)
+  const [ref, setRef] = useState(0);
   const user = useSelector((state) => state.user);
   const token = user.credentials.token;
   const dispatch = useDispatch();
@@ -63,8 +70,6 @@ export default function ShopScreen({ navigation }) {
     })();
   }, [currentRecipes]);
 
-  
-
   const handleDeleteIngredient = (name) => {
     setIngredients(ingredients.filter((e) => e.name !== name));
   };
@@ -82,7 +87,10 @@ export default function ShopScreen({ navigation }) {
   const filter = stores.map((e, i) => ({
     name: e.store.name,
     logo: e.store.logo,
-    price: Object.values(stores[i].products).reduce((acc, obj) => acc + obj.reference.TOTAL, 0),
+    price: Object.values(stores[i].products).reduce(
+      (acc, obj) => acc + obj.reference.TOTAL,
+      0
+    ),
     distance: 4.2,
   }));
 
@@ -108,7 +116,11 @@ export default function ShopScreen({ navigation }) {
       ) : null;
 
     return (
-      <TouchableOpacity key={i} onPress={()=> setRef(i)} style={styles.filterContainer}>
+      <TouchableOpacity
+        key={i}
+        onPress={() => setRef(i)}
+        style={styles.filterContainer}
+      >
         <View style={styles.filterIcon}>{iconComponent}</View>
         <Text style={styles.filterPrice}>{e.price} €</Text>
         <Text style={styles.filterDistance}>{e.distance} km</Text>
@@ -128,6 +140,8 @@ export default function ShopScreen({ navigation }) {
       }
       dispatch(modifyHistory(currentRecipes));
       dispatch(modifyCurrentRecipe([]));
+      setIngredients([]);
+      setStores([]);
     } catch (error) {
       console.error("Error while archiving recipes:", error.message);
     }
