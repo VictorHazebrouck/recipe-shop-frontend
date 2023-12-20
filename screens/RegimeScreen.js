@@ -194,17 +194,15 @@ export default function RegimeScreen({ navigation }) {
       style={styles.container}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
-      <View style={styles.container}>
-        <View style={{ alignItems: "center" }}>
-          <View style={styles.progressContainer}>
-            <View style={styles.progressBar}></View>
-            <View style={styles.progress}></View>
-          </View>
-          <Text style={styles.title}>REGIME</Text>
-          <View style={styles.content}>{data}</View>
+      <View style={{ alignItems: "center" }}>
+        <View style={styles.progressContainer}>
+          <View style={styles.progressBar}></View>
+          <View style={styles.progress}></View>
         </View>
-        <LargeButton onPress={handleNext} name="suivant" isPlain={true} />
+        <Text style={styles.title}>REGIME</Text>
+        <View style={styles.content}>{data}</View>
       </View>
+      <LargeButton onPress={handleNext} name="suivant" isPlain={true} />
     </KeyboardAvoidingView>
   );
 }
@@ -212,8 +210,9 @@ export default function RegimeScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    paddingTop: 40,
+    paddingHorizontal: 20,
+    paddingTop: 80,
+    paddingBottom: 40,
     backgroundColor: "#F9F8F8",
     alignItems: "center",
     justifyContent: "space-between",

@@ -131,32 +131,28 @@ export default function GoutsScreen({ navigation }) {
       style={styles.container}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
-      <View style={styles.container}>
-        <View style={{ alignItems: "center" }}>
-          <View style={styles.progressContainer}>
-            <View style={styles.progressBar}></View>
-            <View style={styles.progress}></View>
-          </View>
-          <Text style={styles.h2}>GOUTS</Text>
-          <Text style={styles.subTitle}>
-            Choisissez des ingrédients que vous n'aimez pas
-          </Text>
-          <View style={styles.content}>
-            <SearchDropdown
-              onInputChange={handleInputChange}
-              onResultSelection={handleResultSelection}
-              placeholder="Rechercher des ingrédients à exclure"
-            />
-            <View style={styles.unselectContainer}>{categoriesUnselected}</View>
-            <Text style={styles.h4}>Ingrédients exclus</Text>
-            <View style={styles.selectContainer}>{categoriesSelected}</View>
-            <View style={styles.selectContainer}>
-              {ingredientsSelectedData}
-            </View>
-          </View>
+      <View style={{ alignItems: "center" }}>
+        <View style={styles.progressContainer}>
+          <View style={styles.progressBar}></View>
+          <View style={styles.progress}></View>
         </View>
-        <LargeButton onPress={handleNext} name="suivant" isPlain={true} />
+        <Text style={styles.h2}>GOUTS</Text>
+        <Text style={styles.subTitle}>
+          Choisissez des ingrédients que vous n'aimez pas
+        </Text>
+        <View style={styles.content}>
+          <SearchDropdown
+            onInputChange={handleInputChange}
+            onResultSelection={handleResultSelection}
+            placeholder="Rechercher des ingrédients à exclure"
+          />
+          <View style={styles.unselectContainer}>{categoriesUnselected}</View>
+          <Text style={styles.h4}>Ingrédients exclus</Text>
+          <View style={styles.selectContainer}>{categoriesSelected}</View>
+          <View style={styles.selectContainer}>{ingredientsSelectedData}</View>
+        </View>
       </View>
+      <LargeButton onPress={handleNext} name="suivant" isPlain={true} />
     </KeyboardAvoidingView>
   );
 }
@@ -164,8 +160,9 @@ export default function GoutsScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    paddingTop: 40,
+    paddingHorizontal: 20,
+    paddingTop: 80,
+    paddingBottom: 40,
     backgroundColor: "#F9F8F8",
     alignItems: "center",
     justifyContent: "space-between",

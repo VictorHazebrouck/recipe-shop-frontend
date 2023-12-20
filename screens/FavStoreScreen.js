@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, TextInput, View, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  TouchableOpacity,
+} from "react-native";
 import SmallButton from "../components/SmallButton";
 import StoreCard from "../components/StoreCard";
 import { useDispatch, useSelector } from "react-redux";
@@ -7,9 +13,10 @@ import { useDispatch, useSelector } from "react-redux";
 export default function FavStoreScreen({ navigation }) {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
+  dispatch(setLogin());
   const isLoggedIn = user.isLoggedIn;
 
-  const [postCode, setPostCode] = useState('');
+  const [postCode, setPostCode] = useState("");
 
   const handlePostCode = () => {
     if (postCode.length === 0) {
@@ -27,7 +34,7 @@ export default function FavStoreScreen({ navigation }) {
         };
 
         dispatch(addPostCode(newPostCode));
-        setPostCode('');
+        setPostCode("");
       });
   };
 
@@ -61,7 +68,7 @@ export default function FavStoreScreen({ navigation }) {
         }}
       >
         Les magasins proches de :
-      </Text>      
+      </Text>
       <TextInput
         style={styles.input}
         placeholder="Code postal"
@@ -69,14 +76,18 @@ export default function FavStoreScreen({ navigation }) {
         value={postCode}
       />
 
-      <StoreCard uri="https://res.cloudinary.com/dyflh81v9/image/upload/v1703066301/Leclerc_n5a1ax.png" name="E.Leclerc Carvin" distance ={4.2}/>
+      <StoreCard
+        uri="https://res.cloudinary.com/dyflh81v9/image/upload/v1703066301/Leclerc_n5a1ax.png"
+        name="E.Leclerc Carvin"
+        distance={4.2}
+      />
 
-        <SmallButton
-          onPress={handleNext}
-          name="valider"
-          isPlain={true}
-          styleButton={styles.button}
-        />
+      <SmallButton
+        onPress={handleNext}
+        name="valider"
+        isPlain={true}
+        styleButton={styles.button}
+      />
     </View>
   );
 }
@@ -86,12 +97,12 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 20,
     backgroundColor: "#EAEAEA",
-    alignItems: 'flex-start',
-    justifyContent: 'flex-start',
+    alignItems: "flex-start",
+    justifyContent: "flex-start",
   },
   input: {
     height: 40,
-    width: '80%',
+    width: "80%",
     borderColor: "gray",
     borderRadius: 5,
     borderWidth: 1,
@@ -100,7 +111,6 @@ const styles = StyleSheet.create({
     marginLeft: 30,
     textAlign: "left",
     paddingStart: 10,
-
   },
   button: {
     marginTop: "auto",
