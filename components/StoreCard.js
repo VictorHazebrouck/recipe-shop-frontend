@@ -5,58 +5,72 @@ import {
   StyleSheet,
   View,
   Image,
+  ScrollView,
 } from "react-native";
+import ROUTE from "../globals/nico";
 
 export default function StoreCard(props) {
   const user = useSelector((state) => state.user);
+  const [stores, setStores] = useState([])
 
-  return (
-    <View style={styles.ingredientContainer}>
-      <Image style={styles.logoStore}
-        source={{
-          uri: props.uri,
-        }}
-      />
-      <View>
-        <Text style={styles.name}>{props.name}</Text>
-        <Text style={styles.name}>{props.distance}</Text>
+useEffect(() => {
+  (async () => {
+  const response = await fetch(`${ROUTE}/stores/lowestPrices`, {
+    method: "put",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      ingredientsList: [] 
+    }),
+  });
+  const data = await response.json();
+  setStores(data.response)
+})()
+},[])
+
+
+
+return (
+  <ScrollView>
+    {stores.map((store, index) => (
+      <View key={index} style={styles.container}>
+        <Image
+          style={styles.logoStore}
+          source={{
+            uri: store.store.logo,
+          }}
+        />
+        <View>
+          <Text style={styles.name}>{store.store.name}</Text>
+          <Text style={styles.distance}>{props.distance} km</Text>
+        </View>
       </View>
-    </View>
-  );
+    ))}
+  </ScrollView>
+);
 }
 
 const styles = StyleSheet.create({
-  ingredientContainer: {
+  container: {
     flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingVertical: 5,
+    justifyContent: "center",
+    alignItems: "space-between",
     borderBottomWidth: 1,
-    borderBottomColor: "#937B8A",
-    marginBottom: 10,
+    borderBottomColor: "#333",
+    width: '80%',
+    
   },
-  name: { fontSize: 16, fontWeight: "400", color: "#937B8A" },
-  unit: { fontSize: 16, fontWeight: "400", color: "#937B8A" },
-  price: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#937B8A",
-    marginHorizontal: 10,
+  name: { 
+    fontSize: 18, 
+    fontWeight: "800", 
+    color: "#333", 
   },
-  qtyForRecipe: {
-    width: 70,
-    height: 42,
-    fontSize: 16,
-    borderColor: "#937B8A",
-    borderWidth: 1,
-    color: "#937B8A",
-    fontWeight: "400",
-    backgroundColor: "#fff",
-    paddingHorizontal: 10,
-    marginRight: 10,
-  },
+  distance: { 
+    fontSize: 18, 
+    fontWeight: "600", 
+    color: "#937B8A" 
+  }, 
   logoStore: {
-    width: 50,
-    height: 50,
+    width: 80,
+    height: 80,
   },
 });

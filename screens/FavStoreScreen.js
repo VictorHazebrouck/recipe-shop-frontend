@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -9,34 +9,42 @@ import {
 import SmallButton from "../components/SmallButton";
 import StoreCard from "../components/StoreCard";
 import { useDispatch, useSelector } from "react-redux";
+import * as Location from "expo-location";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 export default function FavStoreScreen({ navigation }) {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   dispatch(setLogin());
   const isLoggedIn = user.isLoggedIn;
+  const [postalCode, setPostalCode] = useState("");
 
-  const [postCode, setPostCode] = useState("");
+  useEffect(() => {
+    (async () => {
+      const { status } = await Location.requestForegroundPermissionsAsync();
 
-  const handlePostCode = () => {
-    if (postCode.length === 0) {
-      return;
-    }
+      if (status === "granted") {
+        Location.watchPositionAsync(
+          { distanceInterval: 10 },
+          async (location) => {
+            const { coords } = location;
 
-    fetch(`https://api-adresse.data.gouv.fr/search/?q=${postcode}`)
-      .then((response) => response.json())
-      .then((data) => {
-        const firstPostCode = data.features[0];
-        const newPostCode = {
-          postCode: firstPostCode.properties.postCode,
-          latitude: firstPostCode.geometry.coordinates[1],
-          longitude: firstPostCode.geometry.coordinates[0],
-        };
+            const response = await fetch(
+              `https://api-adresse.data.gouv.fr/reverse/?lon=${coords.longitude}&lat=${coords.latitude}`
+            );
+            const data = await response.json();
 
-        dispatch(addPostCode(newPostCode));
-        setPostCode("");
-      });
-  };
+            if (data.features && data.features.length > 0) {
+              const newPostalCode = data.features[0].properties.postcode;
+              setPostalCode(newPostalCode);
+            } else {
+              console.log("Aucune adresse trouvée.");
+            }
+          }
+        );
+      }
+    })();
+  }, []);
 
   const handleNext = () => {
     if (isLoggedIn) {
@@ -49,6 +57,10 @@ export default function FavStoreScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
+      <View style={styles.progressContainer}>
+        <View style={styles.progressBar}></View>
+        <View style={styles.progress}></View>
+      </View>
       <Text
         style={{
           fontSize: 30,
@@ -63,18 +75,28 @@ export default function FavStoreScreen({ navigation }) {
         style={{
           fontSize: 20,
           fontWeight: "thin",
-          marginTop: 50,
+          marginTop: 20,
           marginLeft: 30,
         }}
       >
         Les magasins proches de :
       </Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Code postal"
-        onChangeText={(value) => setPostCode(value)}
-        value={postCode}
-      />
+
+      <View
+        style={{ ...styles.input, flexDirection: "row", alignItems: "center" }}
+      >
+        <FontAwesome
+          style={{ marginLeft: 10, marginRight: 10 }}
+          name="map-marker"
+          size={25}
+          color="#333"
+        />
+        <TextInput
+          placeholder="Code postal"
+          onChangeText={(value) => setPostalCode(value)}
+          value={postalCode}
+        />
+      </View>
 
       <StoreCard
         uri="https://res.cloudinary.com/dyflh81v9/image/upload/v1703066301/Leclerc_n5a1ax.png"
@@ -95,10 +117,10 @@ export default function FavStoreScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 20,
+    paddingTop: 60,
     backgroundColor: "#EAEAEA",
-    alignItems: "flex-start",
-    justifyContent: "flex-start",
+    alignItems: "center",
+    justifyContent: "center",
   },
   input: {
     height: 40,
@@ -111,6 +133,28 @@ const styles = StyleSheet.create({
     marginLeft: 30,
     textAlign: "left",
     paddingStart: 10,
+  },
+  progressContainer: {
+    position: "relative",
+    width: 300,
+    height: 14,
+    marginBottom: 24,
+  },
+  progressBar: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    backgroundColor: "#C9AFBD",
+    width: 300,
+    height: 14,
+  },
+  progress: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    backgroundColor: "#4B3B47",
+    width: 300,
+    height: 14,
   },
   button: {
     marginTop: "auto",
