@@ -19,47 +19,73 @@ const tagsList = [
   "Pour les fetes",
   "A cuisiner en famille",
   "Pour les enfant",
-  "Express",
 ];
+const userList = ["Mes coups de coeur", "Mes recettes"];
 import { useSelector } from "react-redux";
 
 export default function HomeScreen({ navigation, route }) {
-  const user = useSelector((state)=> state.user)
-  const token = user.credentials.token
-  const preferences = user.preferences
+  const user = useSelector((state) => state.user);
+  const token = user.credentials.token;
+  const preferences = user.preferences;
+  const likedRecipes = user.personalRecipes.favoriteRecipes;
+  const myRecipes = user.personalRecipes.myRecipes;
 
   const [filter, setFilter] = useState("A la une");
   const [recipes, setRecipes] = useState({});
   const [currentRecipe, setCurrentRecipe] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [isSearchModal, setIsSearchModal] = useState(false);
-  const [chosenDay, setChosenDay] = useState('');
+  const [chosenDay, setChosenDay] = useState("");
+  const [modalClosedAlert, setModalClosedAlert] = useState(true)
 
-  
-useEffect(()=>{
-  if(route.params){
-    setChosenDay(route.params)
-  }
-}, [route.params])
+  const [referenceList, setReferenceList] = useState(tagsList);
+  //const [isPersonal]
+
+  useEffect(() => {
+    if (route.params) {
+      setChosenDay(route.params);
+    }
+  }, [route.params]);
 
   //Updates the recipes state according to the value of the filter state
   useEffect(() => {
     (async () => {
-      if (!recipes[filter]) {
-        //data not yet saved => fetch & update
+      if (filter === "Mes recettes" || filter === "Mes coups de coeur") {
+        const idsList = filter === "Mes recettes" ? myRecipes : likedRecipes;
+
+        if (!idsList || !idsList.length > 0) {
+          //if no items liked or saved, return
+          setRecipes({ ...recipes, [filter]: [] })
+          return
+        }
+
+        console.log(idsList);
+
         const response = await fetch(
-          `${ROUTE}/recipes/search?&tag=${filter}&regime=${preferences.regime.join(",")}`
+          `${ROUTE}/recipes/populateIds?idsList=${idsList
+            .map((e) => e._id)
+            .join(",")}`
+        );
+        const data = await response.json();
+        
+        setRecipes({ ...recipes, [filter]: data.response })
+      } else if (!recipes[filter]) {
+        //fetch & update recipes on first filter load
+        const response = await fetch(
+          `${ROUTE}/recipes/search?&tag=${filter}&regime=${preferences.regime.join(
+            ","
+          )}`
         );
         const data = await response.json();
         setRecipes({ ...recipes, [filter]: data.response });
       } else {
-        //already saved => do nothing
+        //don't re-fetch data for a previously fetched list of recipes
         return;
       }
     })();
-  }, [filter]);
+  }, [filter, modalClosedAlert]);
 
-  const filters = tagsList.map((e, i) => {
+  const filters = referenceList.map((e, i) => {
     return (
       <TouchableOpacity key={i} onPress={() => setFilter(e)}>
         <Text
@@ -85,19 +111,44 @@ useEffect(()=>{
     ));
 
   const closeModal = () => {
-    setChosenDay('')
+    setModalClosedAlert(!modalClosedAlert)
+    setChosenDay("");
     setModalVisible(false);
+  };
+  const handlePressUserLikes = () => {
+    if (referenceList === tagsList) {
+      setReferenceList(userList);
+      setFilter(userList[0]);
+    } else {
+      setReferenceList(tagsList);
+      setFilter(tagsList[0]);
+    }
   };
 
   return (
     <View style={styles.container}>
       <Modal visible={modalVisible} animationType="slide">
-        {chosenDay!== '' ? <RecipeModal {...currentRecipe} closeModal={closeModal} chosenDay={chosenDay}/> : <RecipeModal {...currentRecipe} closeModal={closeModal}/>}
+        {chosenDay !== "" ? (
+          <RecipeModal
+            {...currentRecipe}
+            closeModal={closeModal}
+            chosenDay={chosenDay}
+          />
+        ) : (
+          <RecipeModal {...currentRecipe} closeModal={closeModal} />
+        )}
       </Modal>
       <Modal visible={isSearchModal}>
         <SearchRecipesModal closeSearchModal={() => setIsSearchModal(false)} />
       </Modal>
       <View style={styles.containerTop}>
+        <TouchableOpacity onPress={handlePressUserLikes}>
+          <FontAwesome
+            name={referenceList === tagsList ? "heart-o" : "heart"}
+            size={25}
+            color="#CC3F0C"
+          />
+        </TouchableOpacity>
         <Text style={styles.topTitle}>Les recettes</Text>
         <TouchableOpacity onPress={() => setIsSearchModal(true)}>
           <FontAwesome name={"search"} size={25} color="gray" />

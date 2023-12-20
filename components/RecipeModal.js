@@ -16,7 +16,11 @@ import {
   ScrollView,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { modifyCurrentRecipe } from "../reducers/user";
+import {
+  modifyCurrentRecipe,
+  addFavoriteRecipes,
+  removeFavoriteRecipes,
+} from "../reducers/user";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 const screenWidth = Dimensions.get("window").width;
@@ -31,7 +35,8 @@ const screenWidth = Dimensions.get("window").width;
 @param {string} props._id
 @param {string} props.imageURL
 @param {string[]} props.instructions
-@param {object[]} props.ingredients */
+@param {object[]} props.ingredients 
+*/
 
 const RecipeModal = (props) => {
   const navigation = useNavigation();
@@ -79,7 +84,6 @@ const RecipeModal = (props) => {
   const hideDatePicker = () => {
     setDatePickerVisibility(false);
   };
-
 
   //function to add new recipe to bdd and navigate to planning
   const addRecipe = (date) => {
@@ -191,8 +195,10 @@ const RecipeModal = (props) => {
       .then((response) => response.json())
       .then((data) => {
         if (data.result) {
+          dispatch(addFavoriteRecipes({_id: props._id}));
           setLike("heart");
         } else {
+          dispatch(removeFavoriteRecipes({_id: props._id}));
           setLike("heart-o");
         }
       });
