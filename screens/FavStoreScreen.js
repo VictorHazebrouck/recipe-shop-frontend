@@ -92,11 +92,7 @@ export default function FavStoreScreen({ navigation }) {
       />
     </View>
 
-      <StoreCard
-        uri="https://res.cloudinary.com/dyflh81v9/image/upload/v1703066301/Leclerc_n5a1ax.png"
-        name="E.Leclerc Carvin"
-        distance={4.2}
-      />
+      <StoreCard/>
 
       <SmallButton
         onPress={handleNext}
