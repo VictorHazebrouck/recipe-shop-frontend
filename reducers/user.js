@@ -42,6 +42,12 @@ export const userSlice = createSlice({
         state.plannedRecipes.historyRecipes.push(action.payload);
       }
     },
+    removeFavoriteRecipes: (state, action) =>{
+      state.personalRecipes.favoriteRecipes = state.personalRecipes.favoriteRecipes.filter(e => action.payload._id !== e._id) 
+    },
+    addFavoriteRecipes: (state, action) =>{
+      state.personalRecipes.favoriteRecipes = [...state.personalRecipes.favoriteRecipes, action.payload]
+    },
 
     //working?
     initUser: (state, action) => {
@@ -93,5 +99,7 @@ export const {
   modifyExcludeIngredients,
   modifyCurrentRecipe,
   modifyHistory,
+  addFavoriteRecipes,
+  removeFavoriteRecipes
 } = userSlice.actions;
 export default userSlice.reducer;

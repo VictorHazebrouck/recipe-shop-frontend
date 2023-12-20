@@ -15,6 +15,7 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 export default function FavStoreScreen({ navigation }) {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
+  dispatch(setLogin());
   const isLoggedIn = user.isLoggedIn;
   const [postalCode, setPostalCode] = useState("");
 
@@ -22,20 +23,25 @@ export default function FavStoreScreen({ navigation }) {
     (async () => {
       const { status } = await Location.requestForegroundPermissionsAsync();
 
-      if (status === 'granted') {
-        Location.watchPositionAsync({ distanceInterval: 10 }, async (location) => {
-          const { coords } = location;
+      if (status === "granted") {
+        Location.watchPositionAsync(
+          { distanceInterval: 10 },
+          async (location) => {
+            const { coords } = location;
 
-          const response = await fetch(`https://api-adresse.data.gouv.fr/reverse/?lon=${coords.longitude}&lat=${coords.latitude}`);
-          const data = await response.json();
+            const response = await fetch(
+              `https://api-adresse.data.gouv.fr/reverse/?lon=${coords.longitude}&lat=${coords.latitude}`
+            );
+            const data = await response.json();
 
-          if (data.features && data.features.length > 0) {
-            const newPostalCode = data.features[0].properties.postcode;
-            setPostalCode(newPostalCode);
-          } else {
-            console.log('Aucune adresse trouvée.');
+            if (data.features && data.features.length > 0) {
+              const newPostalCode = data.features[0].properties.postcode;
+              setPostalCode(newPostalCode);
+            } else {
+              console.log("Aucune adresse trouvée.");
+            }
           }
-        });
+        );
       }
     })();
   }, []);
@@ -51,7 +57,7 @@ export default function FavStoreScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-        <View style={styles.progressContainer}>
+      <View style={styles.progressContainer}>
         <View style={styles.progressBar}></View>
         <View style={styles.progress}></View>
       </View>
@@ -74,23 +80,23 @@ export default function FavStoreScreen({ navigation }) {
         }}
       >
         Les magasins proches de :
-        
       </Text>
 
-    <View style={{...styles.input, flexDirection: 'row', alignItems: 'center' }}>
-    <FontAwesome
-                style={{ marginLeft: 10, marginRight: 10, }}
-                name="map-marker"
-                size={25}
-                color="#333"
-              />
-      <TextInput
-        
-        placeholder="Code postal"
-        onChangeText={(value) => setPostalCode(value)}
-        value={postalCode}
-      />
-    </View>
+      <View
+        style={{ ...styles.input, flexDirection: "row", alignItems: "center" }}
+      >
+        <FontAwesome
+          style={{ marginLeft: 10, marginRight: 10 }}
+          name="map-marker"
+          size={25}
+          color="#333"
+        />
+        <TextInput
+          placeholder="Code postal"
+          onChangeText={(value) => setPostalCode(value)}
+          value={postalCode}
+        />
+      </View>
 
       <StoreCard/>
 
