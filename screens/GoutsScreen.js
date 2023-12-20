@@ -116,14 +116,11 @@ export default function GoutsScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Text
-        style={{
-          fontSize: 30,
-          fontWeight: "bold",
-        }}
-      >
-        GOUTS
-      </Text>
+      <View style={styles.progressContainer}>
+        <View style={styles.progressBar}></View>
+        <View style={styles.progress}></View>
+      </View>
+      <Text style={styles.title}>GOUTS</Text>
       <Text>Choisissez des ingrédients que vous n'aimez pas</Text>
       <SearchDropdown
         onInputChange={handleInputChange}

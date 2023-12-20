@@ -1,5 +1,17 @@
-import { Button, StyleSheet, Text, View, Image } from "react-native";
+import {
+  Button,
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  Touchable,
+  TouchableOpacity,
+} from "react-native";
+import LargeButton from "../components/LargeButton";
 import SmallButton from "../components/SmallButton";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
+import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useState } from "react";
 import ROUTE from "../globals/nico";
 import { useDispatch, useSelector } from "react-redux";
@@ -70,14 +82,49 @@ export default function RegimeScreen({ navigation }) {
     }
   };
 
+  // const data = regimeList.map((e, i) => {
+  //   console.log(e);
+  //   return (
+  //     <SmallButton
+  //       key={i}
+  //       name={e}
+  //       onPress={() => handleRegime(e)}
+  //       isPlain={regimes.some((x) => x === e) ? true : false}
+  //     />
+  //   );
+  // });
+
   const data = regimeList.map((e, i) => {
+    const iconComponent =
+      e === "Pesco-végétarien" ? (
+        <FontAwesome5 name={"fish"} size={50} color="#fff" />
+      ) : e === "Sans lactose" ? (
+        <Image source={require("../assets/lait.png")} />
+      ) : e === "Sans gluten" ? (
+        <Image source={require("../assets/gluten.png")} />
+      ) : e === "Sans porc" ? (
+        <Image source={require("../assets/porc.png")} />
+      ) : e === "Vegan" ? (
+        <Image source={require("../assets/vegan.png")} />
+      ) : e === "Végétarien" ? (
+        <Image source={require("../assets/vegetarien.png")} />
+      ) : null;
+
     return (
-      <SmallButton
-        key={i}
-        name={e}
-        onPress={() => handleRegime(e)}
-        isPlain={regimes.some((x) => x === e) ? true : false}
-      />
+      <View style={{ alignItems: "center" }} key={i}>
+        <TouchableOpacity
+          onPress={() => handleRegime(e)}
+          style={{
+            ...styles.button,
+            backgroundColor: regimes.some((x) => x === e)
+              ? "#921706"
+              : "#CC3F0C",
+          }}
+        >
+          {iconComponent}
+        </TouchableOpacity>
+        <Text style={{ color: "#937B8A", fontSize: 16 }}>{e}</Text>
+      </View>
     );
   });
 
@@ -98,21 +145,15 @@ export default function RegimeScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Text
-        style={{
-          fontSize: 30,
-          fontWeight: "bold",
-        }}
-      >
-        REGIME
-      </Text>
-      {data}
-      <SmallButton
-        onPress={handleNext}
-        name="suivant"
-        isPlain={true}
-        styleButton={styles.button}
-      />
+      <View style={styles.progressContainer}>
+        <View style={styles.progressBar}></View>
+        <View style={styles.progress}></View>
+      </View>
+      <Text style={styles.title}>REGIME</Text>
+      <View style={styles.content}>{data}</View>
+      <View style={{ position: "absolute", bottom: 50 }}>
+        <LargeButton onPress={handleNext} name="suivant" isPlain={true} />
+      </View>
     </View>
   );
 }
@@ -120,14 +161,55 @@ export default function RegimeScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 20,
-    backgroundColor: "yellow",
+    padding: 20,
+    paddingTop: 60,
+    backgroundColor: "#F9F8F8",
     alignItems: "center",
   },
-  button: {
-    marginTop: "auto",
-    width: 200,
-    marginBottom: 50,
+  progressContainer: {
+    position: "relative",
+    width: 300,
+    height: 14,
+    marginBottom: 24,
   },
-  title: {},
+  progressBar: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    backgroundColor: "#C9AFBD",
+    width: 300,
+    height: 14,
+  },
+  progress: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    backgroundColor: "#4B3B47",
+    width: 75,
+    height: 14,
+  },
+  title: {
+    fontSize: 40,
+    color: "#4B3B47",
+    alignSelf: "flex-start",
+    marginBottom: 18,
+  },
+  content: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "center",
+    width: 300,
+  },
+  button: {
+    // marginTop: "auto",
+    // width: 200,
+    // marginBottom: 50,
+    width: 80,
+    height: 80,
+    margin: 20,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 40,
+    backgroundColor: "#CC3F0C",
+  },
 });
