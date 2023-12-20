@@ -1,4 +1,11 @@
-import { StyleSheet, Text, View, ScrollView, Dimensions } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  Dimensions,
+  TouchableOpacity,
+} from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useState, useEffect } from "react";
@@ -13,6 +20,8 @@ const screenHeight = Dimensions.get("window").height;
 
 export default function ShopScreen({ navigation }) {
   const [ingredients, setIngredients] = useState([]);
+  const [stores, setStores] = useState([]);
+  const [ref, setRef] = useState(0);
   const user = useSelector((state) => state.user);
   const token = user.credentials.token;
   const dispatch = useDispatch();
@@ -45,7 +54,18 @@ export default function ShopScreen({ navigation }) {
         },
         []
       );
-
+      const response = await fetch(`${ROUTE}/stores/lowestPrices`, {
+        method: "put",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ingredientsList: groupedIngredients.map((e) => ({
+            name: e.name,
+            amount: e.qtyForRecipe,
+          })),
+        }),
+      });
+      const data = await response.json();
+      setStores(data.response);
       setIngredients(groupedIngredients);
     })();
   }, [currentRecipes]);
@@ -54,24 +74,25 @@ export default function ShopScreen({ navigation }) {
     setIngredients(ingredients.filter((e) => e.name !== name));
   };
 
-  /**
-   * @todo enlever les doublons, conputer les totaux, modifier etats sur les inputs.
-   */
   const ingredientsList = ingredients.map((e, i) => (
     <Ingredient
       handleDeleteIngredient={handleDeleteIngredient}
       key={i}
       {...e}
+      price={stores[ref].products[e.name].reference.TOTAL}
     />
   ));
 
   // le filter est a aller fetch depuis la database des magasins
-  const filter = [
-    { name: "favoris", price: 65.23, distance: 4.2 },
-    { name: "proche", price: 70.1, distance: 0.9 },
-    { name: "livraison", price: 78.5, distance: "livraison" },
-    { name: "economique", price: 35.46, distance: 4.2 },
-  ];
+  const filter = stores.map((e, i) => ({
+    name: e.store.name,
+    logo: e.store.logo,
+    price: Object.values(stores[i].products).reduce(
+      (acc, obj) => acc + obj.reference.TOTAL,
+      0
+    ),
+    distance: 4.2,
+  }));
 
   // filter store type rendering
   const filterList = filter.map((e, i) => {
@@ -95,11 +116,15 @@ export default function ShopScreen({ navigation }) {
       ) : null;
 
     return (
-      <View key={i} style={styles.filterContainer}>
+      <TouchableOpacity
+        key={i}
+        onPress={() => setRef(i)}
+        style={styles.filterContainer}
+      >
         <View style={styles.filterIcon}>{iconComponent}</View>
         <Text style={styles.filterPrice}>{e.price} €</Text>
         <Text style={styles.filterDistance}>{e.distance} km</Text>
-      </View>
+      </TouchableOpacity>
     );
   });
 
@@ -115,6 +140,8 @@ export default function ShopScreen({ navigation }) {
       }
       dispatch(modifyHistory(currentRecipes));
       dispatch(modifyCurrentRecipe([]));
+      setIngredients([]);
+      setStores([]);
     } catch (error) {
       console.error("Error while archiving recipes:", error.message);
     }

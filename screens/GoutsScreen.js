@@ -1,5 +1,12 @@
-import { Button, StyleSheet, Text, View } from "react-native";
-import SmallButton from "../components/SmallButton";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Dimensions,
+  KeyboardAvoidingView,
+  TouchableOpacity,
+} from "react-native";
+import LargeButton from "../components/LargeButton";
 import SearchDropdown from "../components/SeachDropdown";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,6 +22,8 @@ const regimeList = [
   "Soja",
 ];
 
+const screenWidth = Dimensions.get("window").width;
+
 export default function GoutsScreen({ navigation }) {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
@@ -24,56 +33,59 @@ export default function GoutsScreen({ navigation }) {
   const excludeAliments = user.preferences.excludeAliments;
 
   const customRegime = regime.filter((e) => regimeList.includes(e));
-  const [ingeridentCategoryUnselcted, setIngeridentCategoryUnselcted] =
+  const [ingredientCategoryUnselected, setingredientCategoryUnselected] =
     useState(regimeList.filter((e) => !customRegime.includes(e)));
-  const [ingeridentCategorySelected, setIngeridentCategorySelected] =
+  const [ingredientCategorySelected, setingredientCategorySelected] =
     useState(customRegime);
-  const [ingeridentSelected, setIngeridentSelected] = useState(excludeAliments);
+  const [ingredientSelected, setIngredientSelected] = useState(excludeAliments);
 
-  const categoriesUnselected = ingeridentCategoryUnselcted.map((e, i) => {
+  const categoriesUnselected = ingredientCategoryUnselected.map((e, i) => {
     return (
-      <SmallButton
+      <TouchableOpacity
         key={i}
-        name={e}
         onPress={() => {
-          setIngeridentCategorySelected([...ingeridentCategorySelected, e]);
-          setIngeridentCategoryUnselcted(
-            ingeridentCategoryUnselcted.filter((x) => x !== e)
+          setingredientCategorySelected([...ingredientCategorySelected, e]);
+          setingredientCategoryUnselected(
+            ingredientCategoryUnselected.filter((x) => x !== e)
           );
         }}
-        isPlain={false}
-      />
+        style={styles.checkbox}
+      >
+        <Text style={styles.checkboxText}>{e}</Text>
+      </TouchableOpacity>
     );
   });
 
-  const categoriesSelected = ingeridentCategorySelected.map((e, i) => {
+  const categoriesSelected = ingredientCategorySelected.map((e, i) => {
     return (
-      <SmallButton
+      <TouchableOpacity
         key={i}
-        name={e}
         onPress={() => {
-          setIngeridentCategoryUnselcted([...ingeridentCategoryUnselcted, e]);
-          setIngeridentCategorySelected(
-            ingeridentCategorySelected.filter((x) => x !== e)
+          setingredientCategoryUnselected([...ingredientCategoryUnselected, e]);
+          setingredientCategorySelected(
+            ingredientCategorySelected.filter((x) => x !== e)
           );
         }}
-        isPlain={true}
-      />
+        style={[styles.checkbox, styles.checked]}
+      >
+        <Text style={{ ...styles.checkboxText, color: "#fff" }}>{e}</Text>
+      </TouchableOpacity>
     );
   });
 
-  const ingredientsSelectedData = ingeridentSelected.map((e, i) => {
+  const ingredientsSelectedData = ingredientSelected.map((e, i) => {
     return (
-      <SmallButton
+      <TouchableOpacity
         key={i}
-        name={e.name}
         onPress={() => {
-          setIngeridentSelected(
-            ingeridentSelected.filter((x) => x.name !== e.name)
+          setIngredientSelected(
+            ingredientSelected.filter((x) => x.name !== e.name)
           );
         }}
-        isPlain={true}
-      />
+        style={[styles.checkbox, styles.checked]}
+      >
+        <Text style={{ ...styles.checkboxText, color: "#fff" }}>{e.name}</Text>
+      </TouchableOpacity>
     );
   });
 
@@ -86,24 +98,24 @@ export default function GoutsScreen({ navigation }) {
   };
 
   const handleResultSelection = (data) => {
-    setIngeridentSelected([...ingeridentSelected, data]);
+    setIngredientSelected([...ingredientSelected, data]);
   };
 
   const handleNext = async () => {
-    const newRegime = [...new Set([...regime, ...ingeridentCategorySelected])];
+    const newRegime = [...new Set([...regime, ...ingredientCategorySelected])];
     const response = await fetch(`${ROUTE}/users/preference`, {
       method: "put",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         regime: newRegime,
-        excludeAliments: ingeridentSelected,
+        excludeAliments: ingredientSelected,
         token: token,
       }),
     });
     const data = await response.json();
 
-    if (ingeridentSelected) {
-      dispatch(modifyExcludeIngredients(ingeridentSelected));
+    if (ingredientSelected) {
+      dispatch(modifyExcludeIngredients(ingredientSelected));
     }
     dispatch(modifyRegime(newRegime));
 
@@ -115,46 +127,114 @@ export default function GoutsScreen({ navigation }) {
   };
 
   return (
-    <View style={styles.container}>
-      <Text
-        style={{
-          fontSize: 30,
-          fontWeight: "bold",
-        }}
-      >
-        GOUTS
-      </Text>
-      <Text>Choisissez des ingrédients que vous n'aimez pas</Text>
-      <SearchDropdown
-        onInputChange={handleInputChange}
-        onResultSelection={handleResultSelection}
-        placeholder="Rechercher des ingrédients à exclure"
-      />
-      {categoriesUnselected}
-      <Text>Ingrédients exclus</Text>
-      {categoriesSelected}
-      {ingredientsSelectedData}
-      <SmallButton
-        onPress={handleNext}
-        name="suivant"
-        isPlain={true}
-        styleButton={styles.button}
-      />
-    </View>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
+      <View style={{ alignItems: "center" }}>
+        <View style={styles.progressContainer}>
+          <View style={styles.progressBar}></View>
+          <View style={styles.progress}></View>
+        </View>
+        <Text style={styles.h2}>GOUTS</Text>
+        <Text style={styles.subTitle}>
+          Choisissez des ingrédients que vous n'aimez pas
+        </Text>
+        <View style={styles.content}>
+          <SearchDropdown
+            onInputChange={handleInputChange}
+            onResultSelection={handleResultSelection}
+            placeholder="Rechercher des ingrédients à exclure"
+          />
+          <View style={styles.unselectContainer}>{categoriesUnselected}</View>
+          <Text style={styles.h4}>Ingrédients exclus</Text>
+          <View style={styles.selectContainer}>{categoriesSelected}</View>
+          <View style={styles.selectContainer}>{ingredientsSelectedData}</View>
+        </View>
+      </View>
+      <LargeButton onPress={handleNext} name="suivant" isPlain={true} />
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 20,
-    backgroundColor: "lightgreen",
+    paddingHorizontal: 20,
+    paddingTop: 80,
+    paddingBottom: 40,
+    backgroundColor: "#F9F8F8",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "space-between",
   },
-  button: {
-    marginTop: "auto",
-    width: 200,
-    marginBottom: 50,
+  progressContainer: {
+    position: "relative",
+    width: 300,
+    height: 14,
+    marginBottom: 24,
+  },
+  progressBar: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    backgroundColor: "#C9AFBD",
+    width: 300,
+    height: 14,
+  },
+  progress: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    backgroundColor: "#4B3B47",
+    width: 150,
+    height: 14,
+  },
+  h2: {
+    fontSize: 40,
+    color: "#4B3B47",
+    alignSelf: "flex-start",
+    marginBottom: 18,
+  },
+  h4: {
+    fontSize: 20,
+    color: "#4B3B47",
+    alignSelf: "flex-start",
+    marginBottom: 18,
+  },
+  subTitle: {
+    fontSize: 16,
+    color: "#4B3B47",
+    alignSelf: "flex-start",
+    marginBottom: 18,
+  },
+  content: {
+    justifyContent: "center",
+    width: screenWidth - 40,
+  },
+  unselectContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    marginVertical: 15,
+  },
+  selectContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+  },
+  checkbox: {
+    borderColor: "#C9AFBD",
+    borderWidth: 1,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    marginRight: 10,
+    marginBottom: 10,
+    borderRadius: 4,
+  },
+  checkboxText: {
+    fontSize: 16,
+    color: "#C9AFBD",
+  },
+  checked: {
+    borderColor: "#4B3B47",
+    backgroundColor: "#4B3B47",
   },
 });
