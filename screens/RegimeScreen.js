@@ -1,21 +1,19 @@
 import {
-  Button,
+  Dimensions,
   StyleSheet,
   Text,
   View,
   Image,
-  Touchable,
+  KeyboardAvoidingView,
   TouchableOpacity,
 } from "react-native";
 import LargeButton from "../components/LargeButton";
-import SmallButton from "../components/SmallButton";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
-import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useState } from "react";
 import ROUTE from "../globals/nico";
 import { useDispatch, useSelector } from "react-redux";
 import { modifyRegime } from "../reducers/user";
+
+const screenWidth = Dimensions.get("window").width;
 
 const regimeList = [
   "Pesco-végétarien",
@@ -97,28 +95,76 @@ export default function RegimeScreen({ navigation }) {
   const data = regimeList.map((e, i) => {
     const iconComponent =
       e === "Pesco-végétarien" ? (
-        <FontAwesome5 name={"fish"} size={50} color="#fff" />
+        <Image
+          source={
+            regimes.some((x) => x === e)
+              ? require("../assets/poisson-hover.png")
+              : require("../assets/poisson.png")
+          }
+          style={styles.image}
+        />
       ) : e === "Sans lactose" ? (
-        <Image source={require("../assets/lait.png")} />
+        <Image
+          source={
+            regimes.some((x) => x === e)
+              ? require("../assets/lait-hover.png")
+              : require("../assets/lait.png")
+          }
+          style={styles.image}
+        />
       ) : e === "Sans gluten" ? (
-        <Image source={require("../assets/gluten.png")} />
+        <Image
+          source={
+            regimes.some((x) => x === e)
+              ? require("../assets/gluten-hover.png")
+              : require("../assets/gluten.png")
+          }
+          style={styles.image}
+        />
       ) : e === "Sans porc" ? (
-        <Image source={require("../assets/porc.png")} />
+        <Image
+          source={
+            regimes.some((x) => x === e)
+              ? require("../assets/porc-hover.png")
+              : require("../assets/porc.png")
+          }
+          style={styles.image}
+        />
       ) : e === "Vegan" ? (
-        <Image source={require("../assets/vegan.png")} />
+        <Image
+          source={
+            regimes.some((x) => x === e)
+              ? require("../assets/vegan-hover.png")
+              : require("../assets/vegan.png")
+          }
+          style={styles.image}
+        />
       ) : e === "Végétarien" ? (
-        <Image source={require("../assets/vegetarien.png")} />
+        <Image
+          source={
+            regimes.some((x) => x === e)
+              ? require("../assets/vegetarien-hover.png")
+              : require("../assets/vegetarien.png")
+          }
+          style={styles.image}
+        />
       ) : null;
 
     return (
-      <View style={{ alignItems: "center" }} key={i}>
+      <View
+        style={{
+          alignItems: "center",
+          justifyContent: "center",
+          width: 100,
+          margin: 10,
+        }}
+        key={i}
+      >
         <TouchableOpacity
           onPress={() => handleRegime(e)}
           style={{
             ...styles.button,
-            backgroundColor: regimes.some((x) => x === e)
-              ? "#921706"
-              : "#CC3F0C",
+            backgroundColor: regimes.some((x) => x === e) ? "#CC3F0C" : "#fff",
           }}
         >
           {iconComponent}
@@ -144,17 +190,22 @@ export default function RegimeScreen({ navigation }) {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.progressContainer}>
-        <View style={styles.progressBar}></View>
-        <View style={styles.progress}></View>
-      </View>
-      <Text style={styles.title}>REGIME</Text>
-      <View style={styles.content}>{data}</View>
-      <View style={{ position: "absolute", bottom: 50 }}>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
+      <View style={styles.container}>
+        <View style={{ alignItems: "center" }}>
+          <View style={styles.progressContainer}>
+            <View style={styles.progressBar}></View>
+            <View style={styles.progress}></View>
+          </View>
+          <Text style={styles.title}>REGIME</Text>
+          <View style={styles.content}>{data}</View>
+        </View>
         <LargeButton onPress={handleNext} name="suivant" isPlain={true} />
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -162,9 +213,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    paddingTop: 60,
+    paddingTop: 40,
     backgroundColor: "#F9F8F8",
     alignItems: "center",
+    justifyContent: "space-between",
   },
   progressContainer: {
     position: "relative",
@@ -198,18 +250,20 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "center",
-    width: 300,
+    width: screenWidth - 40,
   },
   button: {
-    // marginTop: "auto",
-    // width: 200,
-    // marginBottom: 50,
-    width: 80,
-    height: 80,
-    margin: 20,
+    width: 70,
+    height: 70,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 40,
-    backgroundColor: "#CC3F0C",
+    borderColor: "#CC3F0C",
+    borderWidth: 3,
+  },
+  image: {
+    width: 40,
+    height: 40,
+    resizeMode: "contain",
   },
 });

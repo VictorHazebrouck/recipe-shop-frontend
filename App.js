@@ -61,7 +61,7 @@ export default function App() {
     <Provider store={store}>
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="Connexion" component={ConnexionScreen} />
+          {/* <Stack.Screen name="Connexion" component={ConnexionScreen} /> */}
           <Stack.Screen name="Regime" component={RegimeScreen} />
           <Stack.Screen name="Gouts" component={GoutsScreen} />
           <Stack.Screen name="Affichage" component={AffichageScreen} />
