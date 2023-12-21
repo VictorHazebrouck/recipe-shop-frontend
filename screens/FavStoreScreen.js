@@ -105,11 +105,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 20,
-    paddingTop: 80,
-    paddingBottom: 40,
+    paddingTop: 40,
     backgroundColor: "#F9F8F8",
     alignItems: "center",
-    justifyContent: "space-between",
+    // justifyContent: "space-between",
   },
   input: {
     width: screenWidth - 40,
@@ -161,6 +160,6 @@ const styles = StyleSheet.create({
   },
   ScrollView: {
     marginVertical: 20,
-    height: 350,
+    height: 300,
   },
 });
