@@ -2,11 +2,10 @@ import React, { useState, useEffect } from "react";
 import LargeButton from "../components/LargeButton";
 import StoreCard from "../components/StoreCard";
 import { useDispatch, useSelector } from "react-redux";
-import { initUser, setLogin } from "../reducers/user";
+import { chooseFavoriteStore, setLogin } from "../reducers/user";
 import * as Location from "expo-location";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import ROUTE from "../globals/nico";
-import { chooseFavoriteStore } from "../reducers/user";
 import {
   StyleSheet,
   Text,
@@ -124,7 +123,7 @@ export default function FavStoreScreen({ navigation }) {
           </View>
           <Text style={styles.h2}>Magasin favori</Text>
           <Text style={styles.subTitle}>Les magasins proches de</Text>
-          <View style={styles.content}>
+          <View style={styles.storeList}>
             <FontAwesome
               style={{ position: "absolute", top: 5, right: 10 }}
               name="map-marker"
@@ -138,12 +137,8 @@ export default function FavStoreScreen({ navigation }) {
               style={styles.input}
               keyboardType="numeric"
             />
-            <ScrollView
-              vertical={true}
-              showsHorizontalScrollIndicator={true}
-              style={styles.ScrollView}
-            >
-              {storeList}
+            <ScrollView vertical={true} showsHorizontalScrollIndicator={true}>
+              <View style={styles.ScrollView}>{storeList}</View>
             </ScrollView>
           </View>
         </View>
@@ -157,8 +152,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 20,
-    paddingTop: 40,
-    paddingBottom: 40,
+    paddingVertical: 40,
     backgroundColor: "#F9F8F8",
     alignItems: "center",
     justifyContent: "space-between",
@@ -207,12 +201,13 @@ const styles = StyleSheet.create({
     color: "#4B3B47",
     alignSelf: "flex-start",
   },
-  content: {
-    width: screenWidth - 40,
-    marginVertical: 20,
+  storeList: {
+    height: screenHeight - 300,
+    marginTop: 20,
   },
   ScrollView: {
+    height: screenHeight - 300,
     marginVertical: 20,
-    height: 300,
+    flex: 1,
   },
 });
