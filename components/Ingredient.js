@@ -20,21 +20,8 @@ const Ingredient = (props) => {
   return (
     <View style={styles.ingredientContainer}>
       <Text style={styles.name}>{props.name}</Text>
-      <View
-        style={{
-          width: 200,
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "flex-end",
-        }}
-      >
-        <View
-          style={{
-            width: 100,
-            flexDirection: "row",
-            alignItems: "center",
-          }}
-        >
+      <View style={styles.infos}>
+        <View style={styles.qtyContainer}>
           <TextInput
             style={styles.qtyForRecipe}
             onChangeText={(value) => setInput(value)}
@@ -64,8 +51,19 @@ const styles = StyleSheet.create({
     borderBottomColor: "#937B8A",
     marginBottom: 10,
   },
-  name: { fontSize: 16, fontWeight: "400", color: "#937B8A" },
+  name: { fontSize: 16, fontWeight: "400", color: "#937B8A", flex: 1 },
   unit: { fontSize: 16, fontWeight: "400", color: "#937B8A" },
+  infos: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-end",
+  },
+  qtyContainer: {
+    width: 100,
+    flexDirection: "row",
+    alignItems: "center",
+  },
   price: {
     fontSize: 16,
     fontWeight: "600",

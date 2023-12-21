@@ -5,6 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { initUser, setLogin } from "../reducers/user";
 import * as Location from "expo-location";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
+import ROUTE from "../globals/nico";
+import { chooseFavoriteStore } from "../reducers/user";
 import {
   StyleSheet,
   Text,
@@ -14,14 +16,6 @@ import {
   Dimensions,
   ScrollView,
 } from "react-native";
-import LargeButton from "../components/LargeButton";
-import StoreCard from "../components/StoreCard";
-import { useDispatch, useSelector } from "react-redux";
-import * as Location from "expo-location";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
-import ROUTE from "../globals/nico";
-import {chooseFavoriteStore} from '../reducers/user'
-
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -36,30 +30,27 @@ export default function FavStoreScreen({ navigation }) {
   const [longitude, setLongitude] = useState(0);
   const [stores, setStores] = useState(null);
 
-  
-console.log('favorite store ->', user.preferences.favoriteStore)
+  console.log("favorite store ->", user.preferences.favoriteStore);
   useEffect(() => {
     (async () => {
       const { status } = await Location.requestForegroundPermissionsAsync();
-  
+
       if (status === "granted") {
         Location.watchPositionAsync(
           { distanceInterval: 10 },
           async (location) => {
             const { coords } = location;
-            setLatitude(coords.latitude)
-            setLongitude(coords.longitude)
+            setLatitude(coords.latitude);
+            setLongitude(coords.longitude);
 
             const response = await fetch(
               `https://api-adresse.data.gouv.fr/reverse/?lon=${coords.longitude}&lat=${coords.latitude}`
             );
             const data = await response.json();
-  
+
             if (data.features && data.features.length > 0) {
               const newPostalCode = data.features[0].properties.postcode;
               setPostalCode(newPostalCode);
-  
-
             } else {
               console.log("Aucune adresse trouvée.");
             }
@@ -83,8 +74,6 @@ console.log('favorite store ->', user.preferences.favoriteStore)
     })();
   }, []);
 
-  
-  
   const handleFavStore = async (storeid) => {
     const response = await fetch(`${ROUTE}/users/preference`, {
       method: "put",
@@ -97,15 +86,23 @@ console.log('favorite store ->', user.preferences.favoriteStore)
     const data = await response.json();
     if (!data.result) return;
     dispatch(chooseFavoriteStore(data.response.favStore));
-
   };
-  
-    //Create list of stores
-    let storeList = []
-    stores && (storeList = stores.map ((e, i) => {
-      return <StoreCard key={i} {...e.store} latitude={latitude} longitude={longitude} handleFavStore={handleFavStore}/>
-    }))
-  
+
+  //Create list of stores
+  let storeList = [];
+  stores &&
+    (storeList = stores.map((e, i) => {
+      return (
+        <StoreCard
+          key={i}
+          {...e.store}
+          latitude={latitude}
+          longitude={longitude}
+          handleFavStore={handleFavStore}
+        />
+      );
+    }));
+
   const handleNext = () => {
     if (isLoggedIn) {
       navigation.navigate("TabNavigator", { screen: "Parameters" });
@@ -160,6 +157,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 20,
     paddingTop: 40,
+    paddingBottom: 80,
     backgroundColor: "#F9F8F8",
     alignItems: "center",
     // justifyContent: "space-between",

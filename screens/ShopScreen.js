@@ -7,8 +7,6 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useState, useEffect } from "react";
 import SmallButton from "../components/SmallButton";
 import Ingredient from "../components/Ingredient";
@@ -110,7 +108,10 @@ export default function ShopScreen({ navigation }) {
       <TouchableOpacity
         key={i}
         onPress={() => setRef(i)}
-        style={{...styles.filterContainer, backgroundColor: ref === i ? "yellow" : "transparent"}}
+        style={{
+          ...styles.filterContainer,
+          backgroundColor: ref === i ? "yellow" : "transparent",
+        }}
       >
         <Image style={styles.filterIcon} source={{ uri: e.logo }} />
         <Text style={styles.filterPrice}>{e.price} €</Text>

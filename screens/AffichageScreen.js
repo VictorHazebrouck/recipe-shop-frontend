@@ -20,10 +20,9 @@ export default function PlanningScreen({ navigation }) {
   const user = useSelector((state) => state.user);
   const token = user.credentials.token;
   const isLoggedIn = user.isLoggedIn;
-  const planningChecked = user.preferences.planningChecked
+  const planningChecked = user.preferences.planningChecked;
 
   const [isPlanningChecked, setPlanningChecked] = useState(planningChecked);
-
 
   const handlePlanningCheck = () => {
     setPlanningChecked(!isPlanningChecked);
@@ -112,8 +111,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 20,
-    paddingTop: 80,
-    paddingBottom: 40,
+    paddingTop: 40,
+    paddingBottom: 80,
     backgroundColor: "#F9F8F8",
     alignItems: "center",
     justifyContent: "space-between",
