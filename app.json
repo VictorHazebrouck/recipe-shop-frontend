@@ -7,9 +7,9 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/RecipeShop.jpg",
+      "image": "./assets/RecipeShopDonwload.jpg",
       "resizeMode": "contain",
-      "backgroundColor": "#b784fd"
+      "backgroundColor": "#CC3F0C"
     },
     "assetBundlePatterns": ["./assets/fonts/*"],
     "ios": {
