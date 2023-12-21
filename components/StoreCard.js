@@ -1,43 +1,30 @@
-import React, { useState, useEffect } from "react";
+// import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { Text, StyleSheet, View, Image, ScrollView } from "react-native";
-import ROUTE from "../globals/nico";
+import { Text, StyleSheet, View, Image, TouchableOpacity } from "react-native";
+// import ROUTE from "../globals/nico";
 
 export default function StoreCard(props) {
-  const user = useSelector((state) => state.user);
-  const [stores, setStores] = useState([]);
-  //const [distance, setDistance] = useState(0);
-
-  useEffect(() => {
-    (async () => {
-      const response = await fetch(`${ROUTE}/stores/lowestPrices`, {
-        method: "put",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ingredientsList: [],
-        }),
-      });
-      const data = await response.json();
-      setStores(data.response);
-    })();
-  }, []);
-
-
+  const favoriteStore = useSelector((state) => state.user.preferences.favoriteStore);
+ 
+  let conditionalStyle = {}
+  if (favoriteStore === props.storeId) {
+    conditionalStyle = {backgroundColor : '#EE9F68'}
+  }
   // Calculate the distance
-  const distance = (storeCoordinates) => { 
+  const distance = () => { 
     return calculateDistance(
-    storeCoordinates[1],
-    storeCoordinates[0],
+    props.coordinates.location.coordinates[1],
+    props.coordinates.location.coordinates[0],
     props.latitude,
     props.longitude
   );
-  console.log(storeCoordinates)
+  //console.log(storeCoordinates)
   }
 
-  console.log(`Distance to store: ${distance} km`);
+  //console.log(`Distance to store: ${distance} km`);
  
 
-  // Set the distance in state
+  //Set the distance in state
   //setDistance(distance);
 
   const calculateDistance = (lat1, lon1, lat2, lon2) => {
@@ -58,15 +45,13 @@ export default function StoreCard(props) {
 
   return (
     <View style={styles.container}>
-      {stores.map((store, index) => (
-        <View key={index} style={styles.card}>
-          <Image style={styles.logoStore} source={{ uri: store.store.logo }} />
+        <TouchableOpacity style={{...styles.card, ...conditionalStyle}} onPress={()=> props.handleFavStore(props.storeId)}>
+          <Image style={styles.logoStore} source={{ uri: props.logo }} />
           <View style={styles.infos}>
-            <Text style={styles.name}>{store.store.name}</Text>
-            <Text style={styles.distance}>{distance(store.store.coordinates.location.coordinates).toFixed(2)} km</Text>
+            <Text style={styles.name}>{props.name}</Text>
+            <Text style={styles.distance}>{distance().toFixed(2)} km</Text>
           </View>
-        </View>
-      ))}
+        </TouchableOpacity>
     </View>
   );
 }
