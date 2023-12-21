@@ -133,69 +133,76 @@ export default function HomeScreen({ navigation, route }) {
 
   return (
     <KeyboardAvoidingView
-      style={styles.container}
+      style={{ flex: 1 }}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
-      <Modal visible={modalVisible} animationType="slide">
-        {chosenDay !== "" ? (
-          <RecipeModal
-            {...currentRecipe}
-            closeModal={closeModal}
-            chosenDay={chosenDay}
+      <View style={styles.container}>
+        <Modal visible={modalVisible} animationType="slide">
+          {chosenDay !== "" ? (
+            <RecipeModal
+              {...currentRecipe}
+              closeModal={closeModal}
+              chosenDay={chosenDay}
+            />
+          ) : (
+            <RecipeModal {...currentRecipe} closeModal={closeModal} />
+          )}
+        </Modal>
+        <Modal visible={isSearchModal} animationType="slide" transparent={true}>
+          <SearchRecipesModal
+            closeSearchModal={() => setIsSearchModal(false)}
           />
-        ) : (
-          <RecipeModal {...currentRecipe} closeModal={closeModal} />
-        )}
-      </Modal>
-      <Modal visible={isSearchModal} animationType="slide" transparent={true}>
-        <SearchRecipesModal closeSearchModal={() => setIsSearchModal(false)} />
-      </Modal>
-      <View style={styles.containerTop}>
-        <View style={styles.profil}>
-          <Image
-            source={require("../assets/profil.png")}
-            style={styles.profilImg}
-          />
-          <View>
-            <Text style={styles.bold}>
-              Bonjour {user.credentials.name || "John Doe"}
-            </Text>
-            <Text style={styles.regular}>Que mange-t-on aujourd’hui ?</Text>
+        </Modal>
+        <View style={styles.containerTop}>
+          <View style={styles.profil}>
+            <Image
+              source={require("../assets/profil.png")}
+              style={styles.profilImg}
+            />
+            <View>
+              <Text style={styles.bold}>
+                Bonjour {user.credentials.name || "John Doe"}
+              </Text>
+              <Text style={styles.regular}>Que mange-t-on aujourd’hui ?</Text>
+            </View>
+          </View>
+          <View style={styles.searchRecipes}>
+            <TouchableOpacity
+              onPress={handlePressUserLikes}
+              style={{ width: 25 }}
+            >
+              <FontAwesome
+                name={referenceList === tagsList ? "heart-o" : "heart"}
+                size={25}
+                color="#CC3F0C"
+              />
+            </TouchableOpacity>
+            <Text style={styles.h3}>Les recettes</Text>
+            <TouchableOpacity
+              onPress={() => setIsSearchModal(true)}
+              style={{ width: 25 }}
+            >
+              <FontAwesome name={"search"} size={25} color="gray" />
+            </TouchableOpacity>
           </View>
         </View>
-        <View style={styles.searchRecipes}>
-          <TouchableOpacity onPress={handlePressUserLikes} style={{ flex: 1 }}>
-            <FontAwesome
-              name={referenceList === tagsList ? "heart-o" : "heart"}
-              size={25}
-              color="#CC3F0C"
-            />
-          </TouchableOpacity>
-          <Text style={styles.h3}>Les recettes</Text>
-          <TouchableOpacity
-            onPress={() => setIsSearchModal(true)}
-            style={{ flex: 1 }}
+        <View style={styles.containerFilters}>
+          <ScrollView
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.filtersScroll}
           >
-            <FontAwesome name={"search"} size={25} color="gray" />
-          </TouchableOpacity>
+            {filters}
+          </ScrollView>
         </View>
-      </View>
-      <View style={styles.containerFilters}>
         <ScrollView
-          horizontal={true}
+          vertical
           showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.filtersScroll}
+          contentContainerStyle={styles.containerRecipes}
         >
-          {filters}
+          {recipesList}
         </ScrollView>
       </View>
-      <ScrollView
-        vertical
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.containerRecipes}
-      >
-        {recipesList}
-      </ScrollView>
     </KeyboardAvoidingView>
   );
 }
@@ -203,7 +210,7 @@ export default function HomeScreen({ navigation, route }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 40,
+    paddingTop: 20,
     backgroundColor: "#F9F8F8",
   },
   containerTop: {
@@ -237,7 +244,8 @@ const styles = StyleSheet.create({
     fontFamily: "Anton-reg",
     fontSize: 30,
     color: "#4B3B47",
-    flex: 8,
+    flex: 1,
+    textAlign: "center",
   },
   containerFilters: {
     height: 55,

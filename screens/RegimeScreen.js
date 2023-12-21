@@ -81,7 +81,6 @@ export default function RegimeScreen({ navigation }) {
   };
 
   // const data = regimeList.map((e, i) => {
-  //   console.log(e);
   //   return (
   //     <SmallButton
   //       key={i}
@@ -191,18 +190,20 @@ export default function RegimeScreen({ navigation }) {
 
   return (
     <KeyboardAvoidingView
-      style={styles.container}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={{ flex: 1 }}
     >
-      <View style={{ alignItems: "center" }}>
-        <View style={styles.progressContainer}>
-          <View style={styles.progressBar}></View>
-          <View style={styles.progress}></View>
+      <View style={styles.container}>
+        <View style={{ alignItems: "center" }}>
+          <View style={styles.progressContainer}>
+            <View style={styles.progressBar}></View>
+            <View style={styles.progress}></View>
+          </View>
+          <Text style={styles.h2}>REGIME</Text>
+          <View style={styles.content}>{data}</View>
         </View>
-        <Text style={styles.h2}>REGIME</Text>
-        <View style={styles.content}>{data}</View>
+        <LargeButton onPress={handleNext} name="suivant" isPlain={true} />
       </View>
-      <LargeButton onPress={handleNext} name="suivant" isPlain={true} />
     </KeyboardAvoidingView>
   );
 }
@@ -212,7 +213,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 20,
     paddingTop: 40,
-    paddingBottom: 80,
+    paddingBottom: 40,
     backgroundColor: "#F9F8F8",
     alignItems: "center",
     justifyContent: "space-between",
