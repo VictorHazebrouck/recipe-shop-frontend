@@ -60,6 +60,7 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
     fontWeight: 500,
     fontSize: 20,
+    fontFamily: "Ops-medium",
   },
   buttonNotPlain: {
     backgroundColor: "#fff",
@@ -76,6 +77,7 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
     fontWeight: 500,
     fontSize: 20,
+    fontFamily: "Ops-medium",
   },
 });
 

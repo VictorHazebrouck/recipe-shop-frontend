@@ -35,6 +35,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   textButtonPlain: {
+    fontFamily: "Ops-medium",
     color: "#fff",
     textTransform: "uppercase",
     fontWeight: 500,
@@ -51,6 +52,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   textButtonNotPlain: {
+    fontFamily: "Ops-medium",
     color: "#CC3F0C",
     textTransform: "uppercase",
     fontWeight: 500,

@@ -60,11 +60,17 @@ const AgendaScroll = ({
 
   return (
     <ScrollView style={styles.container}>
-      <TouchableOpacity style={{ alignSelf: 'center' }} onPress={() => onRefreshPast()}>
+      <TouchableOpacity
+        style={{ alignSelf: "center" }}
+        onPress={() => onRefreshPast()}
+      >
         <FontAwesome name="caret-up" size={30} color="#CC3F0C" />
       </TouchableOpacity>
       {ref}
-      <TouchableOpacity style={{ alignSelf: 'center' }} onPress={() => onRefreshFuture()}>
+      <TouchableOpacity
+        style={{ alignSelf: "center" }}
+        onPress={() => onRefreshFuture()}
+      >
         <FontAwesome name="caret-down" size={30} color="#CC3F0C" />
       </TouchableOpacity>
     </ScrollView>
@@ -74,8 +80,6 @@ const AgendaScroll = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    height: "100%",
-    width: "100%",
   },
 });
 

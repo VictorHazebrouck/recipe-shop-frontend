@@ -29,6 +29,7 @@ export default function GoutsScreen({ navigation }) {
   const user = useSelector((state) => state.user);
   const token = user.credentials.token;
   const isLoggedIn = user.isLoggedIn;
+
   const regime = user.preferences.regime;
   const excludeAliments = user.preferences.excludeAliments;
 
@@ -190,6 +191,7 @@ const styles = StyleSheet.create({
     height: 14,
   },
   h2: {
+    fontFamily: "Anton-reg",
     fontSize: 40,
     color: "#4B3B47",
     alignSelf: "flex-start",

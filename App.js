@@ -58,8 +58,13 @@ const TabNavigator = () => {
 };
 
 export default function App() {
-  const [fontsLoaded] = useFonts({
+  const [fontsLoaded, fontError] = useFonts({
+    "Anton-reg": require("./assets/fonts/Anton-Regular.ttf"),
+    "Ops-light": require("./assets/fonts/OpenSans-Light.ttf"),
     "Ops-reg": require("./assets/fonts/OpenSans-Regular.ttf"),
+    "Ops-medium": require("./assets/fonts/OpenSans-Medium.ttf"),
+    "Ops-bold": require("./assets/fonts/OpenSans-Bold.ttf"),
+    "Ops-extrabold": require("./assets/fonts/OpenSans-ExtraBold.ttf"),
   });
 
   if (!fontsLoaded) {
@@ -70,10 +75,10 @@ export default function App() {
     <Provider store={store}>
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
-          {/* <Stack.Screen name="Connexion" component={ConnexionScreen} />
+          <Stack.Screen name="Connexion" component={ConnexionScreen} />
           <Stack.Screen name="Regime" component={RegimeScreen} />
           <Stack.Screen name="Gouts" component={GoutsScreen} />
-          <Stack.Screen name="Affichage" component={AffichageScreen} /> */}
+          <Stack.Screen name="Affichage" component={AffichageScreen} />
           <Stack.Screen name="FavStore" component={FavStoreScreen} />
           <Stack.Screen name="TabNavigator" component={TabNavigator} />
         </Stack.Navigator>

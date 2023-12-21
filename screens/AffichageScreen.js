@@ -143,6 +143,7 @@ const styles = StyleSheet.create({
     height: 14,
   },
   h2: {
+    fontFamily: "Anton-reg",
     fontSize: 40,
     color: "#4B3B47",
     alignSelf: "flex-start",

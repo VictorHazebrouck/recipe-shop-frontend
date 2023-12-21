@@ -8,9 +8,8 @@ const AgendaDay = ({
   renderItem,
   renderCommonLastItem,
 }) => {
-
   const ref = data.map((itemData, index) => {
-    return renderItem(day, itemData, index)
+    return renderItem(day, itemData, index);
   });
 
   return (
@@ -24,7 +23,7 @@ const AgendaDay = ({
 
 const styles = StyleSheet.create({
   container: {
-    width: "100%",
+    // width: "100%",
     alignItems: "center",
   },
 });

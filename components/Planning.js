@@ -7,6 +7,7 @@ import { Card } from "react-native-paper";
 import { modifyCurrentRecipe } from "../reducers/user";
 import ROUTE from "../globals/nico";
 import RecipeModal from "./RecipeModal";
+import { ScreenWidth } from "react-native-elements/dist/helpers";
 
 export default function PlanningScreen({ navigation }) {
   const dispatch = useDispatch();
@@ -86,8 +87,7 @@ export default function PlanningScreen({ navigation }) {
           style={{
             fontSize: 16,
             fontWeight: "600",
-            color: "#ffffff",
-            width: "80%",
+            color: "#fff",
           }}
         >
           Ajouter une recette
@@ -106,19 +106,17 @@ export default function PlanningScreen({ navigation }) {
     return (
       <Card style={styles.card} key={i}>
         <Card.Content style={styles.cardContent}>
-          <View style={styles.itemContainer}>
-            <TouchableOpacity onPress={() => handleModal(itemData.id)}>
-              <Text style={styles.textCard}>{itemData.id.name}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => handleDeleteRecipe(itemData)}>
-              <FontAwesome
-                style={{ marginLeft: 10 }}
-                name="trash-o"
-                size={25}
-                color="#CC3F0C"
-              />
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity onPress={() => handleModal(itemData.id)}>
+            <Text style={styles.textCard}>{itemData.id.name}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => handleDeleteRecipe(itemData)}>
+            <FontAwesome
+              style={{ marginLeft: 10 }}
+              name="trash-o"
+              size={25}
+              color="#CC3F0C"
+            />
+          </TouchableOpacity>
         </Card.Content>
         <Modal visible={modalVisible} animationType="slide">
           <RecipeModal {...currentRecipe} closeModal={closeModal}></RecipeModal>
@@ -143,76 +141,39 @@ export default function PlanningScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  item: {
-    flex: 1,
-    backgroundColor: "green",
-    height: 30,
-    width: "100%",
-  },
-  lastItem: {
-    flex: 1,
-    backgroundColor: "red",
-    height: 30,
-    width: "100%",
-  },
-  day: {
-    flex: 1,
-    backgroundColor: "blue",
-    height: 30,
-    width: "100%",
-  },
   addRecipe: {
     flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
     backgroundColor: "#CC3F0C",
-    marginTop: 30,
-    marginBottom: 30,
-    marginLeft: 70,
-    marginRight: 40,
-    width: "60%",
     borderRadius: 5,
     paddingHorizontal: 20,
     paddingVertical: 10,
-  },
-  cardContent: {
-    flexDirection: "row",
-    justifyContent: "space-between", 
-    alignItems: "center",
-    width: "100%",
+    alignSelf: "flex-end",
   },
   card: {
-    flexDirection: "row",
+    alignSelf: "flex-end",
+    marginBottom: 10,
+  },
+  cardContent: {
+    paddingVertical: 3,
+    paddingHorizontal: 6,
+    borderWidth: 1,
+    borderColor: "#937B8A",
+    borderRadius: 3,
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 5,
-    borderWidth: 1,
-    marginTop: 30,
-    marginBottom: 5,
-    marginRight: 20,
-    marginLeft: 20,
-    width: "90%",
-  },
-  itemContainer: {
     flexDirection: "row",
-    alignItems: "center",
-    width: "80%",
   },
   textCard: {
-    paddingVertical: 20,
-    paddingHorizontal: 20,
+    color: "#937B8A",
   },
   dayContainer: {
-    flex: 1,
-    witdh: "100%",
-    justifyContent: "flex-start",
-    alignItems: "flex-start",
+    alignSelf: "flex-start",
+    marginBottom: 10,
   },
   dayText: {
-    width: "100%",
     fontSize: 30,
-    fontWeight: "bold",
-    color: "#333",
-    textAlign: 'left',
+    fontFamily: "Anton-reg",
+    color: "#4B3B47",
+    textAlign: "left",
   },
 });

@@ -1,4 +1,10 @@
 import FontAwesome from "react-native-vector-icons/FontAwesome";
+import { useState, useEffect } from "react";
+import RecipeModal from "../components/RecipeModal";
+import RecipeCard from "../components/RecipeCard";
+import SearchRecipesModal from "../components/SearchRecipesModal";
+import ROUTE from "../globals/nico";
+import { useDispatch, useSelector } from "react-redux";
 import {
   TouchableOpacity,
   StyleSheet,
@@ -9,11 +15,7 @@ import {
   Image,
   KeyboardAvoidingView,
 } from "react-native";
-import { useState, useEffect } from "react";
-import RecipeModal from "../components/RecipeModal";
-import RecipeCard from "../components/RecipeCard";
-import SearchRecipesModal from "../components/SearchRecipesModal";
-import ROUTE from "../globals/nico";
+
 const tagsList = [
   "A la une",
   "Pas cher",
@@ -23,11 +25,13 @@ const tagsList = [
   "Pour les enfant",
 ];
 const userList = ["Mes coups de coeur", "Mes recettes"];
-import { useSelector } from "react-redux";
 
 export default function HomeScreen({ navigation, route }) {
+  const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const token = user.credentials.token;
+  const isLoggedIn = user.isLoggedIn;
+
   const preferences = user.preferences;
   const likedRecipes = user.personalRecipes.favoriteRecipes;
   const myRecipes = user.personalRecipes.myRecipes;

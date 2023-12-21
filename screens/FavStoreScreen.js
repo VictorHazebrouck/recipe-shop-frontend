@@ -1,4 +1,10 @@
 import React, { useState, useEffect } from "react";
+import LargeButton from "../components/LargeButton";
+import StoreCard from "../components/StoreCard";
+import { useDispatch, useSelector } from "react-redux";
+import { initUser, setLogin } from "../reducers/user";
+import * as Location from "expo-location";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 import {
   StyleSheet,
   Text,
@@ -8,11 +14,6 @@ import {
   Dimensions,
   ScrollView,
 } from "react-native";
-import LargeButton from "../components/LargeButton";
-import StoreCard from "../components/StoreCard";
-import { useDispatch, useSelector } from "react-redux";
-import * as Location from "expo-location";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -143,7 +144,7 @@ const styles = StyleSheet.create({
     height: 14,
   },
   h2: {
-    fontFamily: "Ops-reg",
+    fontFamily: "Anton-reg",
     fontSize: 40,
     color: "#4B3B47",
     alignSelf: "flex-start",

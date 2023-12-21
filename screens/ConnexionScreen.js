@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import {
   TouchableOpacity,
   StyleSheet,
@@ -13,6 +13,10 @@ import ROUTE from "../globals/nico";
 import { useDispatch } from "react-redux";
 import { initUser, setLogin } from "../reducers/user";
 import LargeButton from "../components/LargeButton";
+
+// import * as SplashScreen from "expo-splash-screen";
+
+// SplashScreen.preventAutoHideAsync();
 
 export default function ConnexionScreen({ navigation }) {
   const dispatch = useDispatch();
@@ -97,7 +101,7 @@ export default function ConnexionScreen({ navigation }) {
       .then((data) => {
         if (data.result) {
           dispatch(initUser(data.response));
-          dispatch(setLogin())
+          dispatch(setLogin());
           resetState();
           navigation.navigate("TabNavigator");
         } else {
@@ -220,8 +224,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   h3: {
-    // uninstall npx react-native-asset ?
-    // fontFamily: "Anton Regular",
+    fontFamily: "Anton-reg",
     fontSize: 30,
     marginBottom: 10,
   },
