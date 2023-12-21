@@ -47,9 +47,10 @@ export default function HomeScreen({ navigation, route }) {
   const [referenceList, setReferenceList] = useState(tagsList);
   //const [isPersonal]
 
+  //fix @todo here
   useEffect(() => {
     if (route.params) {
-      setChosenDay(route.params);
+      setChosenDay(route.params.day);
     }
   }, [route.params]);
 

@@ -29,6 +29,7 @@ export default function PlanningScreen({ navigation }) {
   const [endDay, setEndDay] = useState(15);
   const [modalVisible, setModalVisible] = useState(false);
   const [currentRecipe, setCurentRecipe] = useState(null);
+  const [forceRerender, setForceRerender] = useState(false)
 
   useEffect(() => {
     const ref = {};
@@ -44,7 +45,8 @@ export default function PlanningScreen({ navigation }) {
   }, [currentRecipes]);
 
   const handleAddRecipe = (day) => {
-    navigation.navigate("Home", day);
+    setForceRerender(!forceRerender)
+    navigation.navigate("Home", {day, forceRerender});
   };
 
   const handleDeleteRecipe = async (itemData) => {
