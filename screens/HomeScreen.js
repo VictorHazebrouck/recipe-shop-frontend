@@ -233,6 +233,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   h3: {
+    fontFamily: "Anton-reg",
     fontSize: 30,
     color: "#4B3B47",
     flex: 8,

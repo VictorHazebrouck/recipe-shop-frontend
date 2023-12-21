@@ -48,6 +48,9 @@ export const userSlice = createSlice({
     addFavoriteRecipes: (state, action) =>{
       state.personalRecipes.favoriteRecipes = [...state.personalRecipes.favoriteRecipes, action.payload]
     },
+    chooseFavoriteStore: (state, action) => {
+      state.preferences.favoriteStore = action.payload
+    },
 
     //working?
     initUser: (state, action) => {
@@ -100,6 +103,7 @@ export const {
   modifyCurrentRecipe,
   modifyHistory,
   addFavoriteRecipes,
-  removeFavoriteRecipes
+  removeFavoriteRecipes,
+  chooseFavoriteStore
 } = userSlice.actions;
 export default userSlice.reducer;

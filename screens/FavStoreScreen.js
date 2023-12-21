@@ -14,6 +14,9 @@ import {
   Dimensions,
   ScrollView,
 } from "react-native";
+import ROUTE from "../globals/nico";
+import {chooseFavoriteStore} from '../reducers/user'
+
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -23,12 +26,13 @@ export default function FavStoreScreen({ navigation }) {
   const user = useSelector((state) => state.user);
   const token = user.credentials.token;
   const isLoggedIn = user.isLoggedIn;
-
   const [postalCode, setPostalCode] = useState("");
   const [latitude, setLatitude] = useState(0);
   const [longitude, setLongitude] = useState(0);
-  
+  const [stores, setStores] = useState(null);
 
+  
+console.log('favorite store ->', user.preferences.favoriteStore)
   useEffect(() => {
     (async () => {
       const { status } = await Location.requestForegroundPermissionsAsync();
@@ -60,6 +64,43 @@ export default function FavStoreScreen({ navigation }) {
     })();
   }, []);
 
+  useEffect(() => {
+    (async () => {
+      const response = await fetch(`${ROUTE}/stores/lowestPrices`, {
+        method: "put",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ingredientsList: [],
+        }),
+      });
+      const data = await response.json();
+      setStores(data.response);
+    })();
+  }, []);
+
+  
+  
+  const handleFavStore = async (storeid) => {
+    const response = await fetch(`${ROUTE}/users/preference`, {
+      method: "put",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        favStore: storeid,
+        token: token,
+      }),
+    });
+    const data = await response.json();
+    if (!data.result) return;
+    dispatch(chooseFavoriteStore(data.response.favStore));
+
+  };
+  
+    //Create list of stores
+    let storeList = []
+    stores && (storeList = stores.map ((e, i) => {
+      return <StoreCard key={i} {...e.store} latitude={latitude} longitude={longitude} handleFavStore={handleFavStore}/>
+    }))
+  
   const handleNext = () => {
     if (isLoggedIn) {
       navigation.navigate("TabNavigator", { screen: "Parameters" });
@@ -100,7 +141,7 @@ export default function FavStoreScreen({ navigation }) {
             showsHorizontalScrollIndicator={true}
             style={styles.ScrollView}
           >
-            <StoreCard longitude={longitude} latitude={latitude} />
+            {storeList}
           </ScrollView>
         </View>
       </View>
