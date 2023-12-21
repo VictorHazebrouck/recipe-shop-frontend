@@ -24,10 +24,12 @@ export default function PlanningScreen({ navigation }) {
 
   const [isPlanningChecked, setPlanningChecked] = useState(planningChecked);
 
+
   const handlePlanningCheck = () => {
     setPlanningChecked(!isPlanningChecked);
   };
 
+  //Changes page and saves modified data to db & reducer
   const handleNext = async () => {
     const response = await fetch(`${ROUTE}/users/preference`, {
       method: "put",
