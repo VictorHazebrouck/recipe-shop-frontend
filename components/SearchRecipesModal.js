@@ -6,17 +6,20 @@ import {
   View,
   ScrollView,
   Modal,
+  Dimensions,
 } from "react-native";
 import { useState, useEffect } from "react";
 import RecipeModal from "./RecipeModal";
 import RecipeCard from "./RecipeCard";
 import ROUTE from "../globals/nico";
-const dishType = ["Entrée", "Plat", "Dessert", "Apéro", "Autre"];
-const difficulty = ["Easy", "Medium", "Hard"];
 import Slider from "@react-native-community/slider";
 import SearchBar from "./SearchBar";
 import SmallButton from "./SmallButton";
 import MyCheckbox from "./MyCheckbox";
+
+const dishType = ["Entrée", "Plat", "Dessert", "Apéro", "Autre"];
+const difficulty = ["Easy", "Medium", "Hard"];
+const screenWidth = Dimensions.get("window").width;
 
 export default function SearchRecipeModal({ navigation, closeSearchModal }) {
   const [isFilterVisible, setIsFilterVisible] = useState(true);
@@ -120,13 +123,9 @@ export default function SearchRecipeModal({ navigation, closeSearchModal }) {
         <View style={styles.containerInput}>
           <TouchableOpacity
             onPress={() => closeSearchModal()}
-            style={{
-              height: 40,
-              justifyContent: "center",
-              paddingHorizontal: 15,
-            }}
+            style={styles.closeModal}
           >
-            <FontAwesome name={"arrow-left"} size={23} color="gray" />
+            <FontAwesome name={"arrow-left"} size={23} color="#937B8A" />
           </TouchableOpacity>
           <SearchBar
             onInputChange={(input) => setInputValue(input)}
@@ -139,7 +138,7 @@ export default function SearchRecipeModal({ navigation, closeSearchModal }) {
         >
           <FontAwesome
             name={!isFilterVisible ? "angle-double-down" : "angle-double-up"}
-            size={23}
+            size={25}
             color={"gray"}
           />
         </TouchableOpacity>
@@ -152,14 +151,7 @@ export default function SearchRecipeModal({ navigation, closeSearchModal }) {
             >
               {dishTypesFilters}
             </ScrollView>
-            <View
-              style={{
-                backgroundColor: "gray",
-                height: 1,
-                width: "64%",
-                alignSelf: "center",
-              }}
-            ></View>
+            <View style={styles.separation}></View>
             <ScrollView
               horizontal={true}
               showsHorizontalScrollIndicator={false}
@@ -167,14 +159,7 @@ export default function SearchRecipeModal({ navigation, closeSearchModal }) {
             >
               {difficultyFilters}
             </ScrollView>
-            <View
-              style={{
-                backgroundColor: "gray",
-                height: 1,
-                width: "64%",
-                alignSelf: "center",
-              }}
-            ></View>
+            <View style={styles.separation}></View>
             <View style={{ alignItems: "center" }}>
               <Text
                 style={{
@@ -202,7 +187,6 @@ export default function SearchRecipeModal({ navigation, closeSearchModal }) {
           </View>
         )}
       </View>
-
       <ScrollView
         vertical
         showsHorizontalScrollIndicator={false}
@@ -223,25 +207,28 @@ export default function SearchRecipeModal({ navigation, closeSearchModal }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "stretch",
-    justifyContent: "flex-start",
-    backgroundColor: "white",
+    alignItems: "center",
+    backgroundColor: "#fff",
     paddingTop: 30,
   },
-  containerTop: {},
+  containerTop: {
+    width: screenWidth - 40,
+  },
   containerInput: {
     flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "center",
-    height: 40,
-    paddingRight: 5,
+    width: screenWidth - 40,
+    borderBottomWidth: 1,
+    borderColorBottom: "#937B8A",
+  },
+  closeModal: {
+    flex: 1,
   },
   showFilters: {
     backgroundColor: "#F9F8F8",
-    marginHorizontal: 30,
-    marginTop: 8,
     alignItems: "center",
     borderRadius: 4,
+    marginTop: 10,
   },
   filtersScroll: {
     flexDirection: "row",
@@ -251,16 +238,21 @@ const styles = StyleSheet.create({
   filterNonSelected: {
     fontSize: 16,
     fontWeight: "800",
-    color: "gray",
+    color: "#937B8A",
     paddingHorizontal: 10,
   },
   filterSelected: {
     fontSize: 22,
     fontWeight: "800",
-    color: "black",
+    color: "#937B8A",
     paddingHorizontal: 8,
   },
-
+  separation: {
+    backgroundColor: "#937B8A",
+    height: 1,
+    width: screenWidth - 40,
+    alignSelf: "center",
+  },
   containerRecipes: {
     flexDirection: "row",
     flexWrap: "wrap",
