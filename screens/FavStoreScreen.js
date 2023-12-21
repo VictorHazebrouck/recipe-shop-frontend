@@ -14,11 +14,6 @@ import {
   Dimensions,
   ScrollView,
 } from "react-native";
-import LargeButton from "../components/LargeButton";
-import StoreCard from "../components/StoreCard";
-import { useDispatch, useSelector } from "react-redux";
-import * as Location from "expo-location";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
 import ROUTE from "../globals/nico";
 import {chooseFavoriteStore} from '../reducers/user'
 
