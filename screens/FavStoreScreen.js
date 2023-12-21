@@ -6,6 +6,7 @@ import {
   View,
   KeyboardAvoidingView,
   Dimensions,
+  ScrollView,
 } from "react-native";
 import LargeButton from "../components/LargeButton";
 import StoreCard from "../components/StoreCard";
@@ -14,6 +15,7 @@ import * as Location from "expo-location";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 const screenWidth = Dimensions.get("window").width;
+const screenHeight = Dimensions.get("window").height;
 
 export default function FavStoreScreen({ navigation }) {
   const dispatch = useDispatch();
@@ -85,7 +87,13 @@ export default function FavStoreScreen({ navigation }) {
             style={styles.input}
             keyboardType="numeric"
           />
-          <StoreCard />
+          <ScrollView
+            vertical={true}
+            showsHorizontalScrollIndicator={true}
+            style={styles.ScrollView}
+          >
+            <StoreCard />
+          </ScrollView>
         </View>
       </View>
       <LargeButton onPress={handleNext} name="suivant" isPlain={true} />
@@ -136,6 +144,7 @@ const styles = StyleSheet.create({
     height: 14,
   },
   h2: {
+    fontFamily: "Ops-reg",
     fontSize: 40,
     color: "#4B3B47",
     alignSelf: "flex-start",
@@ -149,5 +158,9 @@ const styles = StyleSheet.create({
   content: {
     width: screenWidth - 40,
     marginVertical: 20,
+  },
+  ScrollView: {
+    marginVertical: 20,
+    height: 350,
   },
 });

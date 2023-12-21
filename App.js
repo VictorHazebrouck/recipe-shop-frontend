@@ -14,6 +14,7 @@ import ConnexionScreen from "./screens/ConnexionScreen.js";
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import user from "./reducers/user.js";
+import { useFonts } from "expo-font";
 
 const store = configureStore({
   reducer: { user },
@@ -57,14 +58,22 @@ const TabNavigator = () => {
 };
 
 export default function App() {
+  const [fontsLoaded] = useFonts({
+    "Ops-reg": require("./assets/fonts/OpenSans-Regular.ttf"),
+  });
+
+  if (!fontsLoaded) {
+    return null;
+  }
+
   return (
     <Provider store={store}>
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="Connexion" component={ConnexionScreen} />
+          {/* <Stack.Screen name="Connexion" component={ConnexionScreen} />
           <Stack.Screen name="Regime" component={RegimeScreen} />
           <Stack.Screen name="Gouts" component={GoutsScreen} />
-          <Stack.Screen name="Affichage" component={AffichageScreen} />
+          <Stack.Screen name="Affichage" component={AffichageScreen} /> */}
           <Stack.Screen name="FavStore" component={FavStoreScreen} />
           <Stack.Screen name="TabNavigator" component={TabNavigator} />
         </Stack.Navigator>
