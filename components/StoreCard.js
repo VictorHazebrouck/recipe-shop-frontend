@@ -6,6 +6,7 @@ import ROUTE from "../globals/nico";
 export default function StoreCard(props) {
   const user = useSelector((state) => state.user);
   const [stores, setStores] = useState([]);
+  //const [distance, setDistance] = useState(0);
 
   useEffect(() => {
     (async () => {
@@ -21,6 +22,40 @@ export default function StoreCard(props) {
     })();
   }, []);
 
+
+  // Calculate the distance
+  const distance = (storeCoordinates) => { 
+    return calculateDistance(
+    storeCoordinates[1],
+    storeCoordinates[0],
+    props.latitude,
+    props.longitude
+  );
+  console.log(storeCoordinates)
+  }
+
+  console.log(`Distance to store: ${distance} km`);
+ 
+
+  // Set the distance in state
+  //setDistance(distance);
+
+  const calculateDistance = (lat1, lon1, lat2, lon2) => {
+    const R = 6371; // Radius of the Earth in kilometers
+    const dLat = (lat2 - lat1) * (Math.PI / 180);
+    const dLon = (lon2 - lon1) * (Math.PI / 180);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1 * (Math.PI / 180)) *
+        Math.cos(lat2 * (Math.PI / 180)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = R * c; // Distance in kilometers
+
+    return distance;
+  };
+
   return (
     <View style={styles.container}>
       {stores.map((store, index) => (
@@ -28,7 +63,7 @@ export default function StoreCard(props) {
           <Image style={styles.logoStore} source={{ uri: store.store.logo }} />
           <View style={styles.infos}>
             <Text style={styles.name}>{store.store.name}</Text>
-            <Text style={styles.distance}>{props.distance} km</Text>
+            <Text style={styles.distance}>{distance(store.store.coordinates.location.coordinates).toFixed(2)} km</Text>
           </View>
         </View>
       ))}

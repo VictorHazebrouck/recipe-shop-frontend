@@ -24,25 +24,32 @@ export default function FavStoreScreen({ navigation }) {
   const isLoggedIn = user.isLoggedIn;
 
   const [postalCode, setPostalCode] = useState("");
+  const [latitude, setLatitude] = useState(0);
+  const [longitude, setLongitude] = useState(0);
+  
 
   useEffect(() => {
     (async () => {
       const { status } = await Location.requestForegroundPermissionsAsync();
-
+  
       if (status === "granted") {
         Location.watchPositionAsync(
           { distanceInterval: 10 },
           async (location) => {
             const { coords } = location;
+            setLatitude(coords.latitude)
+            setLongitude(coords.longitude)
 
             const response = await fetch(
               `https://api-adresse.data.gouv.fr/reverse/?lon=${coords.longitude}&lat=${coords.latitude}`
             );
             const data = await response.json();
-
+  
             if (data.features && data.features.length > 0) {
               const newPostalCode = data.features[0].properties.postcode;
               setPostalCode(newPostalCode);
+  
+
             } else {
               console.log("Aucune adresse trouvée.");
             }
@@ -92,7 +99,7 @@ export default function FavStoreScreen({ navigation }) {
             showsHorizontalScrollIndicator={true}
             style={styles.ScrollView}
           >
-            <StoreCard />
+            <StoreCard longitude={longitude} latitude={latitude} />
           </ScrollView>
         </View>
       </View>
