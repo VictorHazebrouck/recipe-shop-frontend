@@ -33,13 +33,17 @@ export default function GoutsScreen({ navigation }) {
   const regime = user.preferences.regime;
   const excludeAliments = user.preferences.excludeAliments;
 
+  //Store regimes in Selected and Unselect category accoring to user preferences
   const customRegime = regime.filter((e) => regimeList.includes(e));
   const [ingredientCategoryUnselected, setingredientCategoryUnselected] =
     useState(regimeList.filter((e) => !customRegime.includes(e)));
   const [ingredientCategorySelected, setingredientCategorySelected] =
     useState(customRegime);
+
+  //store selected ingredients
   const [ingredientSelected, setIngredientSelected] = useState(excludeAliments);
 
+  //displays unselected ingredients categories
   const categoriesUnselected = ingredientCategoryUnselected.map((e, i) => {
     return (
       <TouchableOpacity
@@ -57,6 +61,7 @@ export default function GoutsScreen({ navigation }) {
     );
   });
 
+  //displays selectend ingredients categories
   const categoriesSelected = ingredientCategorySelected.map((e, i) => {
     return (
       <TouchableOpacity
@@ -74,6 +79,7 @@ export default function GoutsScreen({ navigation }) {
     );
   });
 
+  // displays selected single ingredients
   const ingredientsSelectedData = ingredientSelected.map((e, i) => {
     return (
       <TouchableOpacity
@@ -90,6 +96,7 @@ export default function GoutsScreen({ navigation }) {
     );
   });
 
+  //Displays autocomlete suggestions for ingredients from the input field
   const handleInputChange = async (inputValue) => {
     const response = await fetch(
       `https://recipe-shop-backend.vercel.app/ingredients/search/${inputValue}`
@@ -98,6 +105,7 @@ export default function GoutsScreen({ navigation }) {
     return data.res.map((e) => ({ ...e, _searchName: e.name }));
   };
 
+  //Adds ingredients 
   const handleResultSelection = (data) => {
     setIngredientSelected([...ingredientSelected, data]);
   };
