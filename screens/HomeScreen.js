@@ -91,13 +91,17 @@ export default function HomeScreen({ navigation, route }) {
 
   //Displays filters and updates filter style if it is being selected
   const filters = referenceList.map((e, i) => {
-    <TouchableOpacity key={i} onPress={() => setFilter(e)}>
-      <Text
-        style={filter === e ? styles.filterSelected : styles.filterNonSelected}
-      >
-        {e}
-      </Text>
-    </TouchableOpacity>;
+    return (
+      <TouchableOpacity key={i} onPress={() => setFilter(e)}>
+        <Text
+          style={
+            filter === e ? styles.filterSelected : styles.filterNonSelected
+          }
+        >
+          {e}
+        </Text>
+      </TouchableOpacity>
+    );
   });
 
   //Displays recipes details when user presses on a card
