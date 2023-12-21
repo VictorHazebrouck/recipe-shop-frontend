@@ -110,7 +110,7 @@ export default function ShopScreen({ navigation }) {
         onPress={() => setRef(i)}
         style={{
           ...styles.filterContainer,
-          backgroundColor: ref === i ? "orange" : "transparent",
+          backgroundColor: ref === i ? "#ee9f68" : "transparent",
         }}
       >
         <Image style={styles.filterIcon} source={{ uri: e.logo }} />

@@ -45,16 +45,15 @@ export default function HomeScreen({ navigation, route }) {
   const [modalClosedAlert, setModalClosedAlert] = useState(true);
 
   const [referenceList, setReferenceList] = useState(tagsList);
-  //const [isPersonal]
 
-  //fix @todo here
+  //Set a reference date at which to save recipe if user wishes to add it to a date from planning screen
   useEffect(() => {
     if (route.params) {
       setChosenDay(route.params.day);
     }
   }, [route.params]);
 
-  //Updates the recipes state according to the value of the filter state
+  //Updates displayed recieps according to the value of the filter selected
   useEffect(() => {
     (async () => {
       if (filter === "Mes recettes" || filter === "Mes coups de coeur") {
@@ -90,37 +89,38 @@ export default function HomeScreen({ navigation, route }) {
     })();
   }, [filter, modalClosedAlert]);
 
+  //Displays filters and updates filter style if it is being selected
   const filters = referenceList.map((e, i) => {
-    return (
-      <TouchableOpacity key={i} onPress={() => setFilter(e)}>
-        <Text
-          style={
-            filter === e ? styles.filterSelected : styles.filterNonSelected
-          }
-        >
-          {e}
-        </Text>
-      </TouchableOpacity>
-    );
+    <TouchableOpacity key={i} onPress={() => setFilter(e)}>
+      <Text
+        style={filter === e ? styles.filterSelected : styles.filterNonSelected}
+      >
+        {e}
+      </Text>
+    </TouchableOpacity>;
   });
 
+  //Displays recipes details when user presses on a card
   const handlePressCard = (dataRecipe) => {
     setCurrentRecipe(dataRecipe);
     setModalVisible(true);
   };
 
+  //Displays recipes cards for the selected filter
   const recipesList =
     recipes[filter] &&
     recipes[filter].map((e, i) => (
       <RecipeCard key={i} {...e} handlePressCard={handlePressCard} />
     ));
 
+  //Closes the recipe details Modal
   const closeModal = () => {
     setModalClosedAlert(!modalClosedAlert);
     setChosenDay("");
     setModalVisible(false);
   };
 
+  //Changes display of filters, if pressing the like button display liked and personal recipes, else diplay regular filters
   const handlePressUserLikes = () => {
     if (referenceList === tagsList) {
       setReferenceList(userList);
