@@ -19,9 +19,11 @@ const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
 export default function ShopScreen({ navigation }) {
-  const [ingredients, setIngredients] = useState([]);
-  const [stores, setStores] = useState([]);
   const [ref, setRef] = useState(0);
+  const [ingredientsAndStore, setIngredientsAndStore] = useState({
+    ingredients: [],
+    stores: [],
+  });
 
   const user = useSelector((state) => state.user);
   const token = user.credentials.token;
@@ -66,29 +68,39 @@ export default function ShopScreen({ navigation }) {
         }),
       });
       const data = await response.json();
-      setStores(data.response);
-      setIngredients(groupedIngredients);
+      setIngredientsAndStore({
+        ingredients: groupedIngredients,
+        stores: data.response,
+      });
     })();
   }, [currentRecipes]);
 
   const handleDeleteIngredient = (name) => {
-    setIngredients(ingredients.filter((e) => e.name !== name));
+    setIngredientsAndStore({
+      ...ingredientsAndStore,
+      ingredients: ingredientsAndStore.ingredients.filter(
+        (e) => e.name !== name
+      ),
+    });
   };
 
-  const ingredientsList = ingredients.map((e, i) => (
+  console.log(ingredientsAndStore.ingredients);
+  console.log(ingredientsAndStore.stores);
+
+  const ingredientsList = ingredientsAndStore.ingredients.map((e, i) => (
     <Ingredient
       handleDeleteIngredient={handleDeleteIngredient}
       key={i}
       {...e}
-      price={stores[ref].products[e.name].reference.TOTAL}
+      price={ingredientsAndStore.stores[ref].products[e.name].reference.TOTAL}
     />
   ));
 
   // le filter est a aller fetch depuis la database des magasins
-  const filter = stores.map((e, i) => ({
+  const filter = ingredientsAndStore.stores.map((e, i) => ({
     name: e.store.name,
     logo: e.store.logo,
-    price: Object.values(stores[i].products).reduce(
+    price: Object.values(ingredientsAndStore.stores[i].products).reduce(
       (acc, obj) => acc + obj.reference.TOTAL,
       0
     ),
@@ -141,8 +153,9 @@ export default function ShopScreen({ navigation }) {
       }
       dispatch(modifyHistory(currentRecipes));
       dispatch(modifyCurrentRecipe([]));
-      setIngredients([]);
-      setStores([]);
+      setIngredientsAndStore({ ingredients: [], stores: [] });
+      //setIngredients([]);
+      //setStores([]);
     } catch (error) {
       console.error("Error while archiving recipes:", error.message);
     }
