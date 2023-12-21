@@ -110,7 +110,7 @@ export default function ShopScreen({ navigation }) {
       <TouchableOpacity
         key={i}
         onPress={() => setRef(i)}
-        style={{...styles.filterContainer, backgroundColor: ref === i ? "yellow" : "transparent"}}
+        style={{...styles.filterContainer, backgroundColor: ref === i ? "orange" : "transparent"}}
       >
         <Image style={styles.filterIcon} source={{ uri: e.logo }} />
         <Text style={styles.filterPrice}>{e.price} €</Text>
