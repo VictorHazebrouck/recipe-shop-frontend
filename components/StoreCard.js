@@ -57,11 +57,7 @@ export default function StoreCard(props) {
   };
 
   return (
-    <ScrollView
-      vertical={true}
-      showsHorizontalScrollIndicator={true}
-      style={styles.container}
-    >
+    <View style={styles.container}>
       {stores.map((store, index) => (
         <View key={index} style={styles.card}>
           <Image style={styles.logoStore} source={{ uri: store.store.logo }} />
@@ -71,7 +67,7 @@ export default function StoreCard(props) {
           </View>
         </View>
       ))}
-    </ScrollView>
+    </View>
   );
 }
 
