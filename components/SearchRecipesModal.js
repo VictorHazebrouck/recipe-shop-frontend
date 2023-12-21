@@ -44,49 +44,33 @@ export default function SearchRecipeModal({ navigation, closeSearchModal }) {
 
   const dishTypesFilters = dishType.map((e, i) => {
     return (
-      // <SmallButton
-      //   key={i}
-      //   name={e}
-      //   onPress={() =>
-      //     e === dishTypeFilter ? setDishTypeFilter("") : setDishTypeFilter(e)
-      //   }
-      //   isPlain={e === dishTypeFilter && true}
-      //   styleButton={{
-      //     paddingVertical: 2,
-      //     paddingHorizontal: 6,
-      //     marginLeft: 8,
-      //   }}
-      //   styleText={{ fontWeight: 600, fontSize: 16 }}
-      // />
-      <MyCheckbox
+      <SmallButton
         key={i}
         name={e}
         onPress={() =>
           e === dishTypeFilter ? setDishTypeFilter("") : setDishTypeFilter(e)
         }
+        isPlain={e === dishTypeFilter && true}
+        styleButton={{
+          paddingVertical: 4,
+          paddingHorizontal: 10,
+          marginLeft: 8,
+        }}
+        styleText={{ fontWeight: 600, fontSize: 16 }}
       />
+      // <MyCheckbox
+      //   key={i}
+      //   name={e}
+      //   onPress={() =>
+      //     e === dishTypeFilter ? setDishTypeFilter("") : setDishTypeFilter(e)
+      //   }
+      // />
     );
   });
 
   const difficultyFilters = difficulty.map((e, i) => {
     return (
-      // <SmallButton
-      //   key={i}
-      //   name={e}
-      //   onPress={() =>
-      //     e === difficultyFilter
-      //       ? setDiffictultyFilter("")
-      //       : setDiffictultyFilter(e)
-      //   }
-      //   isPlain={e === difficultyFilter && true}
-      //   styleButton={{
-      //     paddingVertical: 2,
-      //     paddingHorizontal: 6,
-      //     marginLeft: 8,
-      //   }}
-      //   styleText={{ fontWeight: 600, fontSize: 16 }}
-      // />
-      <MyCheckbox
+      <SmallButton
         key={i}
         name={e}
         onPress={() =>
@@ -94,7 +78,23 @@ export default function SearchRecipeModal({ navigation, closeSearchModal }) {
             ? setDiffictultyFilter("")
             : setDiffictultyFilter(e)
         }
+        isPlain={e === difficultyFilter && true}
+        styleButton={{
+          paddingVertical: 4,
+          paddingHorizontal: 10,
+          marginLeft: 8,
+        }}
+        styleText={{ fontWeight: 600, fontSize: 16 }}
       />
+      // <MyCheckbox
+      //   key={i}
+      //   name={e}
+      //   onPress={() =>
+      //     e === difficultyFilter
+      //       ? setDiffictultyFilter("")
+      //       : setDiffictultyFilter(e)
+      //   }
+      // />
     );
   });
 

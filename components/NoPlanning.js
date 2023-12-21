@@ -100,6 +100,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#F9F8F8",
+    paddingHorizontal: 20,
   },
   h3: {
     fontSize: 30,
