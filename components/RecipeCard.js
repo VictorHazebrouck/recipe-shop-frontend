@@ -9,15 +9,31 @@ import {
   Dimensions,
   Image,
 } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
+import { removeFavoriteRecipes, addFavoriteRecipes } from "../reducers/user";
 
 const RecipeCard = (props) => {
-  // GET favorite recipes
-  // useEffect(() => {
-  //   (async () => {
-  //     const response = await fetch(`${ROUTE}/users/recipes`);
-  //     const data = await response.json();
-  //   })();
-  // }, []);
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user);
+  const token = user.credentials.token
+
+  const handleLike = () => {
+    fetch(`${ROUTE}/users/like`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ recipe: { _id: props._id }, token: token }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.result) {
+          dispatch(addFavoriteRecipes({ _id: props._id }));
+          //setLike("heart");
+        } else {
+          dispatch(removeFavoriteRecipes({ _id: props._id }));
+          //setLike("heart-o");
+        }
+      });
+  };
 
   return (
     <TouchableOpacity
@@ -27,8 +43,18 @@ const RecipeCard = (props) => {
       <Image source={{ uri: props.imageURL }} style={{ flex: 1 }} />
       <View style={styles.infosContainer}>
         <Text style={styles.text}>{props.name}</Text>
-        <TouchableOpacity>
-          <FontAwesome name={"heart-o"} size={20} color="#CC3F0C" />
+        <TouchableOpacity style={{width: 25, height: 25, alignItems: "center", justifyContent: "center"}} onPress={handleLike}>
+          <FontAwesome
+            name={
+              user.personalRecipes.favoriteRecipes.some(
+                (e) => e._id === props._id
+              )
+                ? "heart"
+                : "heart-o"
+            }
+            size={20}
+            color="#CC3F0C"
+          />
         </TouchableOpacity>
       </View>
     </TouchableOpacity>
