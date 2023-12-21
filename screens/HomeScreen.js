@@ -47,10 +47,6 @@ export default function HomeScreen({ navigation, route }) {
   const [referenceList, setReferenceList] = useState(tagsList);
   //const [isPersonal]
 
-  console.log("Params: ", route.params.day);
-  console.log("Chosen day: ", chosenDay);
-  console.log("------")
-
   //fix @todo here
   useEffect(() => {
     if (route.params) {
