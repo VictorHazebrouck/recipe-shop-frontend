@@ -20,12 +20,10 @@ export default function PlanningScreen({ navigation }) {
   const user = useSelector((state) => state.user);
   const token = user.credentials.token;
   const isLoggedIn = user.isLoggedIn;
+  const planningChecked = user.preferences.planningChecked
 
   const [isPlanningChecked, setPlanningChecked] = useState(planningChecked);
 
-  const planningChecked = useSelector(
-    (state) => state.user.preferences.planningChecked
-  );
 
   const handlePlanningCheck = () => {
     setPlanningChecked(!isPlanningChecked);

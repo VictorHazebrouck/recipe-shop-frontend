@@ -5,6 +5,7 @@ import {
   ScrollView,
   Dimensions,
   TouchableOpacity,
+  Image,
 } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -84,9 +85,6 @@ export default function ShopScreen({ navigation }) {
     });
   };
 
-  console.log(ingredientsAndStore.ingredients);
-  console.log(ingredientsAndStore.stores);
-
   const ingredientsList = ingredientsAndStore.ingredients.map((e, i) => (
     <Ingredient
       handleDeleteIngredient={handleDeleteIngredient}
@@ -100,41 +98,21 @@ export default function ShopScreen({ navigation }) {
   const filter = ingredientsAndStore.stores.map((e, i) => ({
     name: e.store.name,
     logo: e.store.logo,
-    price: Object.values(ingredientsAndStore.stores[i].products).reduce(
-      (acc, obj) => acc + obj.reference.TOTAL,
-      0
-    ),
+    price: Object.values(ingredientsAndStore.stores[i].products)
+      .reduce((acc, obj) => acc + obj.reference.TOTAL, 0)
+      .toFixed(2),
     distance: 4.2,
   }));
 
   // filter store type rendering
   const filterList = filter.map((e, i) => {
-    const iconComponent =
-      e.name === "favoris" ? (
-        <FontAwesome name={"star"} size={30} color="#fff" />
-      ) : e.name === "proche" ? (
-        <MaterialCommunityIcons
-          name="map-marker-distance"
-          size={30}
-          color="#fff"
-        />
-      ) : e.name === "livraison" ? (
-        <MaterialCommunityIcons
-          name="truck-delivery-outline"
-          size={30}
-          color="#fff"
-        />
-      ) : e.name === "economique" ? (
-        <FontAwesome name={"money"} size={30} color="#fff" />
-      ) : null;
-
     return (
       <TouchableOpacity
         key={i}
         onPress={() => setRef(i)}
-        style={styles.filterContainer}
+        style={{...styles.filterContainer, backgroundColor: ref === i ? "yellow" : "transparent"}}
       >
-        <View style={styles.filterIcon}>{iconComponent}</View>
+        <Image style={styles.filterIcon} source={{ uri: e.logo }} />
         <Text style={styles.filterPrice}>{e.price} €</Text>
         <Text style={styles.filterDistance}>{e.distance} km</Text>
       </TouchableOpacity>
@@ -154,8 +132,6 @@ export default function ShopScreen({ navigation }) {
       dispatch(modifyHistory(currentRecipes));
       dispatch(modifyCurrentRecipe([]));
       setIngredientsAndStore({ ingredients: [], stores: [] });
-      //setIngredients([]);
-      //setStores([]);
     } catch (error) {
       console.error("Error while archiving recipes:", error.message);
     }
@@ -163,7 +139,6 @@ export default function ShopScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Text>shop Screen</Text>
       <ScrollView
         horizontal={true}
         showsHorizontalScrollIndicator={true}
@@ -225,10 +200,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   filterIcon: {
-    backgroundColor: "#CC3F0C",
-    width: 50,
-    height: 50,
-    borderRadius: 25,
+    width: 60,
+    height: 60,
     justifyContent: "center",
     alignItems: "center",
   },

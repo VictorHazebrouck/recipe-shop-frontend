@@ -195,11 +195,11 @@ const RecipeModal = (props) => {
       .then((response) => response.json())
       .then((data) => {
         if (data.result) {
-          dispatch(addFavoriteRecipes({_id: props._id}));
-          setLike("heart");
+          dispatch(addFavoriteRecipes({ _id: props._id }));
+          //setLike("heart");
         } else {
-          dispatch(removeFavoriteRecipes({_id: props._id}));
-          setLike("heart-o");
+          dispatch(removeFavoriteRecipes({ _id: props._id }));
+          //setLike("heart-o");
         }
       });
   };
@@ -228,7 +228,17 @@ const RecipeModal = (props) => {
             <MaterialCommunityIcons name={"corn"} size={20} color="#4B3B47" />
           </View>
           <TouchableOpacity style={styles.like} onPress={handleLike}>
-            <FontAwesome name={like} size={20} color="#CC3F0C" />
+            <FontAwesome
+              name={
+                user.personalRecipes.favoriteRecipes.some(
+                  (e) => e._id === props._id
+                )
+                ? "heart"
+                : "heart-o"
+              }
+              size={20}
+              color="#CC3F0C"
+            />
           </TouchableOpacity>
         </View>
         <View style={styles.content}>
@@ -237,13 +247,13 @@ const RecipeModal = (props) => {
               <View style={{ marginBottom: 10 }}>
                 <Text style={styles.h3}>{props.name}</Text>
               </View>
-              <View style={styles.note}>
+              {/* <View style={styles.note}>
                 <FontAwesome name={"star"} size={16} color="#4B3B47" />
                 <FontAwesome name={"star"} size={16} color="#4B3B47" />
                 <FontAwesome name={"star"} size={16} color="#4B3B47" />
                 <FontAwesome name={"star-o"} size={16} color="#4B3B47" />
                 <FontAwesome name={"star-o"} size={16} color="#4B3B47" />
-              </View>
+              </View> */}
             </View>
             <View style={styles.info}>
               <View style={styles.time}>
