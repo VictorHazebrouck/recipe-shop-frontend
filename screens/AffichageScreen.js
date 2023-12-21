@@ -49,60 +49,66 @@ export default function PlanningScreen({ navigation }) {
 
   return (
     <KeyboardAvoidingView
-      style={styles.container}
+      style={{ flex: 1 }}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
-      <View style={{ alignItems: "center" }}>
-        <View style={styles.progressContainer}>
-          <View style={styles.progressBar}></View>
-          <View style={styles.progress}></View>
-        </View>
-        <Text style={styles.h2}>AFFICHAGE</Text>
+      <View style={styles.container}>
+        <View style={{ alignItems: "center" }}>
+          <View style={styles.progressContainer}>
+            <View style={styles.progressBar}></View>
+            <View style={styles.progress}></View>
+          </View>
+          <Text style={styles.h2}>AFFICHAGE</Text>
 
-        <TouchableOpacity onPress={handlePlanningCheck}>
-          <View
-            style={[
-              styles.checkboxContainer,
-              {
-                backgroundColor: isPlanningChecked ? "#EE9F68" : "transparent",
-              },
-            ]}
-          >
-            <Checkbox
-              style={styles.checkbox}
-              value={isPlanningChecked}
-              onValueChange={handlePlanningCheck}
-              color={isPlanningChecked ? "#4B3A47" : undefined}
-            />
-            <Text style={{ flex: 1 }}>
-              Planifier les recettes dans un planning et avoir la liste de
-              courses
-            </Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={handlePlanningCheck}>
-          <View
-            style={[
-              styles.checkboxContainer,
-              {
-                backgroundColor: !isPlanningChecked ? "#EE9F68" : "transparent",
-              },
-            ]}
-          >
-            <Checkbox
-              style={styles.checkbox}
-              value={!isPlanningChecked}
-              onValueChange={handlePlanningCheck}
-              color={!isPlanningChecked ? "#4B3A47" : undefined}
-            />
-            <Text style={{ flex: 1 }}>
-              Sélectionner uniquement les recettes et obtenir la liste de
-              courses
-            </Text>
-          </View>
-        </TouchableOpacity>
+          <TouchableOpacity onPress={handlePlanningCheck}>
+            <View
+              style={[
+                styles.checkboxContainer,
+                {
+                  backgroundColor: isPlanningChecked
+                    ? "#EE9F68"
+                    : "transparent",
+                },
+              ]}
+            >
+              <Checkbox
+                style={styles.checkbox}
+                value={isPlanningChecked}
+                onValueChange={handlePlanningCheck}
+                color={isPlanningChecked ? "#4B3A47" : undefined}
+              />
+              <Text style={{ flex: 1 }}>
+                Planifier les recettes dans un planning et avoir la liste de
+                courses
+              </Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handlePlanningCheck}>
+            <View
+              style={[
+                styles.checkboxContainer,
+                {
+                  backgroundColor: !isPlanningChecked
+                    ? "#EE9F68"
+                    : "transparent",
+                },
+              ]}
+            >
+              <Checkbox
+                style={styles.checkbox}
+                value={!isPlanningChecked}
+                onValueChange={handlePlanningCheck}
+                color={!isPlanningChecked ? "#4B3A47" : undefined}
+              />
+              <Text style={{ flex: 1 }}>
+                Sélectionner uniquement les recettes et obtenir la liste de
+                courses
+              </Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+        <LargeButton onPress={handleNext} name="suivant" isPlain={true} />
       </View>
-      <LargeButton onPress={handleNext} name="suivant" isPlain={true} />
     </KeyboardAvoidingView>
   );
 }
@@ -112,7 +118,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 20,
     paddingTop: 40,
-    paddingBottom: 80,
+    paddingBottom: 40,
     backgroundColor: "#F9F8F8",
     alignItems: "center",
     justifyContent: "space-between",

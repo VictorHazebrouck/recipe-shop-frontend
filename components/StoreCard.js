@@ -4,25 +4,23 @@ import { Text, StyleSheet, View, Image, TouchableOpacity } from "react-native";
 // import ROUTE from "../globals/nico";
 
 export default function StoreCard(props) {
-  const favoriteStore = useSelector((state) => state.user.preferences.favoriteStore);
- 
-  let conditionalStyle = {}
+  const favoriteStore = useSelector(
+    (state) => state.user.preferences.favoriteStore
+  );
+
+  let conditionalStyle = {};
   if (favoriteStore === props.storeId) {
-    conditionalStyle = {backgroundColor : '#EE9F68'}
+    conditionalStyle = { backgroundColor: "#EE9F68" };
   }
   // Calculate the distance
-  const distance = () => { 
+  const distance = () => {
     return calculateDistance(
-    props.coordinates.location.coordinates[1],
-    props.coordinates.location.coordinates[0],
-    props.latitude,
-    props.longitude
-  );
-  //console.log(storeCoordinates)
-  }
-
-  //console.log(`Distance to store: ${distance} km`);
- 
+      props.coordinates.location.coordinates[1],
+      props.coordinates.location.coordinates[0],
+      props.latitude,
+      props.longitude
+    );
+  };
 
   //Set the distance in state
   //setDistance(distance);
@@ -45,13 +43,16 @@ export default function StoreCard(props) {
 
   return (
     <View style={styles.container}>
-        <TouchableOpacity style={{...styles.card, ...conditionalStyle}} onPress={()=> props.handleFavStore(props.storeId)}>
-          <Image style={styles.logoStore} source={{ uri: props.logo }} />
-          <View style={styles.infos}>
-            <Text style={styles.name}>{props.name}</Text>
-            <Text style={styles.distance}>{distance().toFixed(2)} km</Text>
-          </View>
-        </TouchableOpacity>
+      <TouchableOpacity
+        style={{ ...styles.card, ...conditionalStyle }}
+        onPress={() => props.handleFavStore(props.storeId)}
+      >
+        <Image style={styles.logoStore} source={{ uri: props.logo }} />
+        <View style={styles.infos}>
+          <Text style={styles.name}>{props.name}</Text>
+          <Text style={styles.distance}>{distance().toFixed(2)} km</Text>
+        </View>
+      </TouchableOpacity>
     </View>
   );
 }

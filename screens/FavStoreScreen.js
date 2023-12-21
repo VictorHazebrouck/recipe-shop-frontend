@@ -30,7 +30,6 @@ export default function FavStoreScreen({ navigation }) {
   const [longitude, setLongitude] = useState(0);
   const [stores, setStores] = useState(null);
 
-  console.log("favorite store ->", user.preferences.favoriteStore);
   useEffect(() => {
     (async () => {
       const { status } = await Location.requestForegroundPermissionsAsync();
@@ -114,40 +113,42 @@ export default function FavStoreScreen({ navigation }) {
 
   return (
     <KeyboardAvoidingView
-      style={styles.container}
+      style={{ flex: 1 }}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
-      <View style={{ alignItems: "center" }}>
-        <View style={styles.progressContainer}>
-          <View style={styles.progressBar}></View>
-          <View style={styles.progress}></View>
+      <View style={styles.container}>
+        <View style={{ alignItems: "center" }}>
+          <View style={styles.progressContainer}>
+            <View style={styles.progressBar}></View>
+            <View style={styles.progress}></View>
+          </View>
+          <Text style={styles.h2}>Magasin favori</Text>
+          <Text style={styles.subTitle}>Les magasins proches de</Text>
+          <View style={styles.content}>
+            <FontAwesome
+              style={{ position: "absolute", top: 5, right: 10 }}
+              name="map-marker"
+              size={25}
+              color="#937B8A"
+            />
+            <TextInput
+              placeholder="Code postal"
+              onChangeText={(value) => setPostalCode(value)}
+              value={postalCode}
+              style={styles.input}
+              keyboardType="numeric"
+            />
+            <ScrollView
+              vertical={true}
+              showsHorizontalScrollIndicator={true}
+              style={styles.ScrollView}
+            >
+              {storeList}
+            </ScrollView>
+          </View>
         </View>
-        <Text style={styles.h2}>Magasin favori</Text>
-        <Text style={styles.subTitle}>Les magasins proches de</Text>
-        <View style={styles.content}>
-          <FontAwesome
-            style={{ position: "absolute", top: 5, right: 10 }}
-            name="map-marker"
-            size={25}
-            color="#937B8A"
-          />
-          <TextInput
-            placeholder="Code postal"
-            onChangeText={(value) => setPostalCode(value)}
-            value={postalCode}
-            style={styles.input}
-            keyboardType="numeric"
-          />
-          <ScrollView
-            vertical={true}
-            showsHorizontalScrollIndicator={true}
-            style={styles.ScrollView}
-          >
-            {storeList}
-          </ScrollView>
-        </View>
+        <LargeButton onPress={handleNext} name="suivant" isPlain={true} />
       </View>
-      <LargeButton onPress={handleNext} name="suivant" isPlain={true} />
     </KeyboardAvoidingView>
   );
 }
@@ -157,10 +158,10 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 20,
     paddingTop: 40,
-    paddingBottom: 80,
+    paddingBottom: 40,
     backgroundColor: "#F9F8F8",
     alignItems: "center",
-    // justifyContent: "space-between",
+    justifyContent: "space-between",
   },
   input: {
     width: screenWidth - 40,

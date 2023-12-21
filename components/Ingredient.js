@@ -58,6 +58,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "flex-end",
+    marginLeft: 40,
   },
   qtyContainer: {
     width: 100,
