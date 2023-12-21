@@ -1,11 +1,34 @@
-import { SafeAreaView, Image, StyleSheet, Text, View } from "react-native";
+import {
+  SafeAreaView,
+  Image,
+  StyleSheet,
+  Text,
+  View,
+  Alert,
+} from "react-native";
 import SmallButton from "../components/SmallButton";
 import { useDispatch, useSelector } from "react-redux";
+import { setLogout } from "../reducers/user";
 
 export default function ParametersScreen({ navigation }) {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
-  const isLoggedIn = user.isLoggedIn;
+
+  const confirmDisconnect = () =>
+    Alert.alert("Voulez-vous vous déconnecter ?", "", [
+      {
+        text: "non",
+        onPress: () => console.log("Cancel Pressed"),
+        style: "cancel",
+      },
+      {
+        text: "oui",
+        onPress: () => {
+          dispatch(setLogout());
+          navigation.navigate("Connexion");
+        },
+      },
+    ]);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -22,7 +45,6 @@ export default function ParametersScreen({ navigation }) {
             <Text style={styles.regular}>Vos paramètres</Text>
           </View>
         </View>
-
         <View style={styles.buttonsContainer}>
           <SmallButton
             name="Regime"
@@ -45,10 +67,10 @@ export default function ParametersScreen({ navigation }) {
             styleButton={{ marginBottom: 10 }}
           />
           <SmallButton
-            name="Manage account"
+            name="Déconnexion"
             isPlain={true}
-            onPress={() => navigation.navigate("ManageAccount")}
-            styleButton={{ marginBottom: 10 }}
+            // onPress={() => navigation.navigate("Connexion")}
+            onPress={confirmDisconnect}
           />
         </View>
       </View>
@@ -63,11 +85,16 @@ const styles = StyleSheet.create({
     paddingVertical: 40,
     backgroundColor: "#F9F8F8",
     alignItems: "center",
+    justifyContent: "center",
   },
   profil: {
     flexDirection: "row",
     justifyContent: "center",
-    // alignSelf: "flex-start",
+    backgroundColor: "#C9AFBD",
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 6,
+    marginBottom: 20,
   },
   profilImg: {
     marginRight: 10,
@@ -82,7 +109,9 @@ const styles = StyleSheet.create({
     color: "#4B3B47",
   },
   buttonsContainer: {
-    flex: 1,
+    padding: 20,
+    borderRadius: 6,
+    backgroundColor: "#fff",
     justifyContent: "center",
   },
   title: {

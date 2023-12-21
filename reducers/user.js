@@ -42,14 +42,20 @@ export const userSlice = createSlice({
         state.plannedRecipes.historyRecipes.push(action.payload);
       }
     },
-    removeFavoriteRecipes: (state, action) =>{
-      state.personalRecipes.favoriteRecipes = state.personalRecipes.favoriteRecipes.filter(e => action.payload._id !== e._id) 
+    removeFavoriteRecipes: (state, action) => {
+      state.personalRecipes.favoriteRecipes =
+        state.personalRecipes.favoriteRecipes.filter(
+          (e) => action.payload._id !== e._id
+        );
     },
-    addFavoriteRecipes: (state, action) =>{
-      state.personalRecipes.favoriteRecipes = [...state.personalRecipes.favoriteRecipes, action.payload]
+    addFavoriteRecipes: (state, action) => {
+      state.personalRecipes.favoriteRecipes = [
+        ...state.personalRecipes.favoriteRecipes,
+        action.payload,
+      ];
     },
     chooseFavoriteStore: (state, action) => {
-      state.preferences.favoriteStore = action.payload
+      state.preferences.favoriteStore = action.payload;
     },
 
     //working?
@@ -90,6 +96,9 @@ export const userSlice = createSlice({
     setLogin: (state, action) => {
       state.isLoggedIn = true;
     },
+    setLogout: (state, action) => {
+      state.isLoggedIn = false;
+    },
   },
 });
 
@@ -99,11 +108,12 @@ export const {
   modifyRegime,
   initUser,
   setLogin,
+  setLogout,
   modifyExcludeIngredients,
   modifyCurrentRecipe,
   modifyHistory,
   addFavoriteRecipes,
   removeFavoriteRecipes,
-  chooseFavoriteStore
+  chooseFavoriteStore,
 } = userSlice.actions;
 export default userSlice.reducer;
