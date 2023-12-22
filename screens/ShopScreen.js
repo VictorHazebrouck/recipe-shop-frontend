@@ -17,6 +17,23 @@ import ROUTE from "../globals/nico";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
+//result of Nico's mathematical genius
+const calculateDistance = (lat1, lon1, lat2, lon2) => {
+  const R = 6371; // Radius of the Earth in kilometers
+  const dLat = (lat2 - lat1) * (Math.PI / 180);
+  const dLon = (lon2 - lon1) * (Math.PI / 180);
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(lat1 * (Math.PI / 180)) *
+      Math.cos(lat2 * (Math.PI / 180)) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const distance = R * c; // Distance in kilometers
+
+  return distance;
+};
+
 export default function ShopScreen({ navigation }) {
   const [ref, setRef] = useState(0);
   const [ingredientsAndStore, setIngredientsAndStore] = useState({
@@ -27,11 +44,13 @@ export default function ShopScreen({ navigation }) {
   const user = useSelector((state) => state.user);
   const token = user.credentials.token;
   const dispatch = useDispatch();
-
+  const position = user.position;
   const currentRecipes = user.plannedRecipes.currentRecipes;
 
+  //retrives best prices for each store whenever our list of  recipes changes.
   useEffect(() => {
     (async () => {
+      //stores each ingredients and their respective qty in ingredietnsdata variable
       const ingredientsData = currentRecipes.flatMap((recipe) => {
         return recipe.id.ingredients.map((ingredient) => {
           return {
@@ -41,7 +60,8 @@ export default function ShopScreen({ navigation }) {
           };
         });
       });
-      // regroup same ingredients and accumule qtyForRecipe
+
+      //regroups same ingredients and accumules qtyForRecipe for each
       const groupedIngredients = ingredientsData.reduce(
         (result, ingredient) => {
           const existingIngredient = result.findIndex(
@@ -56,6 +76,8 @@ export default function ShopScreen({ navigation }) {
         },
         []
       );
+
+      //fecth backend with a list of unique ingredients nand their amount
       const response = await fetch(`${ROUTE}/stores/lowestPrices`, {
         method: "put",
         headers: { "Content-Type": "application/json" },
@@ -67,6 +89,8 @@ export default function ShopScreen({ navigation }) {
         }),
       });
       const data = await response.json();
+
+      //stores retrieved best prices for each store in ingredientAndStore state
       setIngredientsAndStore({
         ingredients: groupedIngredients,
         stores: data.response,
@@ -83,26 +107,32 @@ export default function ShopScreen({ navigation }) {
     });
   };
 
+  //displays ingredients and their individual price.
   const ingredientsList = ingredientsAndStore.ingredients.map((e, i) => (
     <Ingredient
       handleDeleteIngredient={handleDeleteIngredient}
       key={i}
       {...e}
-      price={ingredientsAndStore.stores[ref].products[e.name].reference.TOTAL}
+      price={ingredientsAndStore.stores[ref].products[e.name].reference.TOTAL.toFixed(2)}
     />
   ));
 
-  // le filter est a aller fetch depuis la database des magasins
+  //stores and formats the values of each stores and calculates total value of basket for each.
   const filter = ingredientsAndStore.stores.map((e, i) => ({
     name: e.store.name,
     logo: e.store.logo,
     price: Object.values(ingredientsAndStore.stores[i].products)
       .reduce((acc, obj) => acc + obj.reference.TOTAL, 0)
       .toFixed(2),
-    distance: 4.2,
+    distance: calculateDistance(
+      e.store.coordinates.location.coordinates[1],
+      e.store.coordinates.location.coordinates[0],
+      position.lat,
+      position.lon,
+    ).toFixed(2),
   }));
 
-  // filter store type rendering
+  //displays stores information: total price, logo & distance
   const filterList = filter.map((e, i) => {
     return (
       <TouchableOpacity
@@ -120,6 +150,7 @@ export default function ShopScreen({ navigation }) {
     );
   });
 
+  //validates the basket, emptys current recipes, "archives" them in history recipes.
   const handleSubmit = async () => {
     try {
       const response = await fetch(`${ROUTE}/users/archive`, {

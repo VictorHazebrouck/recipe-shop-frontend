@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import LargeButton from "../components/LargeButton";
 import StoreCard from "../components/StoreCard";
 import { useDispatch, useSelector } from "react-redux";
-import { chooseFavoriteStore, setLogin } from "../reducers/user";
+import { chooseFavoriteStore, setLogin, setPosition } from "../reducers/user";
 import * as Location from "expo-location";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import ROUTE from "../globals/nico";
@@ -29,6 +29,7 @@ export default function FavStoreScreen({ navigation }) {
   const [longitude, setLongitude] = useState(0);
   const [stores, setStores] = useState(null);
 
+  //get user location & retrieve related postcode with datagouv api from the user's lat/lon
   useEffect(() => {
     (async () => {
       const { status } = await Location.requestForegroundPermissionsAsync();
@@ -48,6 +49,7 @@ export default function FavStoreScreen({ navigation }) {
 
             if (data.features && data.features.length > 0) {
               const newPostalCode = data.features[0].properties.postcode;
+              dispatch(setPosition({lat: coords.latitude, lon: coords.longitude}))
               setPostalCode(newPostalCode);
             } else {
               console.log("Aucune adresse trouvée.");
@@ -58,6 +60,7 @@ export default function FavStoreScreen({ navigation }) {
     })();
   }, []);
 
+  //retrives stores data from db and saves it in stores state
   useEffect(() => {
     (async () => {
       const response = await fetch(`${ROUTE}/stores/lowestPrices`, {
@@ -72,6 +75,7 @@ export default function FavStoreScreen({ navigation }) {
     })();
   }, []);
 
+  //saves users fav store in db and reducer
   const handleFavStore = async (storeid) => {
     const response = await fetch(`${ROUTE}/users/preference`, {
       method: "put",
@@ -86,7 +90,7 @@ export default function FavStoreScreen({ navigation }) {
     dispatch(chooseFavoriteStore(data.response.favStore));
   };
 
-  //Create list of stores
+  //Displays list of stores
   let storeList = [];
   stores &&
     (storeList = stores.map((e, i) => {

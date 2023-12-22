@@ -12,6 +12,10 @@ const initialState = {
   },
   personalRecipes: { favoriteRecipes: [], myRecipes: [] },
   plannedRecipes: { currentRecipes: [], historyRecipes: [] },
+  position: {
+    lat: 3.092952,
+    lon: 50.631881,
+  },
 };
 
 // création de planningChecked en attendant de gérer les préférences
@@ -57,8 +61,9 @@ export const userSlice = createSlice({
     chooseFavoriteStore: (state, action) => {
       state.preferences.favoriteStore = action.payload;
     },
-
-    //working?
+    setPosition: (state, action) => {
+      state.position = { lat: action.payload.lat, lon: action.payload.lon };
+    },
     initUser: (state, action) => {
       const {
         name,
@@ -92,7 +97,6 @@ export const userSlice = createSlice({
         historyRecipes: historyRecipes,
       };
     },
-
     setLogin: (state, action) => {
       state.isLoggedIn = true;
     },
@@ -115,5 +119,6 @@ export const {
   addFavoriteRecipes,
   removeFavoriteRecipes,
   chooseFavoriteStore,
+  setPosition,
 } = userSlice.actions;
 export default userSlice.reducer;
