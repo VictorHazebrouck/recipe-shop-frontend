@@ -73,7 +73,7 @@ export default function HomeScreen({ navigation, route }) {
         const data = await response.json();
 
         setRecipes({ ...recipes, [filter]: data.response });
-      } else if (!recipes[filter]) {
+      } else /*if (!recipes[filter])*/ {
         //fetch & update recipes on first filter load
         const response = await fetch(
           `${ROUTE}/recipes/search?&tag=${filter}&regime=${preferences.regime.join(
@@ -82,10 +82,10 @@ export default function HomeScreen({ navigation, route }) {
         );
         const data = await response.json();
         setRecipes({ ...recipes, [filter]: data.response });
-      } else {
+      } /*else {
         //don't re-fetch data for a previously fetched list of recipes
         return;
-      }
+      }*/
     })();
   }, [filter, modalClosedAlert]);
 
