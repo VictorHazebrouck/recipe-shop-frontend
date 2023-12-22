@@ -141,18 +141,21 @@ export default function ConnexionScreen({ navigation }) {
             <Text style={styles.h3}>Sign up</Text>
             <TextInput
               placeholder="name"
+              placeholderTextColor="#937B8A"
               onChangeText={(value) => setNameSignup(value)}
               value={nameSignup}
               style={styles.nameInput}
             />
             <TextInput
               placeholder="email"
+              placeholderTextColor="#937B8A"
               onChangeText={(value) => setEmailSignup(value)}
               value={emailSignup}
               style={styles.emailInput}
             />
             <TextInput
               placeholder="password"
+              placeholderTextColor="#937B8A"
               onChangeText={(value) => setPasswordSignup(value)}
               value={passwordSignup}
               style={styles.passwordInput}
@@ -178,12 +181,14 @@ export default function ConnexionScreen({ navigation }) {
             <Text style={styles.h3}>Sign in</Text>
             <TextInput
               placeholder="name"
+              placeholderTextColor="#937B8A"
               onChangeText={(value) => setNameSignin(value)}
               value={nameSignin}
               style={styles.nameInput}
             />
             <TextInput
               placeholder="password"
+              placeholderTextColor="#937B8A"
               onChangeText={(value) => setPasswordSignin(value)}
               value={passwordSignin}
               style={styles.passwordInput}

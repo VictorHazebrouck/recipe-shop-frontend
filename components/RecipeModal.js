@@ -233,8 +233,8 @@ const RecipeModal = (props) => {
                 user.personalRecipes.favoriteRecipes.some(
                   (e) => e._id === props._id
                 )
-                ? "heart"
-                : "heart-o"
+                  ? "heart"
+                  : "heart-o"
               }
               size={20}
               color="#CC3F0C"
@@ -270,11 +270,11 @@ const RecipeModal = (props) => {
           </View>
           <View style={styles.number}>
             <TouchableOpacity onPress={() => handlePressMinus()}>
-              <FontAwesome name={"minus-circle"} size={25} color="#4B3B47" />
+              <FontAwesome name={"minus-circle"} size={30} color="#4B3B47" />
             </TouchableOpacity>
             <Text style={styles.numberOfPers}>{numberOfPers}</Text>
             <TouchableOpacity onPress={() => handlePressPlus()}>
-              <MaterialIcons name="add-circle" size={25} color="#4B3B47" />
+              <MaterialIcons name="add-circle" size={30} color="#4B3B47" />
             </TouchableOpacity>
             <Text style={{ fontSize: 16, color: "#4B3B47", marginLeft: 10 }}>
               personnes
@@ -387,7 +387,7 @@ const styles = StyleSheet.create({
   },
   numberOfPers: {
     marginHorizontal: 10,
-    fontSize: 20,
+    fontSize: 25,
     color: "#4B3B47",
   },
   ingredient: {
