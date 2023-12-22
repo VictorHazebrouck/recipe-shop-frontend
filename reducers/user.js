@@ -13,8 +13,8 @@ const initialState = {
   personalRecipes: { favoriteRecipes: [], myRecipes: [] },
   plannedRecipes: { currentRecipes: [], historyRecipes: [] },
   position: {
-    lat: 3.092952,
-    lon: 50.631881,
+    lat: 50.631881,
+    lon: 3.092952,
   },
 };
 
